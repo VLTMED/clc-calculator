@@ -2,6 +2,16 @@
 module.exports = {
   darkMode: ["class"],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  safelist: [
+    // Logical property utilities that may appear in dynamic strings
+    'ms-auto', 'me-auto',
+    'ps-8', 'pe-8', 'ps-2', 'pe-2', 'ps-3', 'pe-3',
+    'ms-1', 'me-1', 'ms-2', 'me-2',
+    'border-s', 'border-e',
+    'rounded-s-md', 'rounded-e-md', 'rounded-s-none', 'rounded-e-none',
+    'text-start', 'text-end',
+    'rtl-flip',
+  ],
   theme: {
     extend: {
       fontFamily: {

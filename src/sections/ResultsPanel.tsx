@@ -105,7 +105,7 @@ export function ResultsPanel({ results, inputs }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-100">
-                <TableHead className="text-end font-bold">بند الحمل</TableHead>
+                <TableHead className="text-start font-bold">بند الحمل</TableHead>
                 <TableHead className="text-start font-bold" dir="ltr">
                   القيمة
                 </TableHead>

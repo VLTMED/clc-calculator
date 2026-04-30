@@ -23,7 +23,7 @@
   
   .xl\:col-span-1 {
     grid-column: span 3 / span 3 !important;
-    margin-top: 2rem;
+    margin-block-start: 2rem;
   }
   
   [data-state="inactive"] {
@@ -66,10 +66,69 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* RTL support for numeric inputs - use ltr for numbers but keep in RTL context */
+/* Numeric inputs: keep digits LTR but align to inline-end so they hug the correct side in RTL */
 input[type="number"] {
   direction: ltr;
   text-align: end;
+  unicode-bidi: embed;
+}
+
+/* ── RTL logical-property overrides ──────────────────────── */
+
+/* Print: swap col offsets that used margin-left/right to logical equivalents */
+@media print {
+  .xl\\:col-span-2 {
+    margin-inline-start: 0 !important;
+  }
+  .xl\\:col-span-1 {
+    margin-block-start: 2rem;
+  }
+}
+
+/* Sonner toast: force RTL alignment */
+[data-sonner-toaster] {
+  direction: rtl;
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar — unchanged, directional side handled by browser in RTL */
+.overflow-auto::-webkit-scrollbar-track {
+  border-radius: 4px;
+}
+
+/* Table: numbers column stays LTR inside RTL table */
+[dir="rtl"] td[dir="ltr"],
+[dir="rtl"] th[dir="ltr"] {
+  text-align: start; /* start = left in ltr cells */
+}
+
+/* Checkbox rows: icon before label in RTL (icon = inline-end) */
+[dir="rtl"] .flex.items-center.gap-2 > input[type="checkbox"] {
+  order: 1;         /* visual end = DOM start in RTL flex */
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+}
+
+/* Touch targets: minimum 44px for mobile Arabic UX */
+button,
+[role="button"],
+input[type="checkbox"],
+select {
+  min-height: 36px;
+}
+
+/* Select triggers: proper RTL arrow placement handled by Radix via data attributes */
+
+/* Cards: remove any accidental left/right border if added inline */
+[dir="rtl"] .border-l {
+  border-inline-start-width: 1px;
+  border-inline-end-width: 0;
+  border-left-width: 0;
+}
+[dir="rtl"] .border-r {
+  border-inline-end-width: 1px;
+  border-inline-start-width: 0;
+  border-right-width: 0;
 }
 
 /* Badge animations */

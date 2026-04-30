@@ -213,44 +213,269 @@
   [dir="rtl"] .rtl-flip {
     transform: scaleX(-1);
   }
+
+  /* ── RTL Layout: Global logical flow ── */
+  [dir="rtl"] {
+    /* All flex rows default to RTL flow — no extra classes needed */
+  }
+
+  /* ── Arabic text line-height & spacing optimizations ── */
+  html[lang="ar"] body,
+  html[lang="ar"] p,
+  html[lang="ar"] span {
+    line-height: 1.75;        /* تباعد سطور مريح للعربية */
+    word-spacing: 0.05em;
+  }
+
+  html[lang="ar"] h1 {
+    line-height: 1.2;
+    letter-spacing: 0;        /* الخط العربي لا يحتاج tracking سالب */
+  }
+  html[lang="ar"] h2 {
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+  html[lang="ar"] h3 {
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  /* ── Number rendering: always LTR inside RTL ── */
+  .font-mono,
+  [dir="ltr"].font-mono,
+  td[dir="ltr"],
+  span[dir="ltr"] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* ── Inputs: RTL-native alignment ── */
+  [dir="rtl"] input:not([type="number"]):not([type="checkbox"]):not([type="radio"]) {
+    text-align: start;
+  }
+
+  [dir="rtl"] select {
+    text-align: start;
+    direction: rtl;
+  }
+
+  /* ── Labels: always start-aligned in RTL ── */
+  [dir="rtl"] label {
+    display: block;
+    text-align: start;
+  }
+
+  /* ── Touch targets: 44px minimum for Arabic mobile UX ── */
+  @media (max-width: 768px) {
+    button,
+    [role="button"],
+    input[type="checkbox"],
+    input[type="radio"],
+    select {
+      min-height: 44px;
+    }
+    input[type="checkbox"],
+    input[type="radio"] {
+      min-height: 20px;
+      min-width: 20px;
+    }
+    /* Larger label tap zone */
+    label {
+      padding-block: 0.25rem;
+      cursor: pointer;
+    }
+  }
+
+  /* ── Checkbox row RTL ordering ── */
+  [dir="rtl"] .checkbox-row {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+  }
+
+  /* ── Select arrow: Radix handles it, but ensure SVG is at inline-end ── */
+  [dir="rtl"] [data-slot="select-trigger"] > svg:last-child {
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+  }
 }
 
 @layer components {
-  /* ── Display utility classes for designers ── */
+  /* ═══════════════════════════════════════════════════════
+     TYPOGRAPHY SYSTEM — Thmanyah Professional Scale
+     ═══════════════════════════════════════════════════════ */
 
-  /* Hero/App title — Serif Black */
+  /* ── Tier 1: Hero / Display ──────────────────────────── */
+  /* استخدام: عنوان الصفحة الرئيسي، Hero section */
   .font-display-black {
     font-family: var(--font-display);
     font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
   }
-  /* Section headings — Serif Bold */
+
+  /* ── Tier 2: Section headings ────────────────────────── */
+  /* استخدام: عناوين الأقسام، card headers رئيسية */
   .font-display-bold {
     font-family: var(--font-display);
     font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
   }
-  /* Card titles — Sans Bold */
+
+  /* ── Tier 3: Card & subsection titles ───────────────── */
+  /* استخدام: عناوين البطاقات، headings ثانوية */
   .font-heading {
     font-family: var(--font-sans);
     font-weight: 700;
+    line-height: 1.3;
   }
-  /* Sub-headings / Labels — Sans Medium */
+
+  /* ── Tier 4: Navigation & interactive labels ─────────── */
+  /* استخدام: Tabs، Buttons، Form labels مهمة */
   .font-subheading {
     font-family: var(--font-sans);
     font-weight: 500;
+    line-height: 1.4;
   }
-  /* Body — Sans Regular */
+
+  /* ── Tier 5: Body text ───────────────────────────────── */
+  /* استخدام: المحتوى الأساسي، Input values، Table cells */
   .font-body {
     font-family: var(--font-sans);
     font-weight: 400;
+    line-height: 1.75;
   }
-  /* Captions / Hints — Sans Light */
+
+  /* ── Tier 6: Helper / Caption text ──────────────────── */
+  /* استخدام: النصوص المساعدة، hints، placeholders، footnotes */
   .font-caption {
     font-family: var(--font-sans);
     font-weight: 300;
+    line-height: 1.6;
+    font-size: 0.8125rem; /* 13px */
   }
-  /* Numeric emphasis — Sans Black */
+
+  /* ── Tier 7: Numeric emphasis ────────────────────────── */
+  /* استخدام: الأرقام الكبيرة في النتائج، KPIs، Badges عددية */
   .font-numeric {
     font-family: var(--font-sans);
     font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  /* ─────────────────────────────────────────────────────── */
+  /* RESPONSIVE TYPOGRAPHY SIZES                             */
+  /* ─────────────────────────────────────────────────────── */
+
+  /* App header title */
+  .app-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(1.375rem, 4vw, 2rem);
+    line-height: 1.15;
+  }
+
+  /* Section card title */
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.25;
+  }
+
+  /* Subsection / card heading */
+  .card-title {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    line-height: 1.35;
+  }
+
+  /* Form label */
+  .field-label {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Button text */
+  .btn-text {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    line-height: 1;
+  }
+
+  /* Result number large */
+  .result-number-lg {
+    font-family: var(--font-sans);
+    font-weight: 900;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    line-height: 1;
+  }
+
+  /* Badge / tag text */
+  .badge-text {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+
+  /* ─────────────────────────────────────────────────────── */
+  /* LAYOUT HELPERS — Logical Property Shortcuts             */
+  /* ─────────────────────────────────────────────────────── */
+
+  /* Inset logical start — replaces left in RTL */
+  .inset-inline-start-0  { inset-inline-start: 0; }
+  .inset-inline-start-2  { inset-inline-start: 0.5rem; }
+  .inset-inline-start-4  { inset-inline-start: 1rem; }
+
+  /* Inset logical end — replaces right in RTL */
+  .inset-inline-end-0  { inset-inline-end: 0; }
+  .inset-inline-end-2  { inset-inline-end: 0.5rem; }
+  .inset-inline-end-4  { inset-inline-end: 1rem; }
+
+  /* ─────────────────────────────────────────────────────── */
+  /* MOBILE-FIRST RESPONSIVE CARDS                           */
+  /* ─────────────────────────────────────────────────────── */
+
+  @media (max-width: 640px) {
+    /* Stack all horizontal input rows vertically on mobile */
+    .sm\:grid-cols-2,
+    .sm\:grid-cols-3,
+    .sm\:grid-cols-4 {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Card padding: tighter on mobile */
+    [data-slot="card-content"] {
+      padding: 0.875rem;
+    }
+
+    /* Tabs: wrap naturally without overflow */
+    [data-slot="tabs-list"] {
+      flex-wrap: wrap;
+      height: auto;
+    }
+  }
+
+  /* ─────────────────────────────────────────────────────── */
+  /* PRINT — RTL-safe column spans                          */
+  /* ─────────────────────────────────────────────────────── */
+  @media print {
+    .xl\:col-span-2 {
+      grid-column: span 3 / span 3 !important;
+    }
+    .xl\:col-span-1 {
+      grid-column: span 3 / span 3 !important;
+      margin-block-start: 2rem;
+    }
   }
 }
