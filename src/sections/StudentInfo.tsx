@@ -8,10 +8,10 @@ export function StudentInfo() {
   const [info, setInfo] = useState({
     name: "",
     id: "",
-    college: "الكلية التقنية بجدة",
-    department: "قسم التبريد والتكييف",
-    course: "HRA-342",
-    doctor: "د. رحيم كاظم جاسم العامري",
+    college: "",
+    department: "",
+    course: "",
+    doctor: "",
   });
 
   return (
@@ -55,6 +55,7 @@ export function StudentInfo() {
             <Input
               value={info.college}
               onChange={(e) => setInfo({ ...info, college: e.target.value })}
+              placeholder="أدخل اسم الكلية"
               className="h-8 text-sm"
             />
           </div>
@@ -65,6 +66,7 @@ export function StudentInfo() {
               onChange={(e) =>
                 setInfo({ ...info, department: e.target.value })
               }
+              placeholder="أدخل اسم القسم"
               className="h-8 text-sm"
             />
           </div>
@@ -78,6 +80,7 @@ export function StudentInfo() {
             <Input
               value={info.course}
               onChange={(e) => setInfo({ ...info, course: e.target.value })}
+              placeholder="أدخل اسم المقرر"
               className="h-8 text-sm"
             />
           </div>
@@ -86,6 +89,7 @@ export function StudentInfo() {
             <Input
               value={info.doctor}
               onChange={(e) => setInfo({ ...info, doctor: e.target.value })}
+              placeholder="أدخل اسم الدكتور"
               className="h-8 text-sm"
             />
           </div>

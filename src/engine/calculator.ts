@@ -1,9 +1,3 @@
-// ==========================================
-// محرك الحسابات الهندسية الشامل
-// CLC Version 4 A - Cooling Load Calculator
-// جميع المعادلات مطابقة 100% للجدول الأصلي
-// ==========================================
-
 export interface WallLayers {
   materialId: string;
   thickness: number; // m

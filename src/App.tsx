@@ -214,7 +214,7 @@ function App() {
                   حساب أحمال التبريد والتكييف
                 </h1>
                 <p className="text-blue-200 text-sm mt-1">
-                  برنامج احترافي متكامل - CLC Version 4 A
+                  برنامج احترافي متكامل
                 </p>
               </div>
             </div>
@@ -398,12 +398,7 @@ function App() {
       <footer className="mt-12 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-slate-300 py-6 no-print">
         <div className="max-w-[1600px] mx-auto px-4 text-center">
           <p className="text-sm">
-            CLC Version 4 A &copy; د. رحيم كاظم جاسم العامري | الكلية التقنية
-            بجدة - شعبة التبريد والتكييف
-          </p>
-          <p className="text-xs text-slate-500 mt-2">
-            Using this program without prior permission of the copyright owner
-            is unlawful
+            Copyright © 2024. All rights reserved.
           </p>
         </div>
       </footer>
