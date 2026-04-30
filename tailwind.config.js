@@ -15,61 +15,79 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        // Primary sans — body, labels, buttons, inputs
-        sans:    ['ThmanyahSans', 'system-ui', 'sans-serif'],
-        // Display serif — main titles & hero headings
-        display: ['ThmanyahSerifDisplay', 'ThmanyahSans', 'sans-serif'],
-        // Explicit weight aliases for fine-grained control
-        'sans-light':   ['ThmanyahSans', 'sans-serif'],
-        'sans-medium':  ['ThmanyahSans', 'sans-serif'],
-        'sans-bold':    ['ThmanyahSans', 'sans-serif'],
-        'sans-black':   ['ThmanyahSans', 'sans-serif'],
-        'serif-bold':   ['ThmanyahSerifDisplay', 'sans-serif'],
-        'serif-black':  ['ThmanyahSerifDisplay', 'sans-serif'],
+        // ── Primary (حصري) ──
+        // All text defaults to ThmanyahSans — no fallback
+        sans:    ['ThmanyahSans'],
+        // Display serif for heroes & major headings
+        display: ['ThmanyahSerifDisplay'],
+        // Named weight aliases for semantic clarity in className
+        'th-light':   ['ThmanyahSans'],
+        'th-regular': ['ThmanyahSans'],
+        'th-medium':  ['ThmanyahSans'],
+        'th-bold':    ['ThmanyahSans'],
+        'th-black':   ['ThmanyahSans'],
+        'th-serif-bold':  ['ThmanyahSerifDisplay'],
+        'th-serif-black': ['ThmanyahSerifDisplay'],
+      },
+      fontSize: {
+        // Arabic-optimized type scale
+        'display-2xl': ['3.5rem',  { lineHeight: '1.05', letterSpacing: '-0.03em' }],
+        'display-xl':  ['2.75rem', { lineHeight: '1.08', letterSpacing: '-0.025em' }],
+        'display-lg':  ['2.25rem', { lineHeight: '1.1',  letterSpacing: '-0.02em' }],
+        'display-md':  ['1.875rem',{ lineHeight: '1.15', letterSpacing: '-0.015em' }],
+        'display-sm':  ['1.5rem',  { lineHeight: '1.2',  letterSpacing: '-0.01em' }],
+        'heading-lg':  ['1.25rem', { lineHeight: '1.3',  letterSpacing: '-0.01em' }],
+        'heading-md':  ['1.125rem',{ lineHeight: '1.35', letterSpacing: '-0.005em' }],
+        'heading-sm':  ['1rem',    { lineHeight: '1.4',  letterSpacing: '0' }],
+        'body-lg':     ['1.0625rem',{ lineHeight: '1.65', letterSpacing: '0' }],
+        'body-md':     ['0.9375rem',{ lineHeight: '1.65', letterSpacing: '0' }],
+        'body-sm':     ['0.875rem', { lineHeight: '1.6',  letterSpacing: '0' }],
+        'caption':     ['0.8125rem',{ lineHeight: '1.55', letterSpacing: '0.01em' }],
+        'micro':       ['0.75rem',  { lineHeight: '1.5',  letterSpacing: '0.01em' }],
       },
       colors: {
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        input:  "hsl(var(--input))",
+        ring:   "hsl(var(--ring))",
         background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        foreground:  "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT:    "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT:    "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive) / <alpha-value>)",
+          DEFAULT:    "hsl(var(--destructive) / <alpha-value>)",
           foreground: "hsl(var(--destructive-foreground) / <alpha-value>)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
+          DEFAULT:    "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT:    "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
+          DEFAULT:    "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
+          DEFAULT:    "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
         sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+          DEFAULT:                  "hsl(var(--sidebar-background))",
+          foreground:               "hsl(var(--sidebar-foreground))",
+          primary:                  "hsl(var(--sidebar-primary))",
+          "primary-foreground":     "hsl(var(--sidebar-primary-foreground))",
+          accent:                   "hsl(var(--sidebar-accent))",
+          "accent-foreground":      "hsl(var(--sidebar-accent-foreground))",
+          border:                   "hsl(var(--sidebar-border))",
+          ring:                     "hsl(var(--sidebar-ring))",
         },
       },
       borderRadius: {
@@ -85,21 +103,21 @@ module.exports = {
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          to:   { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          to:   { height: "0" },
         },
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },
-          "20%,50%": { opacity: "0" },
+          "20%,50%":     { opacity: "0" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "accordion-up":   "accordion-up 0.2s ease-out",
+        "caret-blink":    "caret-blink 1.25s ease-out infinite",
       },
     },
   },
