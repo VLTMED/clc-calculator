@@ -38,10 +38,10 @@ function ResultRow({ label, value, unit = "W", highlight }: ResultRowProps) {
   return (
     <TableRow className={highlight ? "bg-blue-50/50 font-medium" : ""}>
       <TableCell className="py-2">{label}</TableCell>
-      <TableCell className="py-2 text-left font-mono" dir="ltr">
+      <TableCell className="py-2 text-start font-mono" dir="ltr">
         {value.toFixed(2)}
       </TableCell>
-      <TableCell className="py-2 text-left">{unit}</TableCell>
+      <TableCell className="py-2 text-start">{unit}</TableCell>
     </TableRow>
   );
 }
@@ -105,11 +105,11 @@ export function ResultsPanel({ results, inputs }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-100">
-                <TableHead className="text-right font-bold">بند الحمل</TableHead>
-                <TableHead className="text-left font-bold" dir="ltr">
+                <TableHead className="text-end font-bold">بند الحمل</TableHead>
+                <TableHead className="text-start font-bold" dir="ltr">
                   القيمة
                 </TableHead>
-                <TableHead className="text-left font-bold">الوحدة</TableHead>
+                <TableHead className="text-start font-bold">الوحدة</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -247,7 +247,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-3 font-bold text-lg">
                   الحمل الإجمالي
                 </TableCell>
-                <TableCell className="py-3 text-left font-bold text-lg font-mono" dir="ltr">
+                <TableCell className="py-3 text-start font-bold text-lg font-mono" dir="ltr">
                   {results.grandTotal.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-3 font-bold">W</TableCell>
@@ -256,7 +256,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-2 font-medium">
                   مع معامل الأمان ({inputs.safetyFactor}%)
                 </TableCell>
-                <TableCell className="py-2 text-left font-bold font-mono" dir="ltr">
+                <TableCell className="py-2 text-start font-bold font-mono" dir="ltr">
                   {results.totalWithSafety.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2">W</TableCell>
@@ -265,27 +265,27 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-2 font-medium">
                   السعة المطلوبة ({inputs.operationHours}h تشغيل)
                 </TableCell>
-                <TableCell className="py-2 text-left font-bold font-mono" dir="ltr">
+                <TableCell className="py-2 text-start font-bold font-mono" dir="ltr">
                   {results.requiredCapacity.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2">W</TableCell>
               </TableRow>
               <TableRow className="bg-amber-100">
                 <TableCell className="py-2 font-bold">
-                  <Snowflake className="w-4 h-4 inline ml-1" />
+                  <Snowflake className="w-4 h-4 inline me-1" />
                   السعة بالكيلوواط
                 </TableCell>
-                <TableCell className="py-2 text-left font-bold text-lg font-mono" dir="ltr">
+                <TableCell className="py-2 text-start font-bold text-lg font-mono" dir="ltr">
                   {results.kw.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2 font-bold">kW</TableCell>
               </TableRow>
               <TableRow className="bg-amber-200">
                 <TableCell className="py-3 font-bold text-lg">
-                  <Snowflake className="w-5 h-5 inline ml-1" />
+                  <Snowflake className="w-5 h-5 inline me-1" />
                   السعة بالطن
                 </TableCell>
-                <TableCell className="py-3 text-left font-bold text-xl font-mono text-amber-800" dir="ltr">
+                <TableCell className="py-3 text-start font-bold text-xl font-mono text-amber-800" dir="ltr">
                   {results.tons.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-3 font-bold text-lg">Ton</TableCell>

@@ -66,10 +66,10 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* RTL support for inputs */
+/* RTL support for numeric inputs - use ltr for numbers but keep in RTL context */
 input[type="number"] {
   direction: ltr;
-  text-align: left;
+  text-align: end;
 }
 
 /* Badge animations */

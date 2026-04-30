@@ -129,7 +129,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("productMass", parseFloat(e.target.value) || 0)
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
               </div>
@@ -138,7 +138,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                 <div className="bg-violet-50 border border-violet-200 rounded-lg p-3">
                   <div className="flex flex-wrap gap-2 text-xs">
                     <Badge variant="secondary" className="bg-white">
-                      <Snowflake className="w-3 h-3 ml-1" />
+                      <Snowflake className="w-3 h-3 me-1" />
                       تجميد: {selectedProduct.tf}°C
                     </Badge>
                     <Badge variant="secondary" className="bg-white">
@@ -177,7 +177,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
                 <div className="space-y-2">
@@ -192,7 +192,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("freezeTemp", parseFloat(e.target.value) || 0)
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
                 <div className="space-y-2">
@@ -206,7 +206,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("coolTime", parseFloat(e.target.value) || 0)
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
               </div>
@@ -221,7 +221,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("cpAbove", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -233,7 +233,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("cpBelow", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -244,7 +244,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("latentHeat", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -256,7 +256,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("crf", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
               </div>
@@ -298,7 +298,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                   onChange={(e) =>
                     onChange("boxesCount", parseFloat(e.target.value) || 0)
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
               <div className="space-y-1">
@@ -310,7 +310,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                   onChange={(e) =>
                     onChange("boxWeight", parseFloat(e.target.value) || 0)
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
               <div className="space-y-1">
@@ -347,7 +347,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
             </div>
@@ -388,7 +388,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                   onChange={(e) =>
                     onChange("heatersCount", parseFloat(e.target.value) || 0)
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
               <div className="space-y-1">
@@ -399,7 +399,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                   onChange={(e) =>
                     onChange("heaterPower", parseFloat(e.target.value) || 0)
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
               <div className="space-y-1">
@@ -414,7 +414,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="h-8 text-xs text-left"
+                  className="h-8 text-xs text-start"
                 />
               </div>
             </div>

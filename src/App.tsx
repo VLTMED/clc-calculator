@@ -223,21 +223,21 @@ function App() {
                 variant="outline"
                 className="border-white/30 text-white bg-white/10"
               >
-                <ThermometerSun className="w-3 h-3 ml-1" />
+                <ThermometerSun className="w-3 h-3 me-1" />
                 جميع جداول ASHRAE
               </Badge>
               <Badge
                 variant="outline"
                 className="border-white/30 text-white bg-white/10"
               >
-                <CheckCircle2 className="w-3 h-3 ml-1" />
+                <CheckCircle2 className="w-3 h-3 me-1" />
                 100+ منتج
               </Badge>
               <Badge
                 variant="outline"
                 className="border-white/30 text-white bg-white/10"
               >
-                <ClipboardList className="w-3 h-3 ml-1" />
+                <ClipboardList className="w-3 h-3 me-1" />
                 22 جدول مرجعي
               </Badge>
             </div>
@@ -256,35 +256,35 @@ function App() {
                   value="dimensions"
                   className="flex-1 min-w-[100px] data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg text-xs sm:text-sm"
                 >
-                  <Settings className="w-3.5 h-3.5 ml-1" />
+                  <Settings className="w-3.5 h-3.5 me-1" />
                   الأبعاد والمواد
                 </TabsTrigger>
                 <TabsTrigger
                   value="glass"
                   className="flex-1 min-w-[100px] data-[state=active]:bg-amber-600 data-[state=active]:text-white rounded-lg text-xs sm:text-sm"
                 >
-                  <Sun className="w-3.5 h-3.5 ml-1" />
+                  <Sun className="w-3.5 h-3.5 me-1" />
                   الزجاج والشمس
                 </TabsTrigger>
                 <TabsTrigger
                   value="internal"
                   className="flex-1 min-w-[100px] data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-lg text-xs sm:text-sm"
                 >
-                  <Users className="w-3.5 h-3.5 ml-1" />
+                  <Users className="w-3.5 h-3.5 me-1" />
                   الأحمال الداخلية
                 </TabsTrigger>
                 <TabsTrigger
                   value="product"
                   className="flex-1 min-w-[100px] data-[state=active]:bg-violet-600 data-[state=active]:text-white rounded-lg text-xs sm:text-sm"
                 >
-                  <Package className="w-3.5 h-3.5 ml-1" />
+                  <Package className="w-3.5 h-3.5 me-1" />
                   المنتج والتخزين
                 </TabsTrigger>
                 <TabsTrigger
                   value="air"
                   className="flex-1 min-w-[100px] data-[state=active]:bg-sky-600 data-[state=active]:text-white rounded-lg text-xs sm:text-sm"
                 >
-                  <Wind className="w-3.5 h-3.5 ml-1" />
+                  <Wind className="w-3.5 h-3.5 me-1" />
                   أحمال الهواء
                 </TabsTrigger>
               </TabsList>
@@ -341,14 +341,14 @@ function App() {
                       onClick={handleReset}
                       className="flex-1 sm:flex-none border-red-300 text-red-700 hover:bg-red-50"
                     >
-                      <RotateCcw className="w-4 h-4 ml-2" />
+                      <RotateCcw className="w-4 h-4 me-2" />
                       إعادة
                     </Button>
                     <Button
                       onClick={handleCalculate}
                       className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all text-lg px-8"
                     >
-                      <Calculator className="w-5 h-5 ml-2" />
+                      <Calculator className="w-5 h-5 me-2" />
                       احسب الأحمال
                     </Button>
                   </div>
@@ -369,7 +369,7 @@ function App() {
                     variant="outline"
                     className="w-full border-slate-300 hover:bg-slate-50 no-print"
                   >
-                    <Printer className="w-4 h-4 ml-2" />
+                    <Printer className="w-4 h-4 me-2" />
                     طباعة التقرير
                   </Button>
                 </>

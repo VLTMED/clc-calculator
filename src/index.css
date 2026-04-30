@@ -72,4 +72,9 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* RTL utility: flip directional icons only */
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
 }

@@ -92,7 +92,7 @@ function ConstructionLayerEditor({
                 onChange={(e) =>
                   updateLayer(index, "thickness", parseFloat(e.target.value) || 0)
                 }
-                className="h-8 text-xs text-left"
+                className="h-8 text-xs text-start"
               />
             </div>
             <div className="col-span-2">
@@ -116,7 +116,7 @@ function ConstructionLayerEditor({
               step="0.1"
               value={hi}
               onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
-              className="h-8 text-xs text-left"
+              className="h-8 text-xs text-start"
             />
           </div>
           <div className="space-y-1">
@@ -129,7 +129,7 @@ function ConstructionLayerEditor({
               step="0.1"
               value={ho}
               onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
-              className="h-8 text-xs text-left"
+              className="h-8 text-xs text-start"
             />
           </div>
         </div>
@@ -245,7 +245,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
                           parseFloat(e.target.value) || 0
                         )
                       }
-                      className="h-8 text-xs text-left"
+                      className="h-8 text-xs text-start"
                     />
                   </div>
                 ))}

@@ -38,7 +38,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("lightsCount", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -49,7 +49,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("lightsWatt", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -63,7 +63,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("lightsHours", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
           </div>
@@ -90,7 +90,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                   onChange("peopleCount", val);
                   onChange("peopleCountVent", val);
                 }}
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -130,7 +130,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("peopleHours", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
           </div>
@@ -176,7 +176,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="text-left"
+                  className="text-start"
                 />
               </div>
               <div className="space-y-2">
@@ -190,7 +190,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="text-left"
+                  className="text-start"
                 />
               </div>
               <div className="space-y-2">
@@ -207,7 +207,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="text-left"
+                  className="text-start"
                 />
               </div>
             </div>

@@ -83,7 +83,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                       parseFloat(e.target.value) || 0
                     )
                   }
-                  className="text-left"
+                  className="text-start"
                 />
               </div>
             </div>
@@ -152,7 +152,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
               </div>
@@ -168,7 +168,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("ventHi", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -179,7 +179,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                     onChange={(e) =>
                       onChange("ventHo", parseFloat(e.target.value) || 0)
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -194,7 +194,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
               </div>
@@ -244,7 +244,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
                 <div className="space-y-2">
@@ -258,7 +258,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="text-left"
+                    className="text-start"
                   />
                 </div>
               </div>
@@ -275,7 +275,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -289,7 +289,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
                 <div className="space-y-1">
@@ -304,7 +304,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
                         parseFloat(e.target.value) || 0
                       )
                     }
-                    className="h-8 text-xs text-left"
+                    className="h-8 text-xs text-start"
                   />
                 </div>
               </div>

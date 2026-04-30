@@ -43,7 +43,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("length", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -57,7 +57,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("width", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -71,7 +71,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("height", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
           </div>
@@ -115,7 +115,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("tempIn", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -129,7 +129,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("tempOut", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
             <div className="space-y-2">
@@ -143,7 +143,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
                 onChange={(e) =>
                   onChange("groundTemp", parseFloat(e.target.value) || 0)
                 }
-                className="text-left"
+                className="text-start"
               />
             </div>
           </div>
