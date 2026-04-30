@@ -1,5 +1,5 @@
-# Build & Deploy to GitHub Pages
-name: Deploy static content to Pages
+# Build Vite + Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -36,6 +36,101 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Copy fonts into dist
+        run: |
+          mkdir -p dist/fonts
+          cp public/fonts/*.ttf dist/fonts/
+          echo "Fonts copied:"
+          ls dist/fonts/
+
+      - name: Write fonts.css into dist
+        run: |
+          cat > dist/fonts.css << 'CSSEOF'
+          @font-face {
+            font-family: 'ThmanyahSans';
+            src: url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype');
+            font-weight: 300; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSans';
+            src: url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype');
+            font-weight: 400; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSans';
+            src: url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype');
+            font-weight: 500; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSans';
+            src: url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype');
+            font-weight: 700; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSans';
+            src: url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype');
+            font-weight: 900; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSerifDisplay';
+            src: url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');
+            font-weight: 700; font-style: normal; font-display: block;
+          }
+          @font-face {
+            font-family: 'ThmanyahSerifDisplay';
+            src: url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');
+            font-weight: 900; font-style: normal; font-display: block;
+          }
+
+          *, *::before, *::after { font-family: 'ThmanyahSans', sans-serif !important; }
+          html, body { font-family: 'ThmanyahSans' !important; font-weight: 400; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; word-spacing: 0.04em; line-height: 1.65; }
+          h1 { font-family: 'ThmanyahSerifDisplay' !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; }
+          h2 { font-family: 'ThmanyahSerifDisplay' !important; font-weight: 700 !important; line-height: 1.2 !important; letter-spacing: -0.015em !important; }
+          h3 { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; line-height: 1.3 !important; }
+          h4, h5, h6 { font-family: 'ThmanyahSans' !important; font-weight: 500 !important; }
+          label { font-family: 'ThmanyahSans' !important; font-weight: 500 !important; }
+          button { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; }
+          input, select, textarea { font-family: 'ThmanyahSans' !important; font-weight: 400 !important; }
+          input::placeholder, textarea::placeholder { font-family: 'ThmanyahSans' !important; font-weight: 300 !important; }
+          th { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; }
+          td { font-family: 'ThmanyahSans' !important; font-weight: 400 !important; }
+          .font-sans { font-family: 'ThmanyahSans' !important; }
+          .font-display { font-family: 'ThmanyahSerifDisplay' !important; }
+          .font-mono { font-family: 'ThmanyahSans' !important; }
+          .font-light { font-weight: 300 !important; }
+          .font-normal { font-weight: 400 !important; }
+          .font-medium { font-weight: 500 !important; }
+          .font-semibold { font-weight: 700 !important; }
+          .font-bold { font-weight: 700 !important; }
+          .font-black { font-weight: 900 !important; }
+          input[type="number"] { direction: ltr; text-align: end; }
+          CSSEOF
+          echo "fonts.css written:"
+          head -5 dist/fonts.css
+
+      - name: Inject fonts.css into index.html
+        run: |
+          python3 - << 'PYEOF'
+          with open('dist/index.html', 'r') as f:
+              html = f.read()
+          # Inject fonts.css as the FIRST stylesheet in <head>
+          fonts_link = '<link rel="stylesheet" href="/clc-calculator/fonts.css">'
+          html = html.replace('<head>', '<head>\n    ' + fonts_link, 1)
+          with open('dist/index.html', 'w') as f:
+              f.write(html)
+          print("index.html updated:")
+          print(html[:600])
+          PYEOF
+
+      - name: Verify dist contents
+        run: |
+          echo "=== dist/ root ==="
+          ls -la dist/
+          echo "=== dist/fonts/ ==="
+          ls -la dist/fonts/
+          echo "=== index.html head ==="
+          head -20 dist/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
