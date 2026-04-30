@@ -25,7 +25,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
       {/* Room Dimensions */}
       <Card className="border-blue-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-blue-800 font-display">
             <Building2 className="w-5 h-5 text-blue-600" />
             أبعاد الحيز المبرد/المكيف
           </CardTitle>
@@ -33,7 +33,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="length" className="text-sm font-medium">
+              <Label htmlFor="length" className="text-sm font-medium font-sans">
                 الطول (m)
               </Label>
               <Input
@@ -47,7 +47,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="width" className="text-sm font-medium">
+              <Label htmlFor="width" className="text-sm font-medium font-sans">
                 العرض (m)
               </Label>
               <Input
@@ -61,7 +61,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="height" className="text-sm font-medium">
+              <Label htmlFor="height" className="text-sm font-medium font-sans">
                 الارتفاع (m)
               </Label>
               <Input
@@ -97,7 +97,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
       {/* Temperature & Location */}
       <Card className="border-amber-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-amber-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-amber-800 font-display">
             <ThermometerSun className="w-5 h-5 text-amber-600" />
             الظروف الحرارية والموقع
           </CardTitle>
@@ -105,7 +105,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tempIn" className="text-sm font-medium">
+              <Label htmlFor="tempIn" className="text-sm font-medium font-sans">
                 درجة حرارة الداخل (°C)
               </Label>
               <Input
@@ -119,7 +119,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tempOut" className="text-sm font-medium">
+              <Label htmlFor="tempOut" className="text-sm font-medium font-sans">
                 درجة حرارة الخارج (°C)
               </Label>
               <Input
@@ -133,7 +133,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="groundTemp" className="text-sm font-medium">
+              <Label htmlFor="groundTemp" className="text-sm font-medium font-sans">
                 حرارة الأرض/الهواء (°C)
               </Label>
               <Input
@@ -173,7 +173,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="isGroundFloor" className="text-sm font-medium">
+              <Label htmlFor="isGroundFloor" className="text-sm font-medium font-sans">
                 موقع الحيز
               </Label>
               <Select

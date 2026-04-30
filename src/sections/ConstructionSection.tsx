@@ -107,7 +107,7 @@ function ConstructionLayerEditor({
 
         <div className="grid grid-cols-2 gap-2">
           <div className="space-y-1">
-            <Label className="text-xs flex items-center gap-1">
+            <Label className="text-xs flex items-center gap-1 font-sans">
               <Info className="w-3 h-3" />
               hi (داخلي)
             </Label>
@@ -120,7 +120,7 @@ function ConstructionLayerEditor({
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs flex items-center gap-1">
+            <Label className="text-xs flex items-center gap-1 font-sans">
               <Info className="w-3 h-3" />
               ho (خارجي)
             </Label>
@@ -205,7 +205,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
         {inputs.considerWalls === 1 && (
           <Card className="border-indigo-200 shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base text-indigo-800">
+              <CardTitle className="text-base text-indigo-800 font-display">
                 طبقات الجدران (الشمالي / الجنوبي / الشرقي / الغربي)
               </CardTitle>
             </CardHeader>

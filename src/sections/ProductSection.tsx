@@ -44,7 +44,7 @@ export function ProductSection({ inputs, onChange }: Props) {
       {/* Product Selection */}
       <Card className="border-violet-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-violet-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-violet-800 font-display">
             <Package className="w-5 h-5 text-violet-600" />
             حمل المنتج (التبريد/التجميد)
           </CardTitle>
@@ -268,7 +268,7 @@ export function ProductSection({ inputs, onChange }: Props) {
       {/* Packaging */}
       <Card className="border-teal-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-teal-800">
+          <CardTitle className="text-base text-teal-800 font-display">
             حمل مواد التغليف
           </CardTitle>
         </CardHeader>
@@ -358,7 +358,7 @@ export function ProductSection({ inputs, onChange }: Props) {
       {/* Defrost */}
       <Card className="border-red-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-red-800">
+          <CardTitle className="text-base text-red-800 font-display">
             حمل أذابة الصقيع (Defrost)
           </CardTitle>
         </CardHeader>
@@ -425,7 +425,7 @@ export function ProductSection({ inputs, onChange }: Props) {
       {/* Usage Method */}
       <Card className="border-pink-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-pink-800">
+          <CardTitle className="text-base text-pink-800 font-display">
             الطريقة المختصرة (Usage Factor)
           </CardTitle>
         </CardHeader>

@@ -23,7 +23,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
       {/* Lighting */}
       <Card className="border-yellow-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-yellow-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-yellow-800 font-display">
             <Lightbulb className="w-5 h-5 text-yellow-600" />
             حمل الإضاءة
           </CardTitle>
@@ -73,7 +73,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
       {/* People */}
       <Card className="border-emerald-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-emerald-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-emerald-800 font-display">
             <Users className="w-5 h-5 text-emerald-600" />
             حمل الأشخاص
           </CardTitle>
@@ -140,7 +140,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
       {/* Equipment */}
       <Card className="border-orange-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-orange-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-orange-800 font-display">
             <Wrench className="w-5 h-5 text-orange-600" />
             حمل المعدات
           </CardTitle>

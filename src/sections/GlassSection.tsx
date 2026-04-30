@@ -24,7 +24,7 @@ export function GlassSection({ inputs, onChange }: Props) {
       {/* Solar Settings */}
       <Card className="border-amber-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-amber-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-amber-800 font-display">
             <Sun className="w-5 h-5 text-amber-600" />
             تأثير الإشعاع الشمسي على الجدران والسقف
           </CardTitle>
@@ -98,7 +98,7 @@ export function GlassSection({ inputs, onChange }: Props) {
       {/* Glass Loads */}
       <Card className="border-sky-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-sky-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-sky-800 font-display">
             <GlassWater className="w-5 h-5 text-sky-600" />
             أحمال النوافذ الزجاجية
           </CardTitle>

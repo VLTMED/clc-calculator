@@ -37,7 +37,7 @@ export function StudentInfo() {
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">رقم القيد</Label>
+            <Label className="text-xs font-sans">رقم القيد</Label>
             <Input
               value={info.id}
               onChange={(e) => setInfo({ ...info, id: e.target.value })}
@@ -60,7 +60,7 @@ export function StudentInfo() {
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">القسم</Label>
+            <Label className="text-xs font-sans">القسم</Label>
             <Input
               value={info.department}
               onChange={(e) =>
@@ -85,7 +85,7 @@ export function StudentInfo() {
             />
           </div>
           <div className="space-y-1">
-            <Label className="text-xs">اسم الدكتور</Label>
+            <Label className="text-xs font-sans">اسم الدكتور</Label>
             <Input
               value={info.doctor}
               onChange={(e) => setInfo({ ...info, doctor: e.target.value })}

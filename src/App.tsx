@@ -210,10 +210,10 @@ function App() {
                 <Calculator className="w-10 h-10 text-cyan-300" />
               </div>
               <div>
-                <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">
+                <h1 className="text-2xl lg:text-3xl font-black tracking-tight font-display">
                   حساب أحمال التبريد والتكييف
                 </h1>
-                <p className="text-blue-200 text-sm mt-1">
+                <p className="text-blue-200 text-sm mt-1 font-light font-sans">
                   برنامج احترافي متكامل
                 </p>
               </div>
@@ -327,10 +327,10 @@ function App() {
                       <Calculator className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-blue-900">
+                      <h3 className="font-bold text-blue-900 font-display text-lg">
                         جاهز للحساب؟
                       </h3>
-                      <p className="text-sm text-blue-700">
+                      <p className="text-sm text-blue-700 font-sans font-normal">
                         اضغط لحساب جميع الأحمال بدقة 100%
                       </p>
                     </div>
@@ -379,10 +379,10 @@ function App() {
                     <div className="w-20 h-20 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
                       <ClipboardList className="w-10 h-10 text-slate-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-600 mb-2">
+                    <h3 className="text-lg font-bold text-slate-600 mb-2 font-display">
                       لوحة النتائج
                     </h3>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-500 font-sans font-light">
                       أدخل البيانات واضغط "احسب الأحمال" لرؤية النتائج
                       المفصلة
                     </p>
@@ -397,7 +397,7 @@ function App() {
       {/* Footer */}
       <footer className="mt-12 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-slate-300 py-6 no-print">
         <div className="max-w-[1600px] mx-auto px-4 text-center">
-          <p className="text-sm">
+          <p className="text-sm font-sans font-light">
             Copyright © 2024. All rights reserved.
           </p>
         </div>

@@ -25,7 +25,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
       {/* Infiltration */}
       <Card className="border-sky-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-sky-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-sky-800 font-display">
             <DoorOpen className="w-5 h-5 text-sky-600" />
             حمل تسرب الهواء (Infiltration)
           </CardTitle>
@@ -94,7 +94,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
       {/* Ventilation */}
       <Card className="border-cyan-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-cyan-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-cyan-800 font-display">
             <Wind className="w-5 h-5 text-cyan-600" />
             حمل التهوية (Ventilation)
           </CardTitle>
@@ -206,7 +206,7 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
       {/* Air Change */}
       <Card className="border-indigo-200 shadow-sm">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-indigo-800">
+          <CardTitle className="text-lg flex items-center gap-2 text-indigo-800 font-display">
             <RefreshCw className="w-5 h-5 text-indigo-600" />
             حمل تغيير الهواء (Air Change)
           </CardTitle>

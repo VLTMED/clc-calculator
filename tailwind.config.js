@@ -4,6 +4,19 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        // Primary sans — body, labels, buttons, inputs
+        sans:    ['ThmanyahSans', 'system-ui', 'sans-serif'],
+        // Display serif — main titles & hero headings
+        display: ['ThmanyahSerifDisplay', 'ThmanyahSans', 'sans-serif'],
+        // Explicit weight aliases for fine-grained control
+        'sans-light':   ['ThmanyahSans', 'sans-serif'],
+        'sans-medium':  ['ThmanyahSans', 'sans-serif'],
+        'sans-bold':    ['ThmanyahSans', 'sans-serif'],
+        'sans-black':   ['ThmanyahSans', 'sans-serif'],
+        'serif-bold':   ['ThmanyahSerifDisplay', 'sans-serif'],
+        'serif-black':  ['ThmanyahSerifDisplay', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

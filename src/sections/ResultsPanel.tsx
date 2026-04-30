@@ -50,11 +50,11 @@ export function ResultsPanel({ results, inputs }: Props) {
   return (
     <Card className="border-2 border-blue-200 shadow-xl bg-white">
       <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg pb-4">
-        <CardTitle className="text-xl flex items-center gap-2">
+        <CardTitle className="text-xl flex items-center gap-2 font-display">
           <TrendingUp className="w-6 h-6" />
           لوحة النتائج المفصلة
         </CardTitle>
-        <p className="text-blue-100 text-sm">
+        <p className="text-blue-100 text-sm font-sans font-light">
           جميع الأحمال المحسوبة بدقة 100%
         </p>
       </CardHeader>
@@ -62,24 +62,24 @@ export function ResultsPanel({ results, inputs }: Props) {
         <div className="overflow-auto max-h-[80vh]">
           {/* System Capacity Summary */}
           <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
-            <h3 className="text-lg font-bold text-amber-800 mb-3 text-center">
+            <h3 className="text-lg font-black text-amber-800 mb-3 text-center font-display">
               السعة النهائية للمنظومة
             </h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-bold text-amber-700">
+                <div className="text-2xl font-black text-amber-700 font-sans">
                   {results.tons.toFixed(2)}
                 </div>
                 <div className="text-xs text-amber-600">طن تبريد (Ton)</div>
               </div>
               <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-bold text-amber-700">
+                <div className="text-2xl font-black text-amber-700 font-sans">
                   {results.kw.toFixed(2)}
                 </div>
                 <div className="text-xs text-amber-600">كيلوواط (kW)</div>
               </div>
               <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-bold text-amber-700">
+                <div className="text-2xl font-black text-amber-700 font-sans">
                   {results.grandTotal.toFixed(2)}
                 </div>
                 <div className="text-xs text-amber-600">
@@ -87,7 +87,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 </div>
               </div>
               <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-bold text-amber-700">
+                <div className="text-2xl font-black text-amber-700 font-sans">
                   {results.requiredCapacity.toFixed(2)}
                 </div>
                 <div className="text-xs text-amber-600">
