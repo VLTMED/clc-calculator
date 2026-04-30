@@ -30,7 +30,7 @@ interface LayerEditorProps {
   onHoChange: (val: number) => void;
 }
 
-function LayerEditor({
+function ConstructionLayerEditor({
   title,
   color,
   layers,
@@ -158,7 +158,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
 
       {inputs.considerRoofFloor === 1 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <LayerEditor
+          <ConstructionLayerEditor
             title="طبقات السقف"
             color="rose"
             layers={inputs.roofLayers}
@@ -168,7 +168,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
             onHiChange={(val) => onChange("roofHi", val)}
             onHoChange={(val) => onChange("roofHo", val)}
           />
-          <LayerEditor
+          <ConstructionLayerEditor
             title="طبقات الأرضية"
             color="emerald"
             layers={inputs.floorLayers}
@@ -210,7 +210,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <LayerEditor
+              <ConstructionLayerEditor
                 title=""
                 color="indigo"
                 layers={inputs.wallLayers}
