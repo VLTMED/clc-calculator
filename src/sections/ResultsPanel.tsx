@@ -105,11 +105,11 @@ export function ResultsPanel({ results, inputs }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-100">
-                <TableHead className="text-right font-bold">بند الحمل</TableHead>
-                <TableHead className="text-left font-bold" dir="ltr">
+                <TableHead className="font-bold text-start">بند الحمل</TableHead>
+                <TableHead className="font-bold" dir="ltr">
                   القيمة
                 </TableHead>
-                <TableHead className="text-left font-bold">الوحدة</TableHead>
+                <TableHead className="font-bold">الوحدة</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -272,7 +272,7 @@ export function ResultsPanel({ results, inputs }: Props) {
               </TableRow>
               <TableRow className="bg-amber-100">
                 <TableCell className="py-2 font-bold">
-                  <Snowflake className="w-4 h-4 inline ml-1" />
+                  <Snowflake className="w-4 h-4 inline me-1" />
                   السعة بالكيلوواط
                 </TableCell>
                 <TableCell className="py-2 text-left font-bold text-lg font-mono" dir="ltr">
@@ -282,7 +282,7 @@ export function ResultsPanel({ results, inputs }: Props) {
               </TableRow>
               <TableRow className="bg-amber-200">
                 <TableCell className="py-3 font-bold text-lg">
-                  <Snowflake className="w-5 h-5 inline ml-1" />
+                  <Snowflake className="w-5 h-5 inline me-1" />
                   السعة بالطن
                 </TableCell>
                 <TableCell className="py-3 text-left font-bold text-xl font-mono text-amber-800" dir="ltr">
