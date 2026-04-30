@@ -138,7 +138,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                 <div className="bg-violet-50 border border-violet-200 rounded-lg p-3">
                   <div className="flex flex-wrap gap-2 text-xs">
                     <Badge variant="secondary" className="bg-white">
-                      <Snowflake className="w-3 h-3 me-1" />
+                      <Snowflake className="w-3 h-3 ml-1" />
                       تجميد: {selectedProduct.tf}°C
                     </Badge>
                     <Badge variant="secondary" className="bg-white">

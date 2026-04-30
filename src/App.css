@@ -1,80 +1,94 @@
 /* ==========================================
-   CLC Version 4 A - RTL + Mobile Styles
+   CLC Version 4 A - Professional Styles
    ========================================== */
 
-/* ── RTL: number inputs always LTR ────────────────────── */
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="tel"] {
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  .xl\:col-span-2 {
+    grid-column: span 3 / span 3 !important;
+  }
+  
+  .xl\:col-span-1 {
+    grid-column: span 3 / span 3 !important;
+    margin-top: 2rem;
+  }
+  
+  [data-state="inactive"] {
+    display: none !important;
+  }
+}
+
+/* Custom scrollbar */
+.overflow-auto::-webkit-scrollbar {
+  width: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Smooth transitions */
+* {
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+/* Card hover effects */
+.shadow-sm:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Input focus styles */
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* RTL support for inputs */
+input[type="number"] {
   direction: ltr;
   text-align: left;
 }
 
-/* Mono numeric cells */
-[dir="ltr"] {
-  text-align: left;
-}
-
-/* ── Mobile (<640px) ───────────────────────────────────── */
-@media (max-width: 640px) {
-  /* Tabs: horizontal scroll instead of wrapping */
-  [role="tablist"] {
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  [role="tablist"]::-webkit-scrollbar { display: none; }
-  [role="tab"] {
-    flex-shrink: 0 !important;
-    min-width: fit-content !important;
-    font-size: 0.7rem !important;
-    padding: 0.4rem 0.6rem !important;
-  }
-
-  /* Tables */
-  table { font-size: 0.72rem; }
-  th, td { padding: 0.4rem 0.3rem; }
-
-  /* Sticky results: disable on mobile */
-  .sticky {
-    position: relative !important;
-    top: auto !important;
-  }
-
-  /* Touch targets */
-  button, [role="button"] { min-height: 44px; }
-  input, select {
-    min-height: 44px;
-    font-size: 16px; /* prevent iOS zoom */
-  }
-}
-
-/* ── Print ─────────────────────────────────────────────── */
-@media print {
-  .no-print { display: none !important; }
-  body { background: white !important; direction: rtl; }
-  main { max-width: 100% !important; padding: 0 !important; }
-  .xl\:col-span-2 { grid-column: span 3 / span 3 !important; }
-  .xl\:col-span-1 { grid-column: span 3 / span 3 !important; margin-top: 2rem; }
-  [data-state="inactive"] { display: block !important; }
-}
-
-/* ── Scrollbar ─────────────────────────────────────────── */
-.overflow-auto::-webkit-scrollbar { width: 6px; height: 6px; }
-.overflow-auto::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
-.overflow-auto::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
-.overflow-auto::-webkit-scrollbar-thumb:hover { background: #64748b; }
-
-/* ── Misc ──────────────────────────────────────────────── */
-* { transition: color 0.15s ease, background-color 0.15s ease; }
-.shadow-sm:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-input:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-
+/* Badge animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive table */
+@media (max-width: 640px) {
+  table {
+    font-size: 0.75rem;
+  }
+  
+  th, td {
+    padding: 0.5rem 0.25rem;
+  }
+}
