@@ -148,31 +148,37 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* OpenType: تفعيل الحروف المرسلة والروابط التلقائية */
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
   }
 
-  /* ── Headings: Serif Display for impact ── */
+  /* ── Headings: Serif Display + حروف مرسلة ── */
   h1 {
     font-family: var(--font-display);
     font-weight: 900; /* ThmanyahSerifDisplay-Black */
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
     line-height: 1.15;
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
   }
   h2 {
     font-family: var(--font-display);
     font-weight: 700; /* ThmanyahSerifDisplay-Bold */
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
     line-height: 1.2;
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
   }
   h3 {
     font-family: var(--font-sans);
     font-weight: 700; /* ThmanyahSans-Bold */
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     line-height: 1.3;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
   h4, h5, h6 {
     font-family: var(--font-sans);
     font-weight: 500; /* ThmanyahSans-Medium */
     line-height: 1.4;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
 
   /* ── Form labels: Medium weight for clarity ── */
@@ -323,65 +329,74 @@
      ═══════════════════════════════════════════════════════ */
 
   /* ── Tier 1: Hero / Display ──────────────────────────── */
-  /* استخدام: عنوان الصفحة الرئيسي، Hero section */
   .font-display-black {
     font-family: var(--font-display);
     font-weight: 900;
     line-height: 1.15;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
   }
 
   /* ── Tier 2: Section headings ────────────────────────── */
-  /* استخدام: عناوين الأقسام، card headers رئيسية */
   .font-display-bold {
     font-family: var(--font-display);
     font-weight: 700;
     line-height: 1.2;
-    letter-spacing: -0.005em;
+    letter-spacing: 0;
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
   }
 
   /* ── Tier 3: Card & subsection titles ───────────────── */
-  /* استخدام: عناوين البطاقات، headings ثانوية */
   .font-heading {
     font-family: var(--font-sans);
     font-weight: 700;
     line-height: 1.3;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
 
   /* ── Tier 4: Navigation & interactive labels ─────────── */
-  /* استخدام: Tabs، Buttons، Form labels مهمة */
   .font-subheading {
     font-family: var(--font-sans);
     font-weight: 500;
     line-height: 1.4;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
 
   /* ── Tier 5: Body text ───────────────────────────────── */
-  /* استخدام: المحتوى الأساسي، Input values، Table cells */
   .font-body {
     font-family: var(--font-sans);
     font-weight: 400;
     line-height: 1.75;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
 
   /* ── Tier 6: Helper / Caption text ──────────────────── */
-  /* استخدام: النصوص المساعدة، hints، placeholders، footnotes */
   .font-caption {
     font-family: var(--font-sans);
     font-weight: 300;
     line-height: 1.6;
-    font-size: 0.8125rem; /* 13px */
+    font-size: 0.8125rem;
+    font-feature-settings: "salt" 1, "calt" 1;
   }
 
   /* ── Tier 7: Numeric emphasis ────────────────────────── */
-  /* استخدام: الأرقام الكبيرة في النتائج، KPIs، Badges عددية */
   .font-numeric {
     font-family: var(--font-sans);
     font-weight: 900;
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum";
+    font-feature-settings: "tnum" 1;
     line-height: 1;
     letter-spacing: -0.02em;
+  }
+
+  /* ── Utility: حروف مرسلة صريحة ── */
+  .font-cursive-ar {
+    font-feature-settings: "salt" 1, "calt" 1, "liga" 1;
+  }
+
+  /* ── Utility: كشيدة مائلة عبر ss01 ── */
+  .font-kashida-italic {
+    font-feature-settings: "salt" 1, "calt" 1, "ss01" 1;
   }
 
   /* ─────────────────────────────────────────────────────── */
@@ -482,6 +497,15 @@
       flex-wrap: wrap;
       height: auto;
     }
+  }
+
+  /* ── Scrollbar hide utility ── */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 
   /* ─────────────────────────────────────────────────────── */
