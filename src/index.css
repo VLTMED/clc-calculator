@@ -14,35 +14,35 @@
 /* ── @font-face declarations ──────────────────────────────── */
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype');
+  src: url('/fonts/thmanyahsans-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype');
+  src: url('/fonts/thmanyahsans-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype');
+  src: url('/fonts/thmanyahsans-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype');
+  src: url('/fonts/thmanyahsans-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype');
+  src: url('/fonts/thmanyahsans-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -50,14 +50,14 @@
 
 @font-face {
   font-family: 'ThmanyahSerifDisplay';
-  src: url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');
+  src: url('/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'ThmanyahSerifDisplay';
-  src: url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');
+  src: url('/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
