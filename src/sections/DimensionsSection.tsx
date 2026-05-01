@@ -94,11 +94,19 @@ export function DimensionsSection({ inputs, onChange }: Props) {
               dir="ltr" className="text-center font-mono" />
           </FieldRow>
 
-          <FieldRow label="حرارة الأرض/الهواء (°C)">
-            <Input type="number" value={inputs.groundTemp}
-              onChange={(e) => onChange("groundTemp", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
+          <div className="flex items-start gap-3">
+            <div className="flex-1 text-sm font-medium text-slate-700 leading-snug pt-2.5">
+              <div>درجة حرارة التربة/الهواء المحاذي للأرضية (°C)</div>
+              <div className="text-xs text-slate-400 font-normal mt-0.5">
+                تختلف عن الخارج عند وجود طابق سفلي أو تربة باردة — في الغالب = الخارج
+              </div>
+            </div>
+            <div className="w-28 shrink-0">
+              <Input type="number" value={inputs.groundTemp}
+                onChange={(e) => onChange("groundTemp", parseFloat(e.target.value) || 0)}
+                dir="ltr" className="text-center font-mono" />
+            </div>
+          </div>
 
           <Separator />
 
