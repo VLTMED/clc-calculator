@@ -53,11 +53,27 @@ Layers are independently addable, deletable, and editable. The thermal calculati
 
 ## Mobile-First RTL Design
 
-- Header: compact layout on mobile, badges hidden on xs, clamp() font scaling
+- Header: compact layout on mobile, badges hidden on xs, clamp() font scaling, color changes with appMode (blue=refrig, orange=ac)
 - Tabs: horizontally scrollable on mobile (icon + label stacked), full on desktop
 - Layer cards: full-width material select, 2-column thickness/k grid
 - Touch targets: minimum 44px on mobile
 - Checkbox toggles: card-style rows with clear visual affordance
+
+## UX Overhaul (v4A — May 2026)
+
+Key changes applied from 30-point observation report:
+1. **appMode switch** — prominent 2-button card at top of App.tsx (تبريد/تكييف). Header color adapts dynamically.
+2. **lightsEnabled + peopleEnabled** — independent card toggles in InternalLoadsSection, same pattern as equipment.
+3. **Neutral defaults** — all inputs start at 0. "تحميل مثال" button loads demo data.
+4. **handleReset** — now resets all inputs (not just results). Clears localStorage too.
+5. **Ground temp label** — "درجة حرارة التربة/الهواء المحاذي للأرضية" with explanatory sub-label.
+6. **Product field locking** — constants auto-filled on product selection, locked by default. "مؤمّن — انقر للتعديل" button to unlock.
+7. **Frozen product note** — blue info banner shown when product has latentHeat=0 or frozen.
+8. **Temp validation** — amber warning banner when productEnterTemp < storageTemp.
+9. **Auto-infiltration** — AirLoadsSection auto-calculates suggested infiltration rate from room volume via INFILTRATION_RATES interpolation, with one-tap "تطبيق" button.
+10. **localStorage** — inputs auto-saved on every change; restored on page load; cleared on reset.
+11. **fullCalculator.ts** — lightsEnabled and peopleEnabled flags now multiply their respective loads.
+12. **DisabledBadge** — consistent "غير محسوب" indicator across all disabled load cards.
 
 ## Development
 
