@@ -1,41 +1,58 @@
+/* Thmanyah Exclusive Font System — loaded before everything */
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype');
-  font-weight: 300; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahsans-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype');
-  font-weight: 400; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahsans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype');
-  font-weight: 500; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahsans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype');
-  font-weight: 700; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahsans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSans';
-  src: url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype');
-  font-weight: 900; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahsans-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSerifDisplay';
-  src: url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');
-  font-weight: 700; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
 }
 @font-face {
   font-family: 'ThmanyahSerifDisplay';
-  src: url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');
-  font-weight: 900; font-style: normal; font-display: block;
+  src: url('./fonts/thmanyahserifdisplay-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: block;
 }
 
-/* ── Global: force Thmanyah on every element ── */
-*, *::before, *::after {
+/* ── Global Typography ── */
+*,
+*::before,
+*::after {
   font-family: 'ThmanyahSans', sans-serif !important;
 }
 
@@ -46,40 +63,86 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   word-spacing: 0.04em;
-  line-height: 1.65;
 }
 
-/* Headings */
-h1 { font-family: 'ThmanyahSerifDisplay' !important; font-weight: 900 !important; line-height: 1.1 !important; letter-spacing: -0.025em !important; }
-h2 { font-family: 'ThmanyahSerifDisplay' !important; font-weight: 700 !important; line-height: 1.2 !important; letter-spacing: -0.015em !important; }
-h3 { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; line-height: 1.3 !important; letter-spacing: -0.01em !important; }
-h4, h5, h6 { font-family: 'ThmanyahSans' !important; font-weight: 500 !important; line-height: 1.4 !important; }
+/* ── Headings ── */
+h1 {
+  font-family: 'ThmanyahSerifDisplay' !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.025em !important;
+}
+h2 {
+  font-family: 'ThmanyahSerifDisplay' !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.015em !important;
+}
+h3 {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -0.01em !important;
+}
+h4, h5, h6 {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
 
-/* Interactive */
-label   { font-family: 'ThmanyahSans' !important; font-weight: 500 !important; }
-button  { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; }
-input, select, textarea { font-family: 'ThmanyahSans' !important; font-weight: 400 !important; }
-input::placeholder, textarea::placeholder { font-family: 'ThmanyahSans' !important; font-weight: 300 !important; }
+/* ── Labels ── */
+label {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
 
-/* Table */
-th { font-family: 'ThmanyahSans' !important; font-weight: 700 !important; }
-td { font-family: 'ThmanyahSans' !important; font-weight: 400 !important; }
+/* ── Buttons ── */
+button {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 700 !important;
+}
 
-/* Tailwind overrides */
-.font-sans    { font-family: 'ThmanyahSans' !important; }
-.font-display { font-family: 'ThmanyahSerifDisplay' !important; }
-.font-mono    { font-family: 'ThmanyahSans' !important; font-variant-numeric: tabular-nums; }
+/* ── Inputs ── */
+input, select, textarea {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 400 !important;
+}
+input::placeholder,
+textarea::placeholder {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 300 !important;
+}
 
-/* Weight mapping */
-.font-light    { font-weight: 300 !important; }
-.font-normal   { font-weight: 400 !important; }
-.font-medium   { font-weight: 500 !important; }
-.font-semibold { font-weight: 700 !important; }
-.font-bold     { font-weight: 700 !important; }
-.font-black    { font-weight: 900 !important; }
+/* ── Table ── */
+th {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 700 !important;
+}
+td {
+  font-family: 'ThmanyahSans' !important;
+  font-weight: 400 !important;
+}
 
-/* Arabic line heights */
-p { line-height: 1.65; }
+/* ── Override Tailwind font-sans utility ── */
+.font-sans {
+  font-family: 'ThmanyahSans' !important;
+}
+.font-display {
+  font-family: 'ThmanyahSerifDisplay' !important;
+}
+.font-mono {
+  font-family: 'ThmanyahSans' !important;
+}
 
-/* Numeric inputs stay LTR */
-input[type="number"] { direction: ltr; text-align: end; }
+/* ── Override Tailwind font-weight with Thmanyah specifics ── */
+.font-light   { font-weight: 300 !important; }
+.font-normal  { font-weight: 400 !important; }
+.font-medium  { font-weight: 500 !important; }
+.font-bold    { font-weight: 700 !important; }
+.font-black   { font-weight: 900 !important; }
+.font-semibold { font-weight: 700 !important; } /* Thmanyah has no 600, map to Bold */
+
+/* ── Line heights optimized for Arabic ── */
+body { line-height: 1.65; }
+p    { line-height: 1.65; }

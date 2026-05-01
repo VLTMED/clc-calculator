@@ -1,175 +1,85 @@
 /* ==========================================
-   CLC Version 4 A - Professional Styles
+   CLC Calculator — RTL-Native Styles
    ========================================== */
 
-/* Print styles */
+/* ── Print ─────────────────────────────────── */
 @media print {
-  .no-print {
-    display: none !important;
-  }
-  
-  body {
-    background: white !important;
-  }
-  
-  main {
-    max-width: 100% !important;
-    padding: 0 !important;
-  }
-  
-  .xl\:col-span-2 {
-    grid-column: span 3 / span 3 !important;
-  }
-  
-  .xl\:col-span-1 {
-    grid-column: span 3 / span 3 !important;
-    margin-block-start: 2rem;
-  }
-  
-  [data-state="inactive"] {
-    display: none !important;
-  }
+  .no-print { display: none !important; }
+  body { background: white !important; }
+  main { max-width: 100% !important; padding: 0 !important; }
+  .xl\:col-span-2 { grid-column: span 3 / span 3 !important; }
+  .xl\:col-span-1 { grid-column: span 3 / span 3 !important; margin-block-start: 2rem; }
+  [data-state="inactive"] { display: none !important; }
 }
 
-/* Custom scrollbar */
-.overflow-auto::-webkit-scrollbar {
-  width: 8px;
+/* ── Scrollbar ─────────────────────────────── */
+.overflow-auto::-webkit-scrollbar { width: 6px; }
+.overflow-auto::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+.overflow-auto::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+.overflow-auto::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ── Transitions ───────────────────────────── */
+* { transition: color 0.15s ease, background-color 0.15s ease; }
+.shadow-sm:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+
+/* ── Inputs ────────────────────────────────── */
+/* Text inputs: start-aligned in RTL */
+[dir="rtl"] input:not([type="number"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+  text-align: start;
+  direction: rtl;
 }
 
-.overflow-auto::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
-}
-
-.overflow-auto::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 4px;
-}
-
-.overflow-auto::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
-}
-
-/* Smooth transitions */
-* {
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-
-/* Card hover effects */
-.shadow-sm:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Input focus styles */
-input:focus, select:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-/* Numeric inputs: keep digits LTR, center-aligned for clarity */
+/* Number inputs: always LTR, centered (digits read left-to-right universally) */
 input[type="number"] {
   direction: ltr;
   text-align: center;
   unicode-bidi: embed;
 }
 
-/* ── RTL logical-property overrides ──────────────────────── */
-
-/* Print: swap col offsets that used margin-left/right to logical equivalents */
-@media print {
-  .xl\\:col-span-2 {
-    margin-inline-start: 0 !important;
-  }
-  .xl\\:col-span-1 {
-    margin-block-start: 2rem;
-  }
+/* Input focus */
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
 }
 
-/* Sonner toast: force RTL alignment */
+/* ── Touch targets ─────────────────────────── */
+button, [role="button"], input[type="checkbox"], select { min-height: 36px; }
+@media (max-width: 768px) {
+  button, [role="button"] { min-height: 44px; }
+  input[type="checkbox"], input[type="radio"] { min-width: 20px; min-height: 20px; }
+}
+
+/* ── RTL logical borders ───────────────────── */
+[dir="rtl"] .border-l {
+  border-inline-start-width: 1px;
+  border-left-width: 0;
+}
+[dir="rtl"] .border-r {
+  border-inline-end-width: 1px;
+  border-right-width: 0;
+}
+
+/* ── Tables ────────────────────────────────── */
+[dir="rtl"] td[dir="ltr"],
+[dir="rtl"] th[dir="ltr"] { text-align: start; }
+
+@media (max-width: 640px) {
+  table { font-size: 0.75rem; }
+  th, td { padding: 0.5rem 0.25rem; }
+}
+
+/* ── Sonner Toast ──────────────────────────── */
 [data-sonner-toaster] {
   direction: rtl;
   font-family: var(--font-sans);
 }
 
-/* Scrollbar — unchanged, directional side handled by browser in RTL */
-.overflow-auto::-webkit-scrollbar-track {
-  border-radius: 4px;
-}
-
-/* Table: numbers column stays LTR inside RTL table */
-[dir="rtl"] td[dir="ltr"],
-[dir="rtl"] th[dir="ltr"] {
-  text-align: start; /* start = left in ltr cells */
-}
-
-/* Checkbox rows: icon before label in RTL (icon = inline-end) */
-[dir="rtl"] .flex.items-center.gap-2 > input[type="checkbox"] {
-  order: 1;         /* visual end = DOM start in RTL flex */
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-}
-
-/* Touch targets: minimum 44px for mobile Arabic UX */
-button,
-[role="button"],
-input[type="checkbox"],
-select {
-  min-height: 36px;
-}
-
-/* Select triggers: proper RTL arrow placement handled by Radix via data attributes */
-
-/* Cards: remove any accidental left/right border if added inline */
-[dir="rtl"] .border-l {
-  border-inline-start-width: 1px;
-  border-inline-end-width: 0;
-  border-left-width: 0;
-}
-[dir="rtl"] .border-r {
-  border-inline-end-width: 1px;
-  border-inline-start-width: 0;
-  border-right-width: 0;
-}
-
-/* Badge animations */
+/* ── Animations ────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
 
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out;
-}
-
-/* Responsive table */
-@media (max-width: 640px) {
-  table {
-    font-size: 0.75rem;
-  }
-  
-  th, td {
-    padding: 0.5rem 0.25rem;
-  }
-}
-
-/* ── RTL Select: arrow on inline-start (left in RTL) ── */
-[dir="rtl"] [data-slot="select-trigger"] {
-  flex-direction: row-reverse;
-}
-
-/* ── RTL: Fix Radix Select content alignment ── */
-[dir="rtl"] [data-slot="select-content"] {
-  text-align: right;
-}
-
-/* ── Table: section headers with inline div ── */
-[dir="rtl"] table td > div.flex {
-  direction: rtl;
-}
-
-/* ── Responsive: stack dimension inputs on narrow mobile ── */
-@media (max-width: 380px) {
-  .grid-cols-3 {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
+/* ── RTL flip for directional icons only ───── */
+[dir="rtl"] .rtl-flip { transform: scaleX(-1); }
