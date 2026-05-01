@@ -298,6 +298,22 @@ export interface UsageFactor {
 }
 
 export const USAGE_FACTORS: UsageFactor[] = [
-  { service: "تخزين طويل الأمد", heavy: 3.97, medium: 3.63, volumeFactor: 0.6 },
-  { service: "خدمة", heavy: 3.57, medium: 2.56, volumeFactor: 0.85 },
+  // جدول (2-22) كامل — 17 صفاً من 0.6 حتى 2800 م³
+  { service: "0.6 م³",   heavy: 3.97, medium: 3.63, volumeFactor: 0.6   },
+  { service: "0.85 م³",  heavy: 3.57, medium: 2.56, volumeFactor: 0.85  },
+  { service: "1.5 م³",   heavy: 2.76, medium: 1.77, volumeFactor: 1.5   },
+  { service: "2 م³",     heavy: 2.24, medium: 1.44, volumeFactor: 2     },
+  { service: "3 م³",     heavy: 1.96, medium: 1.25, volumeFactor: 3     },
+  { service: "6 م³",     heavy: 1.72, medium: 1.07, volumeFactor: 6     },
+  { service: "8.5 م³",   heavy: 1.61, medium: 1.01, volumeFactor: 8.5   },
+  { service: "11 م³",    heavy: 1.52, medium: 0.96, volumeFactor: 11    },
+  { service: "14 م³",    heavy: 1.45, medium: 0.94, volumeFactor: 14    },
+  { service: "17 م³",    heavy: 1.44, medium: 0.91, volumeFactor: 17    },
+  { service: "23 م³",    heavy: 1.37, medium: 0.86, volumeFactor: 23    },
+  { service: "28 م³",    heavy: 1.30, medium: 0.85, volumeFactor: 28    },
+  { service: "34 م³",    heavy: 1.23, medium: 0.77, volumeFactor: 34    },
+  { service: "43 م³",    heavy: 1.16, medium: 0.71, volumeFactor: 43    },
+  { service: "57 م³",    heavy: 0,    medium: 0.65, volumeFactor: 57    }, // معامل ثقيل غير متاح
+  { service: "85 م³",    heavy: 0,    medium: 0.58, volumeFactor: 85    }, // معامل ثقيل غير متاح
+  { service: "140+ م³",  heavy: 0,    medium: 0.45, volumeFactor: 140   }, // معامل ثقيل غير متاح
 ];

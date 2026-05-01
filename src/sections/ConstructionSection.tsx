@@ -127,32 +127,21 @@ function LayerCard({
         </Select>
       </div>
 
-      {/* Thickness + K value — side by side */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label className="text-xs text-slate-500 mb-1 block">
-            السُّمك
-            <span className="text-slate-400 font-mono ms-1">(m)</span>
-          </Label>
-          <Input
-            type="number"
-            step="0.01"
-            min="0"
-            value={layer.thickness}
-            onChange={(e) => onThicknessChange(parseFloat(e.target.value) || 0)}
-            className="h-11 text-sm text-center font-mono bg-white"
-            dir="ltr"
-          />
-        </div>
-        <div>
-          <Label className="text-xs text-slate-500 mb-1 block">
-            معامل التوصيل
-            <span className="text-slate-400 font-mono ms-1">(k)</span>
-          </Label>
-          <div className={`h-11 flex items-center justify-center rounded-lg border text-sm font-mono font-bold ${accent.kBadge}`}>
-            {layer.k}
-          </div>
-        </div>
+      {/* Thickness only — k already shown in the dropdown */}
+      <div>
+        <Label className="text-xs text-slate-500 mb-1 block">
+          السُّمك
+          <span className="text-slate-400 font-mono ms-1">(m)</span>
+        </Label>
+        <Input
+          type="number"
+          step="0.01"
+          min="0"
+          value={layer.thickness}
+          onChange={(e) => onThicknessChange(parseFloat(e.target.value) || 0)}
+          className="h-11 text-sm text-center font-mono bg-white"
+          dir="ltr"
+        />
       </div>
     </div>
   );

@@ -267,12 +267,39 @@ export function ProductSection({ inputs, onChange }: Props) {
                 onValueChange={(v) => onChange("usageFactor", parseFloat(v))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="3.97">شاقة - تخزين طويل (3.97)</SelectItem>
-                  <SelectItem value="3.63">متوسطة - تخزين طويل (3.63)</SelectItem>
-                  <SelectItem value="3.57">شاقة - خدمة (3.57)</SelectItem>
-                  <SelectItem value="2.56">متوسطة - خدمة (2.56)</SelectItem>
-                  <SelectItem value="1.18">مختصرة - عام (1.18)</SelectItem>
-                  <SelectItem value="0.6">تخزين طويل - حجم (0.6)</SelectItem>
+                  {/* جدول (2-22) كامل — ثقيل */}
+                  <SelectItem value="3.97">0.6 م³ — ثقيل (3.97)</SelectItem>
+                  <SelectItem value="3.57">0.85 م³ — ثقيل (3.57)</SelectItem>
+                  <SelectItem value="2.76">1.5 م³ — ثقيل (2.76)</SelectItem>
+                  <SelectItem value="2.24">2 م³ — ثقيل (2.24)</SelectItem>
+                  <SelectItem value="1.96">3 م³ — ثقيل (1.96)</SelectItem>
+                  <SelectItem value="1.72">6 م³ — ثقيل (1.72)</SelectItem>
+                  <SelectItem value="1.61">8.5 م³ — ثقيل (1.61)</SelectItem>
+                  <SelectItem value="1.52">11 م³ — ثقيل (1.52)</SelectItem>
+                  <SelectItem value="1.45">14 م³ — ثقيل (1.45)</SelectItem>
+                  <SelectItem value="1.44">17 م³ — ثقيل (1.44)</SelectItem>
+                  <SelectItem value="1.37">23 م³ — ثقيل (1.37)</SelectItem>
+                  <SelectItem value="1.30">28 م³ — ثقيل (1.30)</SelectItem>
+                  <SelectItem value="1.23">34 م³ — ثقيل (1.23)</SelectItem>
+                  <SelectItem value="1.16">43 م³ — ثقيل (1.16)</SelectItem>
+                  {/* جدول (2-22) كامل — متوسط */}
+                  <SelectItem value="3.63">0.6 م³ — متوسط (3.63)</SelectItem>
+                  <SelectItem value="2.56">0.85 م³ — متوسط (2.56)</SelectItem>
+                  <SelectItem value="1.77">1.5 م³ — متوسط (1.77)</SelectItem>
+                  <SelectItem value="1.44">2 م³ — متوسط (1.44)</SelectItem>
+                  <SelectItem value="1.25">3 م³ — متوسط (1.25)</SelectItem>
+                  <SelectItem value="1.07">6 م³ — متوسط (1.07)</SelectItem>
+                  <SelectItem value="1.01">8.5 م³ — متوسط (1.01)</SelectItem>
+                  <SelectItem value="0.96">11 م³ — متوسط (0.96)</SelectItem>
+                  <SelectItem value="0.94">14 م³ — متوسط (0.94)</SelectItem>
+                  <SelectItem value="0.91">17 م³ — متوسط (0.91)</SelectItem>
+                  <SelectItem value="0.86">23 م³ — متوسط (0.86)</SelectItem>
+                  <SelectItem value="0.85">28 م³ — متوسط (0.85)</SelectItem>
+                  <SelectItem value="0.77">34 م³ — متوسط (0.77)</SelectItem>
+                  <SelectItem value="0.71">43 م³ — متوسط (0.71)</SelectItem>
+                  <SelectItem value="0.65">57 م³ — متوسط (0.65)</SelectItem>
+                  <SelectItem value="0.58">85 م³ — متوسط (0.58)</SelectItem>
+                  <SelectItem value="0.45">140+ م³ — متوسط (0.45)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
