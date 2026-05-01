@@ -186,13 +186,16 @@ export function DimensionsSection({ inputs, onChange }: Props) {
 
           {/* CLTD */}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-amber-600 font-sans">
-                حرارة الأرض - الداخل: <span className="font-mono">{inputs.groundTemp - inputs.tempIn}°C</span>
-              </span>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
               <span className="font-medium text-amber-800 text-sm">
-                فرق الحرارة (CLTD):{" "}
+                فرق الحرارة{" "}
+                <span className="text-xs text-amber-600 font-mono">(CLTD)</span>
+                {": "}
                 <span className="text-lg font-bold font-mono">{inputs.tempOut - inputs.tempIn}°C</span>
+              </span>
+              <span className="text-sm text-amber-600 font-sans">
+                حرارة الأرض - الداخل:{" "}
+                <span className="font-mono">{inputs.groundTemp - inputs.tempIn}°C</span>
               </span>
             </div>
           </div>

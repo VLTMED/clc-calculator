@@ -50,21 +50,13 @@ function LayerRow({
   return (
     <div className="space-y-1">
       <span className="text-xs font-medium text-slate-500">الطبقة {index + 1}</span>
-      {/* Row: [k badge | thickness | material select] — RTL reading order */}
+      {/* RTL order: [k badge] [thickness] [material select] — reads right to left naturally */}
       <div className="flex items-center gap-2">
-        {/* Material: flex-1, leftmost visually in RTL = last in flex row */}
-        <Select value={layer.materialId} onValueChange={onMaterialChange}>
-          <SelectTrigger className="h-9 text-xs flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {MATERIALS.map((m) => (
-              <SelectItem key={m.id} value={m.id} className="text-xs">
-                {m.name} (k={m.k})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* k value badge — far right in RTL (first in DOM = right side) */}
+        <div className="shrink-0 w-14 text-center bg-slate-100 rounded-md border border-slate-200 py-1 px-1">
+          <div className="text-[9px] text-slate-400">k</div>
+          <div className="text-xs font-mono font-semibold text-slate-700">{layer.k}</div>
+        </div>
 
         {/* Thickness label + input stacked, fixed width */}
         <div className="shrink-0 w-20 text-center">
@@ -79,11 +71,19 @@ function LayerRow({
           />
         </div>
 
-        {/* k value badge — far left in RTL */}
-        <div className="shrink-0 w-14 text-center bg-slate-100 rounded-md border border-slate-200 py-1 px-1">
-          <div className="text-[9px] text-slate-400">k</div>
-          <div className="text-xs font-mono font-semibold text-slate-700">{layer.k}</div>
-        </div>
+        {/* Material select: flex-1, leftmost visually in RTL */}
+        <Select value={layer.materialId} onValueChange={onMaterialChange}>
+          <SelectTrigger className="h-9 text-xs flex-1">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {MATERIALS.map((m) => (
+              <SelectItem key={m.id} value={m.id} className="text-xs">
+                {m.name} (k={m.k})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
@@ -142,26 +142,30 @@ function ConstructionLayerEditor({
 
         <Separator className="my-1" />
 
-        {/* hi / ho — RTL: ho (خارجي) right, hi (داخلي) left */}
+        {/* hi / ho */}
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <Label className="text-xs font-medium text-slate-600">ho الخارجي</Label>
-            <Input
-              type="number"
-              step="0.1"
-              value={ho}
-              onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
-              className="h-9 text-xs text-center font-mono"
-              dir="ltr"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs font-medium text-slate-600">hi الداخلي</Label>
+            <Label className="text-xs font-medium text-slate-600">
+              معامل التوصيل الداخلي <span className="text-slate-400 font-mono">(hi)</span>
+            </Label>
             <Input
               type="number"
               step="0.1"
               value={hi}
               onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
+              className="h-9 text-xs text-center font-mono"
+              dir="ltr"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs font-medium text-slate-600">
+              معامل التوصيل الخارجي <span className="text-slate-400 font-mono">(ho)</span>
+            </Label>
+            <Input
+              type="number"
+              step="0.1"
+              value={ho}
+              onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
               className="h-9 text-xs text-center font-mono"
               dir="ltr"
             />
@@ -277,7 +281,7 @@ export function ConstructionSection({ inputs, onChange }: Props) {
                 ].map(({ key, label, val }) => (
                   <div key={key} className="flex items-center gap-2">
                     <span className="text-xs font-medium text-slate-600 flex-1">
-                      ho {label}
+                      {label} <span className="text-slate-400 font-mono">(ho)</span>
                     </span>
                     <Input
                       type="number"

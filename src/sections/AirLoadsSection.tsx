@@ -42,8 +42,8 @@ function EnthalpyRow({
     <div className="bg-slate-50 rounded-lg p-3 space-y-2">
       <div className="text-xs font-medium text-slate-500">بيانات الإنثالبي</div>
       {[
-        { label: "hi داخلي (kJ/kg)", val: hiVal, fn: onHi },
-        { label: "ho خارجي (kJ/kg)", val: hoVal, fn: onHo },
+        { label: "الإنثالبي الداخلي (kJ/kg)", val: hiVal, fn: onHi },
+        { label: "الإنثالبي الخارجي (kJ/kg)", val: hoVal, fn: onHo },
         { label: "الحجم النوعي (m³/kg)", val: volVal, fn: onVol },
       ].map(({ label, val, fn }) => (
         <div key={label} className="flex items-center gap-2">

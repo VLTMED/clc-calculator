@@ -66,10 +66,10 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* Numeric inputs: keep digits LTR but align to inline-end so they hug the correct side in RTL */
+/* Numeric inputs: keep digits LTR, center-aligned for clarity */
 input[type="number"] {
   direction: ltr;
-  text-align: end;
+  text-align: center;
   unicode-bidi: embed;
 }
 

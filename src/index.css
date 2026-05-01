@@ -292,7 +292,25 @@
     justify-content: flex-end;
   }
 
-  /* ── Select arrow: Radix handles it, but ensure SVG is at inline-end ── */
+  /* ── Checkbox rows: checkbox at inline-start (right in RTL) ── */
+  [dir="rtl"] label.flex.items-center > input[type="checkbox"] {
+    order: -1;
+  }
+
+  /* ── Badge numbers: always LTR ── */
+  [dir="rtl"] .font-mono,
+  [dir="rtl"] span.font-mono {
+    direction: ltr;
+    display: inline-block;
+    unicode-bidi: embed;
+  }
+
+  /* ── Table section headers: fix flex in RTL ── */
+  [dir="rtl"] td.flex {
+    direction: rtl;
+  }
+
+  /* ── Select arrow: appears at inline-start in RTL ── */
   [dir="rtl"] [data-slot="select-trigger"] > svg:last-child {
     margin-inline-start: auto;
     margin-inline-end: 0;

@@ -181,11 +181,11 @@ function App() {
               {/* Tab list — ThmanyahSans Bold (700): عناصر التنقل تحتاج وضوح */}
               <TabsList className="w-full flex flex-wrap h-auto bg-white/80 backdrop-blur-sm border shadow-sm rounded-xl p-1 gap-1">
                 {[
-                  { value: "dimensions", icon: <Settings className="w-3.5 h-3.5 me-1" />, label: "الأبعاد والمواد",   color: "data-[state=active]:bg-blue-600" },
-                  { value: "glass",      icon: <Sun       className="w-3.5 h-3.5 me-1" />, label: "الزجاج والشمس",    color: "data-[state=active]:bg-amber-600" },
-                  { value: "internal",   icon: <Users     className="w-3.5 h-3.5 me-1" />, label: "الأحمال الداخلية", color: "data-[state=active]:bg-emerald-600" },
-                  { value: "product",    icon: <Package   className="w-3.5 h-3.5 me-1" />, label: "المنتج والتخزين",  color: "data-[state=active]:bg-violet-600" },
-                  { value: "air",        icon: <Wind      className="w-3.5 h-3.5 me-1" />, label: "أحمال الهواء",     color: "data-[state=active]:bg-sky-600" },
+                  { value: "dimensions", icon: <Settings className="w-3.5 h-3.5 me-1" />,          label: "الأبعاد والمواد",   color: "data-[state=active]:bg-blue-600" },
+                  { value: "glass",      icon: <Sun       className="w-3.5 h-3.5 me-1" />,          label: "الزجاج والشمس",    color: "data-[state=active]:bg-amber-600" },
+                  { value: "internal",   icon: <Users     className="w-3.5 h-3.5 me-1" />,          label: "الأحمال الداخلية", color: "data-[state=active]:bg-emerald-600" },
+                  { value: "product",    icon: <Package   className="w-3.5 h-3.5 me-1" />,          label: "المنتج والتخزين",  color: "data-[state=active]:bg-violet-600" },
+                  { value: "air",        icon: <Wind      className="w-3.5 h-3.5 me-1 rtl-flip" />, label: "أحمال الهواء",     color: "data-[state=active]:bg-sky-600" },
                 ].map(({ value, icon, label, color }) => (
                   <TabsTrigger
                     key={value}
@@ -252,7 +252,7 @@ function App() {
                       className="flex-1 sm:flex-none border-red-300 text-red-700 hover:bg-red-50 text-body-sm"
                       style={{ fontFamily: "'ThmanyahSans'", fontWeight: 700 }}
                     >
-                      <RotateCcw className="w-4 h-4 me-2" />
+                      <RotateCcw className="w-4 h-4 me-2 rtl-flip" />
                       إعادة
                     </Button>
                     {/* Primary CTA — Sans Black (900): أقوى وزن للفعل الأهم */}
@@ -327,7 +327,7 @@ function App() {
             className="text-caption"
             style={{ fontFamily: "'ThmanyahSans'", fontWeight: 300 }}
           >
-            Copyright © 2024. All rights reserved.
+            Copyright © ٢٠٢٤. جميع الحقوق محفوظة.
           </p>
         </div>
       </footer>

@@ -37,11 +37,11 @@ interface ResultRowProps {
 function ResultRow({ label, value, unit = "W", highlight }: ResultRowProps) {
   return (
     <TableRow className={highlight ? "bg-blue-50/50 font-medium" : ""}>
-      <TableCell className="py-2">{label}</TableCell>
-      <TableCell className="py-2 text-start font-mono" dir="ltr">
+      <TableCell className="py-2 text-start">{label}</TableCell>
+      <TableCell className="py-2 text-center font-mono" dir="ltr">
         {value.toFixed(2)}
       </TableCell>
-      <TableCell className="py-2 text-start">{unit}</TableCell>
+      <TableCell className="py-2 text-center text-slate-500 text-xs">{unit}</TableCell>
     </TableRow>
   );
 }
@@ -105,11 +105,9 @@ export function ResultsPanel({ results, inputs }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-100">
-                <TableHead className="text-start font-bold">بند الحمل</TableHead>
-                <TableHead className="text-start font-bold" dir="ltr">
-                  القيمة
-                </TableHead>
-                <TableHead className="text-start font-bold">الوحدة</TableHead>
+                <TableHead className="font-bold text-start">بند الحمل</TableHead>
+                <TableHead className="font-bold text-center w-28" dir="ltr">القيمة</TableHead>
+                <TableHead className="font-bold text-center w-16">الوحدة</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -120,7 +118,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-blue-800 flex items-center gap-2"
                 >
                   <Thermometer className="w-4 h-4" />
-                  1. أحمال التوصيل (Transmission)
+                  أحمال التوصيل (Transmission)
                 </TableCell>
               </TableRow>
               <ResultRow label="السقف" value={results.roofLoad} />
@@ -142,7 +140,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-amber-800 flex items-center gap-2"
                 >
                   <Sun className="w-4 h-4" />
-                  2. أحمال الإشعاع الشمسي (Solar Radiation)
+                  أحمال الإشعاع الشمسي (Solar Radiation)
                 </TableCell>
               </TableRow>
               <ResultRow label="إشعاع السقف" value={results.solarRoof} />
@@ -159,7 +157,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-sky-800 flex items-center gap-2"
                 >
                   <GlassWater className="w-4 h-4" />
-                  3. أحمال الزجاج (Glass)
+                  أحمال الزجاج (Glass)
                 </TableCell>
               </TableRow>
               <ResultRow label="توصيل الزجاج" value={results.glassTransmission} />
@@ -173,7 +171,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-emerald-800 flex items-center gap-2"
                 >
                   <Users className="w-4 h-4" />
-                  4. الأحمال الداخلية (Internal)
+                  الأحمال الداخلية (Internal)
                 </TableCell>
               </TableRow>
               <ResultRow label="الإضاءة" value={results.lightingLoad} />
@@ -188,7 +186,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-violet-800 flex items-center gap-2"
                 >
                   <Package className="w-4 h-4" />
-                  5. أحمال المنتج (Product)
+                  أحمال المنتج (Product)
                 </TableCell>
               </TableRow>
               <ResultRow
@@ -217,7 +215,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   className="py-2 font-bold text-cyan-800 flex items-center gap-2"
                 >
                   <Wind className="w-4 h-4" />
-                  6. أحمال الهواء (Air Infiltration & Ventilation)
+                  أحمال الهواء (Air & Ventilation)
                 </TableCell>
               </TableRow>
               <ResultRow label="التسرب" value={results.infiltrationLoad} />
