@@ -20,9 +20,9 @@ interface Props {
 
 function FieldRow({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="text-sm font-medium text-slate-700 flex-1 leading-snug">{label}</div>
-      <div className="w-32 shrink-0">{children}</div>
+    <div className="flex items-center justify-between gap-3">
+      <div className="text-sm font-medium text-slate-700 leading-snug">{label}</div>
+      <div className="w-28 shrink-0">{children}</div>
     </div>
   );
 }

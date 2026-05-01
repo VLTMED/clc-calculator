@@ -21,9 +21,9 @@ interface Props {
 
 function FieldRow({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="text-sm font-medium text-slate-700 flex-1 leading-snug">{label}</div>
-      <div className="w-32 shrink-0">{children}</div>
+    <div className="flex items-center justify-between gap-3">
+      <div className="text-sm font-medium text-slate-700 leading-snug">{label}</div>
+      <div className="w-28 shrink-0">{children}</div>
     </div>
   );
 }
@@ -46,8 +46,8 @@ function EnthalpyRow({
         { label: "الإنثالبي الخارجي (kJ/kg)", val: hoVal, fn: onHo },
         { label: "الحجم النوعي (m³/kg)", val: volVal, fn: onVol },
       ].map(({ label, val, fn }) => (
-        <div key={label} className="flex items-center gap-2">
-          <span className="text-xs text-slate-600 flex-1">{label}</span>
+        <div key={label} className="flex items-center justify-between gap-2">
+          <span className="text-xs text-slate-600">{label}</span>
           <Input type="number" step="0.01" value={val}
             onChange={(e) => fn(parseFloat(e.target.value) || 0)}
             className="h-8 text-xs text-center font-mono w-24 shrink-0"

@@ -31,13 +31,9 @@ function FieldRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      {/* Label: right side (flex-1 so it takes available space) */}
-      <div className="text-sm font-medium text-slate-700 flex-1 leading-snug">
-        {label}
-      </div>
-      {/* Input: fixed width, always on the left side in RTL */}
-      <div className="w-32 shrink-0">{children}</div>
+    <div className="flex items-center justify-between gap-3">
+      <div className="text-sm font-medium text-slate-700 leading-snug">{label}</div>
+      <div className="w-28 shrink-0">{children}</div>
     </div>
   );
 }
@@ -53,39 +49,28 @@ export function DimensionsSection({ inputs, onChange }: Props) {
             أبعاد الحيز المبرد/المكيف
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <FieldRow label="الطول (m)">
-            <Input
-              id="length"
-              type="number"
-              value={inputs.length}
-              onChange={(e) => onChange("length", parseFloat(e.target.value) || 0)}
-              dir="ltr"
-              className="text-center font-mono"
-            />
-          </FieldRow>
-
-          <FieldRow label="العرض (m)">
-            <Input
-              id="width"
-              type="number"
-              value={inputs.width}
-              onChange={(e) => onChange("width", parseFloat(e.target.value) || 0)}
-              dir="ltr"
-              className="text-center font-mono"
-            />
-          </FieldRow>
-
-          <FieldRow label="الارتفاع (m)">
-            <Input
-              id="height"
-              type="number"
-              value={inputs.height}
-              onChange={(e) => onChange("height", parseFloat(e.target.value) || 0)}
-              dir="ltr"
-              className="text-center font-mono"
-            />
-          </FieldRow>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { id: "length",  label: "الطول",     unit: "m", val: inputs.length },
+              { id: "width",   label: "العرض",     unit: "m", val: inputs.width  },
+              { id: "height",  label: "الارتفاع",  unit: "m", val: inputs.height },
+            ].map(({ id, label, unit, val }) => (
+              <div key={id} className="space-y-1">
+                <label htmlFor={id} className="text-xs font-medium text-slate-600 block text-center">
+                  {label} <span className="text-slate-400">({unit})</span>
+                </label>
+                <Input
+                  id={id}
+                  type="number"
+                  value={val}
+                  onChange={(e) => onChange(id, parseFloat(e.target.value) || 0)}
+                  dir="ltr"
+                  className="text-center font-mono"
+                />
+              </div>
+            ))}
+          </div>
 
           <Separator />
 

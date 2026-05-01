@@ -151,3 +151,25 @@ select {
     padding: 0.5rem 0.25rem;
   }
 }
+
+/* ── RTL Select: arrow on inline-start (left in RTL) ── */
+[dir="rtl"] [data-slot="select-trigger"] {
+  flex-direction: row-reverse;
+}
+
+/* ── RTL: Fix Radix Select content alignment ── */
+[dir="rtl"] [data-slot="select-content"] {
+  text-align: right;
+}
+
+/* ── Table: section headers with inline div ── */
+[dir="rtl"] table td > div.flex {
+  direction: rtl;
+}
+
+/* ── Responsive: stack dimension inputs on narrow mobile ── */
+@media (max-width: 380px) {
+  .grid-cols-3 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}

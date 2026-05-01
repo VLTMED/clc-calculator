@@ -115,10 +115,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-blue-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-blue-800 flex items-center gap-2"
+                  className="py-2 font-bold text-blue-800"
                 >
-                  <Thermometer className="w-4 h-4" />
-                  أحمال التوصيل (Transmission)
+                  <div className="flex items-center gap-2"><Thermometer className="w-4 h-4 shrink-0" />أحمال التوصيل (Transmission)</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="السقف" value={results.roofLoad} />
@@ -137,10 +136,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-amber-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-amber-800 flex items-center gap-2"
+                  className="py-2 font-bold text-amber-800"
                 >
-                  <Sun className="w-4 h-4" />
-                  أحمال الإشعاع الشمسي (Solar Radiation)
+                  <div className="flex items-center gap-2"><Sun className="w-4 h-4 shrink-0" />أحمال الإشعاع الشمسي (Solar Radiation)</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="إشعاع السقف" value={results.solarRoof} />
@@ -154,10 +152,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-sky-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-sky-800 flex items-center gap-2"
+                  className="py-2 font-bold text-sky-800"
                 >
-                  <GlassWater className="w-4 h-4" />
-                  أحمال الزجاج (Glass)
+                  <div className="flex items-center gap-2"><GlassWater className="w-4 h-4 shrink-0" />أحمال الزجاج (Glass)</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="توصيل الزجاج" value={results.glassTransmission} />
@@ -168,10 +165,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-emerald-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-emerald-800 flex items-center gap-2"
+                  className="py-2 font-bold text-emerald-800"
                 >
-                  <Users className="w-4 h-4" />
-                  الأحمال الداخلية (Internal)
+                  <div className="flex items-center gap-2"><Users className="w-4 h-4 shrink-0" />الأحمال الداخلية (Internal)</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="الإضاءة" value={results.lightingLoad} />
@@ -183,10 +179,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-violet-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-violet-800 flex items-center gap-2"
+                  className="py-2 font-bold text-violet-800"
                 >
-                  <Package className="w-4 h-4" />
-                  أحمال المنتج (Product)
+                  <div className="flex items-center gap-2"><Package className="w-4 h-4 shrink-0" />أحمال المنتج (Product)</div>
                 </TableCell>
               </TableRow>
               <ResultRow
@@ -212,10 +207,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-cyan-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-cyan-800 flex items-center gap-2"
+                  className="py-2 font-bold text-cyan-800"
                 >
-                  <Wind className="w-4 h-4" />
-                  أحمال الهواء (Air & Ventilation)
+                  <div className="flex items-center gap-2"><Wind className="w-4 h-4 shrink-0 rtl-flip" />أحمال الهواء (Air & Ventilation)</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="التسرب" value={results.infiltrationLoad} />
@@ -227,10 +221,9 @@ export function ResultsPanel({ results, inputs }: Props) {
               <TableRow className="bg-rose-100">
                 <TableCell
                   colSpan={3}
-                  className="py-2 font-bold text-rose-800 flex items-center gap-2"
+                  className="py-2 font-bold text-rose-800"
                 >
-                  <Zap className="w-4 h-4" />
-                  7. أحمال أخرى
+                  <div className="flex items-center gap-2"><Zap className="w-4 h-4 shrink-0" />أحمال أخرى</div>
                 </TableCell>
               </TableRow>
               <ResultRow label="أذابة الصقيع" value={results.defrostLoad} />
@@ -245,7 +238,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-3 font-bold text-lg">
                   الحمل الإجمالي
                 </TableCell>
-                <TableCell className="py-3 text-start font-bold text-lg font-mono" dir="ltr">
+                <TableCell className="py-3 text-center font-bold text-lg font-mono" dir="ltr">
                   {results.grandTotal.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-3 font-bold">W</TableCell>
@@ -254,7 +247,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-2 font-medium">
                   مع معامل الأمان ({inputs.safetyFactor}%)
                 </TableCell>
-                <TableCell className="py-2 text-start font-bold font-mono" dir="ltr">
+                <TableCell className="py-2 text-center font-bold font-mono" dir="ltr">
                   {results.totalWithSafety.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2">W</TableCell>
@@ -263,7 +256,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                 <TableCell className="py-2 font-medium">
                   السعة المطلوبة ({inputs.operationHours}h تشغيل)
                 </TableCell>
-                <TableCell className="py-2 text-start font-bold font-mono" dir="ltr">
+                <TableCell className="py-2 text-center font-bold font-mono" dir="ltr">
                   {results.requiredCapacity.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2">W</TableCell>
@@ -273,7 +266,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   <Snowflake className="w-4 h-4 inline me-1" />
                   السعة بالكيلوواط
                 </TableCell>
-                <TableCell className="py-2 text-start font-bold text-lg font-mono" dir="ltr">
+                <TableCell className="py-2 text-center font-bold text-lg font-mono" dir="ltr">
                   {results.kw.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-2 font-bold">kW</TableCell>
@@ -283,7 +276,7 @@ export function ResultsPanel({ results, inputs }: Props) {
                   <Snowflake className="w-5 h-5 inline me-1" />
                   السعة بالطن
                 </TableCell>
-                <TableCell className="py-3 text-start font-bold text-xl font-mono text-amber-800" dir="ltr">
+                <TableCell className="py-3 text-center font-bold text-xl font-mono text-amber-800" dir="ltr">
                   {results.tons.toFixed(2)}
                 </TableCell>
                 <TableCell className="py-3 font-bold text-lg">Ton</TableCell>
