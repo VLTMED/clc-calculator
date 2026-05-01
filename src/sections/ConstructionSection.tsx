@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Layers, Plus, Trash2 } from "lucide-react";
+import { Layers, Plus, Trash2, GripVertical } from "lucide-react";
 import { MATERIALS, getMaterialK } from "@/data/materials";
 import type { CalculationInputs, WallLayer } from "@/types/inputs";
 
@@ -21,10 +21,7 @@ interface Props {
 
 interface LayerEditorProps {
   title: string;
-  colorClass: string;
-  titleColorClass: string;
-  iconColorClass: string;
-  addBtnColor: string;
+  accentColor: "rose" | "emerald" | "indigo";
   layers: WallLayer[];
   hi: number;
   ho: number;
@@ -39,10 +36,44 @@ const DEFAULT_LAYER: WallLayer = {
   k: 0.029,
 };
 
-function LayerRow({
+const ACCENT_MAP = {
+  rose: {
+    card: "border-rose-200 bg-rose-50/30",
+    header: "text-rose-800",
+    icon: "text-rose-500",
+    badge: "bg-rose-100 text-rose-700 border-rose-200",
+    addBtn: "border-rose-300 text-rose-700 hover:bg-rose-100 hover:border-rose-400",
+    layerCard: "bg-white border-rose-100 shadow-sm",
+    layerNum: "bg-rose-100 text-rose-700",
+    kBadge: "bg-rose-50 text-rose-800 border-rose-200",
+  },
+  emerald: {
+    card: "border-emerald-200 bg-emerald-50/30",
+    header: "text-emerald-800",
+    icon: "text-emerald-500",
+    badge: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    addBtn: "border-emerald-300 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400",
+    layerCard: "bg-white border-emerald-100 shadow-sm",
+    layerNum: "bg-emerald-100 text-emerald-700",
+    kBadge: "bg-emerald-50 text-emerald-800 border-emerald-200",
+  },
+  indigo: {
+    card: "border-indigo-200 bg-indigo-50/30",
+    header: "text-indigo-800",
+    icon: "text-indigo-500",
+    badge: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    addBtn: "border-indigo-300 text-indigo-700 hover:bg-indigo-100 hover:border-indigo-400",
+    layerCard: "bg-white border-indigo-100 shadow-sm",
+    layerNum: "bg-indigo-100 text-indigo-700",
+    kBadge: "bg-indigo-50 text-indigo-800 border-indigo-200",
+  },
+};
+
+function LayerCard({
   layer,
   index,
   total,
+  accent,
   onMaterialChange,
   onThicknessChange,
   onDelete,
@@ -50,54 +81,78 @@ function LayerRow({
   layer: WallLayer;
   index: number;
   total: number;
+  accent: typeof ACCENT_MAP["rose"];
   onMaterialChange: (v: string) => void;
   onThicknessChange: (v: number) => void;
   onDelete: () => void;
 }) {
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-slate-500">الطبقة {index + 1}</span>
+    <div className={`rounded-xl border p-3 sm:p-4 transition-all ${accent.layerCard}`}>
+      {/* Layer header row */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <GripVertical className="w-4 h-4 text-slate-300 shrink-0" />
+          <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${accent.layerNum}`}>
+            طبقة {index + 1}
+          </span>
+        </div>
         {total > 1 && (
           <button
             type="button"
             onClick={onDelete}
-            className="text-red-400 hover:text-red-600 transition-colors p-0.5 rounded"
-            title="حذف الطبقة"
+            aria-label="حذف الطبقة"
+            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 px-2 py-1 rounded-lg transition-all active:scale-95"
           >
             <Trash2 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">حذف</span>
           </button>
         )}
       </div>
-      <div className="flex items-center gap-2">
-        <div className="shrink-0 w-14 text-center bg-slate-100 rounded-md border border-slate-200 py-1 px-1">
-          <div className="text-[9px] text-slate-400">k</div>
-          <div className="text-xs font-mono font-semibold text-slate-700">{layer.k}</div>
-        </div>
-        <div className="shrink-0 w-20 text-center">
-          <div className="text-[10px] text-slate-400 mb-0.5">السُّمك (m)</div>
+
+      {/* Material selector — full width for mobile */}
+      <div className="mb-3">
+        <Label className="text-xs text-slate-500 mb-1 block">المادة</Label>
+        <Select value={layer.materialId} onValueChange={onMaterialChange}>
+          <SelectTrigger className="h-11 text-sm w-full bg-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="max-h-72">
+            {MATERIALS.map((m) => (
+              <SelectItem key={m.id} value={m.id} className="text-sm">
+                <span>{m.name}</span>
+                <span className="text-slate-400 text-xs ms-2 font-mono">(k = {m.k})</span>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Thickness + K value — side by side */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label className="text-xs text-slate-500 mb-1 block">
+            السُّمك
+            <span className="text-slate-400 font-mono ms-1">(m)</span>
+          </Label>
           <Input
             type="number"
             step="0.01"
             min="0"
             value={layer.thickness}
             onChange={(e) => onThicknessChange(parseFloat(e.target.value) || 0)}
-            className="h-9 text-xs text-center font-mono"
+            className="h-11 text-sm text-center font-mono bg-white"
             dir="ltr"
           />
         </div>
-        <Select value={layer.materialId} onValueChange={onMaterialChange}>
-          <SelectTrigger className="h-9 text-xs flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="max-h-64">
-            {MATERIALS.map((m) => (
-              <SelectItem key={m.id} value={m.id} className="text-xs">
-                {m.name} (k={m.k})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div>
+          <Label className="text-xs text-slate-500 mb-1 block">
+            معامل التوصيل
+            <span className="text-slate-400 font-mono ms-1">(k)</span>
+          </Label>
+          <div className={`h-11 flex items-center justify-center rounded-lg border text-sm font-mono font-bold ${accent.kBadge}`}>
+            {layer.k}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -105,10 +160,7 @@ function LayerRow({
 
 function ConstructionLayerEditor({
   title,
-  colorClass,
-  titleColorClass,
-  iconColorClass,
-  addBtnColor,
+  accentColor,
   layers,
   hi,
   ho,
@@ -116,10 +168,16 @@ function ConstructionLayerEditor({
   onHiChange,
   onHoChange,
 }: LayerEditorProps) {
+  const accent = ACCENT_MAP[accentColor];
+
   const updateLayer = (index: number, field: keyof WallLayer, value: string | number) => {
     const newLayers = [...layers];
     if (field === "materialId") {
-      newLayers[index] = { ...newLayers[index], materialId: value as string, k: getMaterialK(value as string) };
+      newLayers[index] = {
+        ...newLayers[index],
+        materialId: value as string,
+        k: getMaterialK(value as string),
+      };
     } else {
       newLayers[index] = { ...newLayers[index], [field]: value as number };
     }
@@ -134,63 +192,87 @@ function ConstructionLayerEditor({
   };
 
   return (
-    <Card className={`border-${colorClass}-200 shadow-sm`}>
-      <CardHeader className="pb-2">
+    <Card className={`border shadow-sm ${accent.card}`}>
+      <CardHeader className="pb-3 pt-4 px-4">
         <div className="flex items-center justify-between gap-2">
-          {title && (
-            <CardTitle className={`text-base flex items-center gap-2 ${titleColorClass}`}>
-              <Layers className={`w-4 h-4 ${iconColorClass} shrink-0`} />
+          {title ? (
+            <CardTitle className={`text-base flex items-center gap-2 ${accent.header}`}>
+              <Layers className={`w-4 h-4 shrink-0 ${accent.icon}`} />
               {title}
+              <span className={`text-xs font-normal border px-2 py-0.5 rounded-full ms-1 ${accent.badge}`}>
+                {layers.length} {layers.length === 1 ? "طبقة" : "طبقات"}
+              </span>
             </CardTitle>
+          ) : (
+            <div className={`flex items-center gap-2 ${accent.header}`}>
+              <Layers className={`w-4 h-4 ${accent.icon}`} />
+              <span className={`text-xs border px-2 py-0.5 rounded-full ${accent.badge}`}>
+                {layers.length} {layers.length === 1 ? "طبقة" : "طبقات"}
+              </span>
+            </div>
           )}
-          {!title && <div />}
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={addLayer}
-            className={`h-7 text-xs px-2 gap-1 shrink-0 ${addBtnColor}`}
+            className={`h-9 text-xs px-3 gap-1.5 shrink-0 font-bold transition-all active:scale-95 ${accent.addBtn}`}
           >
-            <Plus className="w-3 h-3" />
-            إضافة طبقة
+            <Plus className="w-3.5 h-3.5" />
+            <span>إضافة طبقة</span>
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+
+      <CardContent className="px-4 pb-4 space-y-3">
+        {/* Layer cards */}
         {layers.map((layer, index) => (
-          <LayerRow
+          <LayerCard
             key={index}
             layer={layer}
             index={index}
             total={layers.length}
+            accent={accent}
             onMaterialChange={(v) => updateLayer(index, "materialId", v)}
             onThicknessChange={(v) => updateLayer(index, "thickness", v)}
             onDelete={() => deleteLayer(index)}
           />
         ))}
 
-        <Separator className="my-1" />
+        <Separator className="my-3" />
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1">
-            <Label className="text-xs font-medium text-slate-600">
-              معامل الداخلي <span className="text-slate-400 font-mono">(hi)</span>
-            </Label>
-            <Input
-              type="number" step="0.1" value={hi}
-              onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
-              className="h-9 text-xs text-center font-mono" dir="ltr"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs font-medium text-slate-600">
-              معامل الخارجي <span className="text-slate-400 font-mono">(ho)</span>
-            </Label>
-            <Input
-              type="number" step="0.1" value={ho}
-              onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
-              className="h-9 text-xs text-center font-mono" dir="ltr"
-            />
+        {/* Surface coefficients */}
+        <div>
+          <p className="text-xs font-medium text-slate-500 mb-2.5">معاملات سطح الانتقال الحراري</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-xs text-slate-600 mb-1 block">
+                داخلي
+                <span className="text-slate-400 font-mono ms-1">(hi)</span>
+              </Label>
+              <Input
+                type="number"
+                step="0.1"
+                value={hi}
+                onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
+                className="h-11 text-sm text-center font-mono bg-white"
+                dir="ltr"
+              />
+            </div>
+            <div>
+              <Label className="text-xs text-slate-600 mb-1 block">
+                خارجي
+                <span className="text-slate-400 font-mono ms-1">(ho)</span>
+              </Label>
+              <Input
+                type="number"
+                step="0.1"
+                value={ho}
+                onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
+                className="h-11 text-sm text-center font-mono bg-white"
+                dir="ltr"
+              />
+            </div>
           </div>
         </div>
       </CardContent>
@@ -201,12 +283,20 @@ function ConstructionLayerEditor({
 export function ConstructionSection({ inputs, onChange }: Props) {
   return (
     <div className="space-y-4">
-      <label htmlFor="considerRoofFloor" className="flex items-center gap-3 cursor-pointer select-none py-1">
-        <span className="text-sm font-medium flex-1">أخذ تأثير السقف والأرضية بالحسبان؟</span>
-        <input type="checkbox" id="considerRoofFloor"
+      {/* Roof / Floor toggle */}
+      <label
+        htmlFor="considerRoofFloor"
+        className="flex items-center justify-between gap-3 cursor-pointer select-none bg-white border border-slate-200 rounded-xl px-4 py-3.5 shadow-sm hover:border-slate-300 transition-colors"
+      >
+        <span className="text-sm font-medium text-slate-800 leading-snug">
+          أخذ تأثير السقف والأرضية بالحسبان؟
+        </span>
+        <input
+          type="checkbox"
+          id="considerRoofFloor"
           checked={inputs.considerRoofFloor === 1}
           onChange={(e) => onChange("considerRoofFloor", e.target.checked ? 1 : 0)}
-          className="w-5 h-5 rounded border-gray-300 accent-blue-600 shrink-0"
+          className="w-5 h-5 rounded border-gray-300 accent-rose-600 shrink-0 cursor-pointer"
         />
       </label>
 
@@ -214,18 +304,20 @@ export function ConstructionSection({ inputs, onChange }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <ConstructionLayerEditor
             title="طبقات السقف"
-            colorClass="rose" titleColorClass="text-rose-800" iconColorClass="text-rose-600"
-            addBtnColor="border-rose-300 text-rose-700 hover:bg-rose-50"
-            layers={inputs.roofLayers} hi={inputs.roofHi} ho={inputs.roofHo}
+            accentColor="rose"
+            layers={inputs.roofLayers}
+            hi={inputs.roofHi}
+            ho={inputs.roofHo}
             onLayersChange={(layers) => onChange("roofLayers", layers as any)}
             onHiChange={(val) => onChange("roofHi", val)}
             onHoChange={(val) => onChange("roofHo", val)}
           />
           <ConstructionLayerEditor
             title="طبقات الأرضية"
-            colorClass="emerald" titleColorClass="text-emerald-800" iconColorClass="text-emerald-600"
-            addBtnColor="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
-            layers={inputs.floorLayers} hi={inputs.floorHi} ho={inputs.floorHo}
+            accentColor="emerald"
+            layers={inputs.floorLayers}
+            hi={inputs.floorHi}
+            ho={inputs.floorHo}
             onLayersChange={(layers) => onChange("floorLayers", layers as any)}
             onHiChange={(val) => onChange("floorHi", val)}
             onHoChange={(val) => onChange("floorHo", val)}
@@ -235,58 +327,72 @@ export function ConstructionSection({ inputs, onChange }: Props) {
 
       <Separator />
 
-      <label htmlFor="considerWalls" className="flex items-center gap-3 cursor-pointer select-none py-1">
-        <span className="text-sm font-medium flex-1">أخذ حمل الجدران بالحسبان؟</span>
-        <input type="checkbox" id="considerWalls"
+      {/* Walls toggle */}
+      <label
+        htmlFor="considerWalls"
+        className="flex items-center justify-between gap-3 cursor-pointer select-none bg-white border border-slate-200 rounded-xl px-4 py-3.5 shadow-sm hover:border-slate-300 transition-colors"
+      >
+        <span className="text-sm font-medium text-slate-800 leading-snug">
+          أخذ حمل الجدران بالحسبان؟
+        </span>
+        <input
+          type="checkbox"
+          id="considerWalls"
           checked={inputs.considerWalls === 1}
           onChange={(e) => onChange("considerWalls", e.target.checked ? 1 : 0)}
-          className="w-5 h-5 rounded border-gray-300 accent-blue-600 shrink-0"
+          className="w-5 h-5 rounded border-gray-300 accent-indigo-600 shrink-0 cursor-pointer"
         />
       </label>
 
       {inputs.considerWalls === 1 && (
-        <Card className="border-indigo-200 shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base text-indigo-800 font-display">
-              طبقات الجدران (الشمالي / الجنوبي / الشرقي / الغربي)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConstructionLayerEditor
-              title="" colorClass="indigo" titleColorClass="text-indigo-800" iconColorClass="text-indigo-600"
-              addBtnColor="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
-              layers={inputs.wallLayers} hi={inputs.wallHi} ho={inputs.wallHo}
-              onLayersChange={(layers) => onChange("wallLayers", layers as any)}
-              onHiChange={(val) => onChange("wallHi", val)}
-              onHoChange={(val) => onChange("wallHo", val)}
-            />
+        <div className="space-y-4">
+          <ConstructionLayerEditor
+            title="طبقات الجدران"
+            accentColor="indigo"
+            layers={inputs.wallLayers}
+            hi={inputs.wallHi}
+            ho={inputs.wallHo}
+            onLayersChange={(layers) => onChange("wallLayers", layers as any)}
+            onHiChange={(val) => onChange("wallHi", val)}
+            onHoChange={(val) => onChange("wallHo", val)}
+          />
 
-            <Separator />
-
-            <div>
-              <div className="text-xs font-medium text-slate-500 mb-2">قيمة ho لكل اتجاه</div>
+          {/* Directional ho values */}
+          <Card className="border-slate-200 shadow-sm">
+            <CardHeader className="pb-2 pt-4 px-4">
+              <CardTitle className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
+                قيمة الـ ho لكل اتجاه جداري
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 pb-4">
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { key: "northWallHo", label: "الشمالي", val: inputs.northWallHo },
-                  { key: "southWallHo", label: "الجنوبي", val: inputs.southWallHo },
-                  { key: "eastWallHo",  label: "الشرقي",  val: inputs.eastWallHo  },
-                  { key: "westWallHo",  label: "الغربي",  val: inputs.westWallHo  },
-                ].map(({ key, label, val }) => (
-                  <div key={key} className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-medium text-slate-600">
-                      {label} <span className="text-slate-400 font-mono">(ho)</span>
-                    </span>
+                  { key: "northWallHo", label: "الشمالي",  icon: "↑", val: inputs.northWallHo },
+                  { key: "southWallHo", label: "الجنوبي",  icon: "↓", val: inputs.southWallHo },
+                  { key: "eastWallHo",  label: "الشرقي",   icon: "←", val: inputs.eastWallHo  },
+                  { key: "westWallHo",  label: "الغربي",   icon: "→", val: inputs.westWallHo  },
+                ].map(({ key, label, icon, val }) => (
+                  <div key={key} className="bg-slate-50 rounded-xl border border-slate-100 p-3">
+                    <Label className="text-xs text-slate-600 mb-1.5 flex items-center gap-1.5">
+                      <span className="text-slate-400 font-mono text-base leading-none">{icon}</span>
+                      {label}
+                      <span className="text-slate-400 font-mono">(ho)</span>
+                    </Label>
                     <Input
-                      type="number" step="0.1" value={val}
+                      type="number"
+                      step="0.1"
+                      value={val}
                       onChange={(e) => onChange(key, parseFloat(e.target.value) || 0)}
-                      className="h-8 text-xs text-center font-mono w-20 shrink-0" dir="ltr"
+                      className="h-10 text-sm text-center font-mono bg-white"
+                      dir="ltr"
                     />
                   </div>
                 ))}
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
