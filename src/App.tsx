@@ -120,25 +120,28 @@ function App() {
           ══════════════════════════════════════════ */}
       <header className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white shadow-2xl">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2NGgtNHpNMjAgMjBoNHY0aC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-40"></div>
-        <div className="relative max-w-[1600px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="relative max-w-[1600px] mx-auto px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+          <div className="flex items-center justify-between gap-3">
 
             {/* Brand identity */}
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 shrink-0">
-                <Calculator className="w-10 h-10 text-cyan-300" />
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2.5 sm:p-3 bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/20 shrink-0">
+                <Calculator className="w-7 h-7 sm:w-10 sm:h-10 text-cyan-300" />
               </div>
-              <div>
-                {/* H1 — ThmanyahSerifDisplay Black: أعلى مستوى في الهرم البصري */}
+              <div className="min-w-0">
                 <h1
-                  className="font-display text-2xl lg:text-display-md tracking-tight leading-tight"
-                  style={{ fontFamily: "'ThmanyahSerifDisplay'", fontWeight: 900 }}
+                  className="font-display leading-tight truncate"
+                  style={{
+                    fontFamily: "'ThmanyahSerifDisplay'",
+                    fontWeight: 900,
+                    fontSize: "clamp(1.1rem, 4vw, 2rem)",
+                    fontFeatureSettings: '"salt" 1, "calt" 1, "liga" 1',
+                  }}
                 >
                   حساب أحمال التبريد والتكييف
                 </h1>
-                {/* Subtitle — ThmanyahSans Light: ثانوي هادئ */}
                 <p
-                  className="mt-1 text-blue-200 text-caption"
+                  className="mt-0.5 text-blue-200 text-xs sm:text-sm leading-snug"
                   style={{ fontFamily: "'ThmanyahSans'", fontWeight: 300 }}
                 >
                   برنامج احترافي متكامل لحسابات ASHRAE
@@ -146,17 +149,17 @@ function App() {
               </div>
             </div>
 
-            {/* Feature badges — ThmanyahSans Medium */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Feature badges — hidden on small screens, visible sm+ */}
+            <div className="hidden sm:flex flex-wrap items-center gap-1.5 shrink-0">
               {[
-                { icon: <ThermometerSun className="w-3 h-3 me-1.5" />, label: "جداول ASHRAE" },
-                { icon: <CheckCircle2   className="w-3 h-3 me-1.5" />, label: "100+ منتج" },
-                { icon: <ClipboardList  className="w-3 h-3 me-1.5" />, label: "22 جدول مرجعي" },
+                { icon: <ThermometerSun className="w-3 h-3 me-1" />, label: "جداول ASHRAE" },
+                { icon: <CheckCircle2   className="w-3 h-3 me-1" />, label: "100+ منتج" },
+                { icon: <ClipboardList  className="w-3 h-3 me-1" />, label: "22 جدول" },
               ].map(({ icon, label }) => (
                 <Badge
                   key={label}
                   variant="outline"
-                  className="border-white/30 text-white bg-white/10 text-micro py-1 px-2.5"
+                  className="border-white/30 text-white bg-white/10 text-xs py-1 px-2 whitespace-nowrap"
                   style={{ fontFamily: "'ThmanyahSans'", fontWeight: 500 }}
                 >
                   {icon}{label}
@@ -171,29 +174,30 @@ function App() {
       {/* ══════════════════════════════════════════
           MAIN CONTENT
           ══════════════════════════════════════════ */}
-      <main className="max-w-[1600px] mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <main className="max-w-[1600px] mx-auto px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
 
           {/* ── Input Panel (2/3 width on xl) ─────────── */}
           <div className="xl:col-span-2 space-y-6">
             <Tabs defaultValue="dimensions" className="w-full">
 
-              {/* Tab list — ThmanyahSans Bold (700): عناصر التنقل تحتاج وضوح */}
-              <TabsList className="w-full flex flex-wrap h-auto bg-white/80 backdrop-blur-sm border shadow-sm rounded-xl p-1 gap-1">
+              {/* Tab list — scrollable on mobile, full on desktop */}
+              <TabsList className="w-full flex h-auto bg-white/80 backdrop-blur-sm border shadow-sm rounded-xl p-1 gap-1 overflow-x-auto overflow-y-hidden scrollbar-none">
                 {[
-                  { value: "dimensions", icon: <Settings className="w-3.5 h-3.5 me-1" />,          label: "الأبعاد والمواد",   color: "data-[state=active]:bg-blue-600" },
-                  { value: "glass",      icon: <Sun       className="w-3.5 h-3.5 me-1" />,          label: "الزجاج والشمس",    color: "data-[state=active]:bg-amber-600" },
-                  { value: "internal",   icon: <Users     className="w-3.5 h-3.5 me-1" />,          label: "الأحمال الداخلية", color: "data-[state=active]:bg-emerald-600" },
-                  { value: "product",    icon: <Package   className="w-3.5 h-3.5 me-1" />,          label: "المنتج والتخزين",  color: "data-[state=active]:bg-violet-600" },
-                  { value: "air",        icon: <Wind      className="w-3.5 h-3.5 me-1 rtl-flip" />, label: "أحمال الهواء",     color: "data-[state=active]:bg-sky-600" },
+                  { value: "dimensions", icon: <Settings className="w-4 h-4 shrink-0" />, label: "الأبعاد والمواد",   color: "data-[state=active]:bg-blue-600" },
+                  { value: "glass",      icon: <Sun       className="w-4 h-4 shrink-0" />, label: "الزجاج والشمس",    color: "data-[state=active]:bg-amber-600" },
+                  { value: "internal",   icon: <Users     className="w-4 h-4 shrink-0" />, label: "الأحمال الداخلية", color: "data-[state=active]:bg-emerald-600" },
+                  { value: "product",    icon: <Package   className="w-4 h-4 shrink-0" />, label: "المنتج والتخزين",  color: "data-[state=active]:bg-violet-600" },
+                  { value: "air",        icon: <Wind      className="w-4 h-4 shrink-0 rtl-flip" />, label: "أحمال الهواء",     color: "data-[state=active]:bg-sky-600" },
                 ].map(({ value, icon, label, color }) => (
                   <TabsTrigger
                     key={value}
                     value={value}
-                    className={`flex-1 min-w-[90px] ${color} data-[state=active]:text-white rounded-lg text-micro sm:text-caption`}
+                    className={`flex-1 min-w-[52px] flex flex-col sm:flex-row items-center gap-1 sm:gap-1.5 ${color} data-[state=active]:text-white rounded-lg py-2 sm:py-1.5 px-1 sm:px-2 text-[10px] sm:text-xs whitespace-nowrap`}
                     style={{ fontFamily: "'ThmanyahSans'", fontWeight: 700 }}
                   >
-                    {icon}{label}
+                    {icon}
+                    <span className="leading-none text-center">{label}</span>
                   </TabsTrigger>
                 ))}
               </TabsList>
