@@ -9,8 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Layers, Info } from "lucide-react";
+import { Layers } from "lucide-react";
 import { MATERIALS, getMaterialK } from "@/data/materials";
 import type { CalculationInputs, WallLayer } from "@/types/inputs";
 
@@ -21,7 +20,9 @@ interface Props {
 
 interface LayerEditorProps {
   title: string;
-  color: string;
+  colorClass: string;
+  titleColorClass: string;
+  iconColorClass: string;
   layers: WallLayer[];
   hi: number;
   ho: number;
@@ -30,9 +31,69 @@ interface LayerEditorProps {
   onHoChange: (val: number) => void;
 }
 
+/* ── Single layer row ──────────────────────────────────────────
+   RTL layout:
+   [ اسم الطبقة ]  ← label اليمين
+   [ Select المادة ···········] [سُمك] [k=x.xx]
+   ─────────────────────────────────────────────────────────── */
+function LayerRow({
+  layer,
+  index,
+  onMaterialChange,
+  onThicknessChange,
+}: {
+  layer: WallLayer;
+  index: number;
+  onMaterialChange: (v: string) => void;
+  onThicknessChange: (v: number) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <span className="text-xs font-medium text-slate-500">الطبقة {index + 1}</span>
+      {/* Row: [k badge | thickness | material select] — RTL reading order */}
+      <div className="flex items-center gap-2">
+        {/* Material: flex-1, leftmost visually in RTL = last in flex row */}
+        <Select value={layer.materialId} onValueChange={onMaterialChange}>
+          <SelectTrigger className="h-9 text-xs flex-1">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {MATERIALS.map((m) => (
+              <SelectItem key={m.id} value={m.id} className="text-xs">
+                {m.name} (k={m.k})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Thickness label + input stacked, fixed width */}
+        <div className="shrink-0 w-20 text-center">
+          <div className="text-[10px] text-slate-400 mb-0.5">السُّمك (m)</div>
+          <Input
+            type="number"
+            step="0.01"
+            value={layer.thickness}
+            onChange={(e) => onThicknessChange(parseFloat(e.target.value) || 0)}
+            className="h-9 text-xs text-center font-mono"
+            dir="ltr"
+          />
+        </div>
+
+        {/* k value badge — far left in RTL */}
+        <div className="shrink-0 w-14 text-center bg-slate-100 rounded-md border border-slate-200 py-1 px-1">
+          <div className="text-[9px] text-slate-400">k</div>
+          <div className="text-xs font-mono font-semibold text-slate-700">{layer.k}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ConstructionLayerEditor({
   title,
-  color,
+  colorClass,
+  titleColorClass,
+  iconColorClass,
   layers,
   hi,
   ho,
@@ -40,7 +101,11 @@ function ConstructionLayerEditor({
   onHiChange,
   onHoChange,
 }: LayerEditorProps) {
-  const updateLayer = (index: number, field: keyof WallLayer, value: string | number) => {
+  const updateLayer = (
+    index: number,
+    field: keyof WallLayer,
+    value: string | number
+  ) => {
     const newLayers = [...layers];
     if (field === "materialId") {
       newLayers[index] = {
@@ -55,81 +120,50 @@ function ConstructionLayerEditor({
   };
 
   return (
-    <Card className={`border-${color}-200 shadow-sm`}>
+    <Card className={`border-${colorClass}-200 shadow-sm`}>
       <CardHeader className="pb-2">
-        <CardTitle className={`text-base flex items-center gap-2 text-${color}-800`}>
-          <Layers className={`w-4 h-4 text-${color}-600`} />
-          {title}
-        </CardTitle>
+        {title && (
+          <CardTitle className={`text-base flex items-center gap-2 ${titleColorClass}`}>
+            <Layers className={`w-4 h-4 ${iconColorClass} shrink-0`} />
+            {title}
+          </CardTitle>
+        )}
       </CardHeader>
       <CardContent className="space-y-3">
         {layers.map((layer, index) => (
-          <div key={index} className="grid grid-cols-12 gap-2 items-end">
-            <div className="col-span-7 space-y-1">
-              <Label className="text-xs">الطبقة {index + 1}</Label>
-              <Select
-                value={layer.materialId}
-                onValueChange={(v) => updateLayer(index, "materialId", v)}
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {MATERIALS.map((m) => (
-                    <SelectItem key={m.id} value={m.id} className="text-xs">
-                      {m.name} (k={m.k})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="col-span-3 space-y-1">
-              <Label className="text-xs">السمك (m)</Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={layer.thickness}
-                onChange={(e) =>
-                  updateLayer(index, "thickness", parseFloat(e.target.value) || 0)
-                }
-                className="h-8 text-xs text-start"
-              />
-            </div>
-            <div className="col-span-2">
-              <Badge variant="outline" className="text-xs w-full justify-center">
-                k={layer.k}
-              </Badge>
-            </div>
-          </div>
+          <LayerRow
+            key={index}
+            layer={layer}
+            index={index}
+            onMaterialChange={(v) => updateLayer(index, "materialId", v)}
+            onThicknessChange={(v) => updateLayer(index, "thickness", v)}
+          />
         ))}
 
-        <Separator className="my-2" />
+        <Separator className="my-1" />
 
-        <div className="grid grid-cols-2 gap-2">
+        {/* hi / ho — RTL: ho (خارجي) right, hi (داخلي) left */}
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <Label className="text-xs flex items-center gap-1 font-sans">
-              <Info className="w-3 h-3" />
-              hi (داخلي)
-            </Label>
-            <Input
-              type="number"
-              step="0.1"
-              value={hi}
-              onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
-              className="h-8 text-xs text-start"
-            />
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs flex items-center gap-1 font-sans">
-              <Info className="w-3 h-3" />
-              ho (خارجي)
-            </Label>
+            <Label className="text-xs font-medium text-slate-600">ho الخارجي</Label>
             <Input
               type="number"
               step="0.1"
               value={ho}
               onChange={(e) => onHoChange(parseFloat(e.target.value) || 0)}
-              className="h-8 text-xs text-start"
+              className="h-9 text-xs text-center font-mono"
+              dir="ltr"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs font-medium text-slate-600">hi الداخلي</Label>
+            <Input
+              type="number"
+              step="0.1"
+              value={hi}
+              onChange={(e) => onHiChange(parseFloat(e.target.value) || 0)}
+              className="h-9 text-xs text-center font-mono"
+              dir="ltr"
             />
           </div>
         </div>
@@ -141,26 +175,30 @@ function ConstructionLayerEditor({
 export function ConstructionSection({ inputs, onChange }: Props) {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-2">
+      {/* ── Roof & Floor toggle ─────────────────────────────── */}
+      <label
+        htmlFor="considerRoofFloor"
+        className="flex items-center gap-3 cursor-pointer select-none py-1"
+      >
+        <span className="text-sm font-medium flex-1">
+          أخذ تأثير السقف والأرضية بالحسبان؟
+        </span>
         <input
           type="checkbox"
           id="considerRoofFloor"
           checked={inputs.considerRoofFloor === 1}
-          onChange={(e) =>
-            onChange("considerRoofFloor", e.target.checked ? 1 : 0)
-          }
-          className="w-4 h-4 rounded border-gray-300"
+          onChange={(e) => onChange("considerRoofFloor", e.target.checked ? 1 : 0)}
+          className="w-5 h-5 rounded border-gray-300 accent-blue-600 shrink-0"
         />
-        <Label htmlFor="considerRoofFloor" className="text-sm font-medium cursor-pointer">
-          أخذ تأثير السقف والأرضية بالحسبان؟ (1=نعم, 0=لا)
-        </Label>
-      </div>
+      </label>
 
       {inputs.considerRoofFloor === 1 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <ConstructionLayerEditor
             title="طبقات السقف"
-            color="rose"
+            colorClass="rose"
+            titleColorClass="text-rose-800"
+            iconColorClass="text-rose-600"
             layers={inputs.roofLayers}
             hi={inputs.roofHi}
             ho={inputs.roofHo}
@@ -170,13 +208,13 @@ export function ConstructionSection({ inputs, onChange }: Props) {
           />
           <ConstructionLayerEditor
             title="طبقات الأرضية"
-            color="emerald"
+            colorClass="emerald"
+            titleColorClass="text-emerald-800"
+            iconColorClass="text-emerald-600"
             layers={inputs.floorLayers}
             hi={inputs.floorHi}
             ho={inputs.floorHo}
-            onLayersChange={(layers) =>
-              onChange("floorLayers", layers as any)
-            }
+            onLayersChange={(layers) => onChange("floorLayers", layers as any)}
             onHiChange={(val) => onChange("floorHi", val)}
             onHoChange={(val) => onChange("floorHo", val)}
           />
@@ -185,75 +223,79 @@ export function ConstructionSection({ inputs, onChange }: Props) {
 
       <Separator />
 
-      {/* Walls */}
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="considerWalls"
-            checked={inputs.considerWalls === 1}
-            onChange={(e) =>
-              onChange("considerWalls", e.target.checked ? 1 : 0)
-            }
-            className="w-4 h-4 rounded border-gray-300"
-          />
-          <Label htmlFor="considerWalls" className="text-sm font-medium cursor-pointer">
-            أخذ حمل الجدران بالحسبان؟
-          </Label>
-        </div>
+      {/* ── Walls toggle ─────────────────────────────────────── */}
+      <label
+        htmlFor="considerWalls"
+        className="flex items-center gap-3 cursor-pointer select-none py-1"
+      >
+        <span className="text-sm font-medium flex-1">
+          أخذ حمل الجدران بالحسبان؟
+        </span>
+        <input
+          type="checkbox"
+          id="considerWalls"
+          checked={inputs.considerWalls === 1}
+          onChange={(e) => onChange("considerWalls", e.target.checked ? 1 : 0)}
+          className="w-5 h-5 rounded border-gray-300 accent-blue-600 shrink-0"
+        />
+      </label>
 
-        {inputs.considerWalls === 1 && (
-          <Card className="border-indigo-200 shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base text-indigo-800 font-display">
-                طبقات الجدران (الشمالي / الجنوبي / الشرقي / الغربي)
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <ConstructionLayerEditor
-                title=""
-                color="indigo"
-                layers={inputs.wallLayers}
-                hi={inputs.wallHi}
-                ho={inputs.wallHo}
-                onLayersChange={(layers) =>
-                  onChange("wallLayers", layers as any)
-                }
-                onHiChange={(val) => onChange("wallHi", val)}
-                onHoChange={(val) => onChange("wallHo", val)}
-              />
+      {inputs.considerWalls === 1 && (
+        <Card className="border-indigo-200 shadow-sm">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base text-indigo-800 font-display">
+              طبقات الجدران (الشمالي / الجنوبي / الشرقي / الغربي)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ConstructionLayerEditor
+              title=""
+              colorClass="indigo"
+              titleColorClass="text-indigo-800"
+              iconColorClass="text-indigo-600"
+              layers={inputs.wallLayers}
+              hi={inputs.wallHi}
+              ho={inputs.wallHo}
+              onLayersChange={(layers) => onChange("wallLayers", layers as any)}
+              onHiChange={(val) => onChange("wallHi", val)}
+              onHoChange={(val) => onChange("wallHo", val)}
+            />
 
-              <Separator />
+            <Separator />
 
-              {/* Direction-specific ho values */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {/* ho per direction — 2×2 grid, each has label+input */}
+            <div>
+              <div className="text-xs font-medium text-slate-500 mb-2">
+                قيمة ho لكل اتجاه
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 {[
-                  { key: "north", label: "الشمالي", val: inputs.northWallHo },
-                  { key: "south", label: "الجنوبي", val: inputs.southWallHo },
-                  { key: "east", label: "الشرقي", val: inputs.eastWallHo },
-                  { key: "west", label: "الغربي", val: inputs.westWallHo },
-                ].map((dir) => (
-                  <div key={dir.key} className="space-y-1">
-                    <Label className="text-xs">ho {dir.label}</Label>
+                  { key: "northWallHo", label: "الشمالي", val: inputs.northWallHo },
+                  { key: "southWallHo", label: "الجنوبي", val: inputs.southWallHo },
+                  { key: "eastWallHo",  label: "الشرقي",  val: inputs.eastWallHo  },
+                  { key: "westWallHo",  label: "الغربي",  val: inputs.westWallHo  },
+                ].map(({ key, label, val }) => (
+                  <div key={key} className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-slate-600 flex-1">
+                      ho {label}
+                    </span>
                     <Input
                       type="number"
                       step="0.1"
-                      value={dir.val}
+                      value={val}
                       onChange={(e) =>
-                        onChange(
-                          `${dir.key}WallHo`,
-                          parseFloat(e.target.value) || 0
-                        )
+                        onChange(key, parseFloat(e.target.value) || 0)
                       }
-                      className="h-8 text-xs text-start"
+                      className="h-8 text-xs text-center font-mono w-20 shrink-0"
+                      dir="ltr"
                     />
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
