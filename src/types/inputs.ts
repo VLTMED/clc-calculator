@@ -5,6 +5,9 @@ export interface WallLayer {
 }
 
 export interface CalculationInputs {
+  // App mode
+  appMode: "ac" | "refrig"; // وضع التكييف أو التبريد
+
   // Dimensions
   length: number;
   width: number;
@@ -60,9 +63,11 @@ export interface CalculationInputs {
   clfValue: number;
 
   // Internal loads
+  lightsEnabled: number;
   lightsCount: number;
   lightsWatt: number;
   lightsHours: number;
+  peopleEnabled: number;
   peopleCount: number;
   peopleQt: number;
   peopleHours: number;
