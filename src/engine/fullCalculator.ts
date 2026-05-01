@@ -66,9 +66,11 @@ export const runAllCalculations = (
     scValue,
     shgfValue,
     clfValue,
+    lightsEnabled,
     lightsCount,
     lightsWatt,
     lightsHours,
+    peopleEnabled,
     peopleCount,
     peopleQt,
     peopleHours,
@@ -205,8 +207,12 @@ export const runAllCalculations = (
   const totalGlass = glassTransmission + glassSolar;
 
   // 5. Internal Loads
-  const lightingLoad = calculateLightingLoad(lightsCount, lightsWatt, lightsHours);
-  const peopleLoad = calculatePeopleLoad(peopleCount, peopleQt, peopleHours);
+  const lightingLoad = lightsEnabled
+    ? calculateLightingLoad(lightsCount, lightsWatt, lightsHours)
+    : 0;
+  const peopleLoad = peopleEnabled
+    ? calculatePeopleLoad(peopleCount, peopleQt, peopleHours)
+    : 0;
   const equipmentLoad = equipmentEnabled
     ? calculateEquipmentLoad(
         equipmentHeatRate * equipmentCount,
