@@ -42,7 +42,7 @@ jobs:
       - name: Build Vite app
         run: npm run build
 
-      # ── 5. VERIFY — يفشل الـ workflow إذا غاب index.html
+      # ── 5. VERIFY ──────────────────────────────────────
       - name: Verify HTML output
         run: |
           echo "📂 محتوى dist/:"
@@ -63,17 +63,17 @@ jobs:
           echo "✅ الخطوط منسوخة: $(ls dist/fonts | wc -l) ملف"
 
       # ── 7. Inject font CSS into Pages index.html ───────
-      - name: Inject font CSS for GitHub Pages
+      - name: Inject font CSS for Cloudflare Pages
         run: |
           python3 - << 'PYEOF'
           font_css = """
-          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype');font-weight:300;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype');font-weight:400;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype');font-weight:500;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype');font-weight:900;font-display:block;}
-          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
-          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');font-weight:900;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Light.ttf') format('truetype');font-weight:300;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Regular.ttf') format('truetype');font-weight:400;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Medium.ttf') format('truetype');font-weight:500;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Black.ttf') format('truetype');font-weight:900;font-display:block;}
+          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
+          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');font-weight:900;font-display:block;}
           *,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}
           html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}
           h1,h2{font-family:'ThmanyahSerifDisplay'!important;}
@@ -85,7 +85,7 @@ jobs:
           """
           with open('dist/index.html', 'r') as f:
               html = f.read()
-          style_tag = f'<style>{font_css}</style>'
+          style_tag = '<style>' + font_css + '</style>'
           html = html.replace('<head>', '<head>\n' + style_tag, 1)
           with open('dist/index.html', 'w') as f:
               f.write(html)
@@ -118,14 +118,14 @@ jobs:
           ]
           font_faces = []
           for family, weight, filename in fonts:
-              path = f'dist/fonts/{filename}'
+              path = 'dist/fonts/' + filename
               b64 = base64.b64encode(open(path,'rb').read()).decode()
               font_faces.append(
-                  f"@font-face{{font-family:'{family}';"
-                  f"src:url('data:font/truetype;base64,{b64}') format('truetype');"
-                  f"font-weight:{weight};font-display:block;}}"
+                  "@font-face{font-family:'" + family + "';"
+                  "src:url('data:font/truetype;base64," + b64 + "') format('truetype');"
+                  "font-weight:" + str(weight) + ";font-display:block;}"
               )
-              print(f'  ✅ embedded: {filename}')
+              print('  ✅ embedded: ' + filename)
 
           global_css = (
               "*,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}"
@@ -140,56 +140,49 @@ jobs:
 
           sha = os.environ.get('GITHUB_SHA','local')[:7]
 
-          html = f"""<!doctype html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>حساب أحمال التبريد والتكييف</title>
-  <style>{''.join(font_faces)}{global_css}</style>
-  <style>{css}</style>
-</head>
-<body>
-  <div id="root"></div>
-  <script type="module">{js}</script>
-</body>
-</html>"""
+          lang_attr = 'lang="ar" dir="rtl"'
+          html = (
+              '<!doctype html>\n'
+              '<html ' + lang_attr + '>\n'
+              '<head>\n'
+              '  <meta charset="UTF-8"/>\n'
+              '  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n'
+              '  <title>\u062d\u0633\u0627\u0628 \u0623\u062d\u0645\u0627\u0644 \u0627\u0644\u062a\u0628\u0631\u064a\u062f \u0648\u0627\u0644\u062a\u0643\u064a\u064a\u0641</title>\n'
+              '  <style>' + ''.join(font_faces) + global_css + '</style>\n'
+              '  <style>' + css + '</style>\n'
+              '</head>\n'
+              '<body>\n'
+              '  <div id="root"></div>\n'
+              '  <script type="module">' + js + '</script>\n'
+              '</body>\n'
+              '</html>'
+          )
 
           out = 'clc-calculator.html'
           open(out, 'w', encoding='utf-8').write(html)
           size_mb = os.path.getsize(out) / 1024 / 1024
-          print(f'✅ {out} — {size_mb:.2f} MB (sha: {sha})')
+          print('✅ ' + out + ' — ' + str(round(size_mb, 2)) + ' MB (sha: ' + sha + ')')
           PYEOF
         env:
           GITHUB_SHA: ${{ github.sha }}
 
-      # ── 9. Verify standalone HTML was created ──────────
+      # ── 9. Verify standalone HTML ──────────────────────
       - name: Verify standalone HTML
         run: |
           test -f clc-calculator.html || { echo "❌ clc-calculator.html غائب"; exit 1; }
           SIZE=$(wc -c < clc-calculator.html)
           echo "✅ clc-calculator.html — ${SIZE} bytes"
-          # Sanity: must contain Arabic title
           grep -q "التبريد" clc-calculator.html && echo "✅ المحتوى العربي موجود" || { echo "❌ المحتوى العربي غائب"; exit 1; }
 
-      # ── 10. Upload dist as Pages artifact ─────────────
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-
-      # ── 11. Upload standalone HTML as Actions artifact ─
+      # ── 10. Upload standalone HTML as Actions artifact ─
       - name: Upload standalone HTML artifact
         uses: actions/upload-artifact@v4
         with:
-          name: clc-calculator-standalone-${{ github.sha }}
+          name: clc-calculator-${{ github.sha }}
           path: clc-calculator.html
-          retention-days: 30
+          retention-days: 90
 
-      # ── 12. Create GitHub Release with HTML ────────────
+      # ── 11. Create GitHub Release with HTML ────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -197,24 +190,16 @@ jobs:
           name: "CLC ${{ github.sha }}"
           body: |
             ملف HTML مستقل — يعمل offline بدون إنترنت
-
-            الموقع: https://vltmed.github.io/clc-calculator/
             Commit: `${{ github.sha }}`
           files: clc-calculator.html
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # ════════════════════════════════════════════════════════
-  # JOB 2 — Deploy to GitHub Pages
-  # ════════════════════════════════════════════════════════
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      # ── 12. Deploy to Cloudflare Pages ─────────────────
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=clc-calculator --commit-dirty=true
