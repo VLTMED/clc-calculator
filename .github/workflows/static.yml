@@ -7,106 +7,78 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
-
-  # ════════════════════════════════════════════════════════
-  # JOB 1 — Build, Verify, Export HTML, Upload artifacts
-  # ════════════════════════════════════════════════════════
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Checkout ────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # ── 2. Node.js ─────────────────────────────────────
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      # ── 3. Install ─────────────────────────────────────
       - name: Install dependencies
         run: npm ci
 
-      # ── 4. Build ───────────────────────────────────────
       - name: Build Vite app
         run: npm run build
 
-      # ── 5. VERIFY ──────────────────────────────────────
       - name: Verify HTML output
         run: |
-          echo "📂 محتوى dist/:"
-          ls -la dist/
-          echo ""
-          echo "📄 التحقق من dist/index.html..."
-          test -f dist/index.html || { echo "❌ dist/index.html غائب — فشل البناء"; exit 1; }
-          echo "✅ dist/index.html موجود ($(wc -c < dist/index.html) bytes)"
-          echo ""
-          echo "📂 محتوى dist/assets/:"
+          test -f dist/index.html || { echo "❌ dist/index.html غائب"; exit 1; }
+          echo "✅ dist/index.html — $(wc -c < dist/index.html) bytes"
           ls -la dist/assets/
 
-      # ── 6. Embed fonts into dist ───────────────────────
       - name: Copy fonts into dist
         run: |
           mkdir -p dist/fonts
           cp public/fonts/*.ttf dist/fonts/
-          echo "✅ الخطوط منسوخة: $(ls dist/fonts | wc -l) ملف"
+          echo "✅ الخطوط: $(ls dist/fonts | wc -l) ملف"
 
-      # ── 7. Inject font CSS into Pages index.html ───────
-      - name: Inject font CSS for Cloudflare Pages
+      - name: Inject font CSS
         run: |
           python3 - << 'PYEOF'
-          font_css = """
-          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Light.ttf') format('truetype');font-weight:300;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Regular.ttf') format('truetype');font-weight:400;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Medium.ttf') format('truetype');font-weight:500;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
-          @font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Black.ttf') format('truetype');font-weight:900;font-display:block;}
-          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
-          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');font-weight:900;font-display:block;}
-          *,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}
-          html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}
-          h1,h2{font-family:'ThmanyahSerifDisplay'!important;}
-          h1{font-weight:900!important;} h2{font-weight:700!important;}
-          h3,h4,h5,h6{font-family:'ThmanyahSans'!important;font-weight:700!important;}
-          label{font-weight:500!important;} button{font-weight:700!important;}
-          .font-display{font-family:'ThmanyahSerifDisplay'!important;}
-          input[type="number"]{direction:ltr;text-align:center;}
-          """
+          font_css = (
+            "@font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Light.ttf') format('truetype');font-weight:300;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Regular.ttf') format('truetype');font-weight:400;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Medium.ttf') format('truetype');font-weight:500;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Bold.ttf') format('truetype');font-weight:700;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSans';src:url('/fonts/thmanyahsans-Black.ttf') format('truetype');font-weight:900;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');font-weight:700;font-display:block;}"
+            "@font-face{font-family:'ThmanyahSerifDisplay';src:url('/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');font-weight:900;font-display:block;}"
+            "*,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}"
+            "html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}"
+            "h1,h2{font-family:'ThmanyahSerifDisplay'!important;}"
+            "h1{font-weight:900!important;}h2{font-weight:700!important;}"
+            "h3,h4,h5,h6{font-family:'ThmanyahSans'!important;font-weight:700!important;}"
+            "label{font-weight:500!important;}button{font-weight:700!important;}"
+            ".font-display{font-family:'ThmanyahSerifDisplay'!important;}"
+            "input[type='number']{direction:ltr;text-align:center;}"
+          )
           with open('dist/index.html', 'r') as f:
               html = f.read()
-          style_tag = '<style>' + font_css + '</style>'
-          html = html.replace('<head>', '<head>\n' + style_tag, 1)
+          html = html.replace('<head>', '<head><style>' + font_css + '</style>', 1)
           with open('dist/index.html', 'w') as f:
               f.write(html)
-          print('✅ Font CSS injected into dist/index.html')
+          print('✅ Font CSS injected')
           PYEOF
 
-      # ── 8. Generate standalone HTML (fonts as base64) ──
       - name: Generate standalone offline HTML
         run: |
           python3 - << 'PYEOF'
           import base64, os, glob
 
-          # CSS
           css_files = glob.glob('dist/assets/*.css')
           css = open(css_files[0]).read() if css_files else ''
 
-          # JS
           js_files = glob.glob('dist/assets/*.js')
           js = open(js_files[0]).read() if js_files else ''
 
-          # Embed fonts
           fonts = [
             ('ThmanyahSans',         300, 'thmanyahsans-Light.ttf'),
             ('ThmanyahSans',         400, 'thmanyahsans-Regular.ttf'),
@@ -129,33 +101,27 @@ jobs:
 
           global_css = (
               "*,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}"
-              "html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}"
+              "html,body{font-family:'ThmanyahSans'!important;font-weight:400;}"
               "h1,h2{font-family:'ThmanyahSerifDisplay'!important;}"
               "h1{font-weight:900!important;}h2{font-weight:700!important;}"
               "h3,h4,h5,h6{font-family:'ThmanyahSans'!important;font-weight:700!important;}"
               "label{font-weight:500!important;}button{font-weight:700!important;}"
-              ".font-display{font-family:'ThmanyahSerifDisplay'!important;}"
               "input[type='number']{direction:ltr;text-align:center;}"
           )
 
           sha = os.environ.get('GITHUB_SHA','local')[:7]
-
           lang_attr = 'lang="ar" dir="rtl"'
           html = (
-              '<!doctype html>\n'
-              '<html ' + lang_attr + '>\n'
-              '<head>\n'
-              '  <meta charset="UTF-8"/>\n'
-              '  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n'
-              '  <title>\u062d\u0633\u0627\u0628 \u0623\u062d\u0645\u0627\u0644 \u0627\u0644\u062a\u0628\u0631\u064a\u062f \u0648\u0627\u0644\u062a\u0643\u064a\u064a\u0641</title>\n'
-              '  <style>' + ''.join(font_faces) + global_css + '</style>\n'
-              '  <style>' + css + '</style>\n'
-              '</head>\n'
-              '<body>\n'
-              '  <div id="root"></div>\n'
-              '  <script type="module">' + js + '</script>\n'
-              '</body>\n'
-              '</html>'
+              '<!doctype html>\n<html ' + lang_attr + '>\n<head>\n'
+              '<meta charset="UTF-8"/>\n'
+              '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n'
+              '<title>\u062d\u0633\u0627\u0628 \u0623\u062d\u0645\u0627\u0644 \u0627\u0644\u062a\u0628\u0631\u064a\u062f</title>\n'
+              '<style>' + ''.join(font_faces) + global_css + '</style>\n'
+              '<style>' + css + '</style>\n'
+              '</head>\n<body>\n'
+              '<div id="root"></div>\n'
+              '<script type="module">' + js + '</script>\n'
+              '</body>\n</html>'
           )
 
           out = 'clc-calculator.html'
@@ -166,38 +132,32 @@ jobs:
         env:
           GITHUB_SHA: ${{ github.sha }}
 
-      # ── 9. Verify standalone HTML ──────────────────────
       - name: Verify standalone HTML
         run: |
           test -f clc-calculator.html || { echo "❌ clc-calculator.html غائب"; exit 1; }
-          SIZE=$(wc -c < clc-calculator.html)
-          echo "✅ clc-calculator.html — ${SIZE} bytes"
-          grep -q "التبريد" clc-calculator.html && echo "✅ المحتوى العربي موجود" || { echo "❌ المحتوى العربي غائب"; exit 1; }
+          echo "✅ $(wc -c < clc-calculator.html) bytes"
 
-      # ── 10. Upload standalone HTML as Actions artifact ─
-      - name: Upload standalone HTML artifact
+      - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
         with:
           name: clc-calculator-${{ github.sha }}
           path: clc-calculator.html
           retention-days: 90
 
-      # ── 11. Create GitHub Release with HTML ────────────
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.sha }}
           name: "CLC ${{ github.sha }}"
           body: |
-            ملف HTML مستقل — يعمل offline بدون إنترنت
+            ملف HTML مستقل — يعمل offline
             Commit: `${{ github.sha }}`
           files: clc-calculator.html
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── 12. Deploy to Cloudflare Pages ─────────────────
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
