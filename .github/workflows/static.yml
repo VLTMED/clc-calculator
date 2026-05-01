@@ -30,15 +30,15 @@ jobs:
 
       - name: Verify HTML output
         run: |
-          test -f dist/index.html || { echo "❌ dist/index.html غائب"; exit 1; }
-          echo "✅ dist/index.html — $(wc -c < dist/index.html) bytes"
+          test -f dist/index.html || { echo "dist/index.html missing"; exit 1; }
+          echo "dist/index.html — $(wc -c < dist/index.html) bytes"
           ls -la dist/assets/
 
       - name: Copy fonts into dist
         run: |
           mkdir -p dist/fonts
           cp public/fonts/*.ttf dist/fonts/
-          echo "✅ الخطوط: $(ls dist/fonts | wc -l) ملف"
+          echo "Fonts copied: $(ls dist/fonts | wc -l)"
 
       - name: Inject font CSS
         run: |
@@ -65,7 +65,7 @@ jobs:
           html = html.replace('<head>', '<head><style>' + font_css + '</style>', 1)
           with open('dist/index.html', 'w') as f:
               f.write(html)
-          print('✅ Font CSS injected')
+          print('Font CSS injected')
           PYEOF
 
       - name: Generate standalone offline HTML
@@ -97,7 +97,7 @@ jobs:
                   "src:url('data:font/truetype;base64," + b64 + "') format('truetype');"
                   "font-weight:" + str(weight) + ";font-display:block;}"
               )
-              print('  ✅ embedded: ' + filename)
+              print('embedded: ' + filename)
 
           global_css = (
               "*,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}"
@@ -110,9 +110,8 @@ jobs:
           )
 
           sha = os.environ.get('GITHUB_SHA','local')[:7]
-          lang_attr = 'lang="ar" dir="rtl"'
           html = (
-              '<!doctype html>\n<html ' + lang_attr + '>\n<head>\n'
+              '<!doctype html>\n<html lang="ar" dir="rtl">\n<head>\n'
               '<meta charset="UTF-8"/>\n'
               '<meta name="viewport" content="width=device-width,initial-scale=1.0"/>\n'
               '<title>\u062d\u0633\u0627\u0628 \u0623\u062d\u0645\u0627\u0644 \u0627\u0644\u062a\u0628\u0631\u064a\u062f</title>\n'
@@ -127,15 +126,15 @@ jobs:
           out = 'clc-calculator.html'
           open(out, 'w', encoding='utf-8').write(html)
           size_mb = os.path.getsize(out) / 1024 / 1024
-          print('✅ ' + out + ' — ' + str(round(size_mb, 2)) + ' MB (sha: ' + sha + ')')
+          print('Done: ' + out + ' — ' + str(round(size_mb, 2)) + ' MB (sha: ' + sha + ')')
           PYEOF
         env:
           GITHUB_SHA: ${{ github.sha }}
 
       - name: Verify standalone HTML
         run: |
-          test -f clc-calculator.html || { echo "❌ clc-calculator.html غائب"; exit 1; }
-          echo "✅ $(wc -c < clc-calculator.html) bytes"
+          test -f clc-calculator.html || { echo "clc-calculator.html missing"; exit 1; }
+          echo "Size: $(wc -c < clc-calculator.html) bytes"
 
       - name: Upload HTML artifact
         uses: actions/upload-artifact@v4
@@ -156,10 +155,3 @@ jobs:
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=clc-calculator --commit-dirty=true
