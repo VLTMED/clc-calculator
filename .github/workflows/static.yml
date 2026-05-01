@@ -1,4 +1,4 @@
-name: Build, Deploy & Export HTML
+name: Build → Verify → Deploy → Export HTML
 
 on:
   push:
@@ -16,80 +16,97 @@ concurrency:
 
 jobs:
 
-  # ══════════════════════════════════════════════════════
-  # JOB 1: Build + Export HTML + Deploy Pages
-  # ══════════════════════════════════════════════════════
+  # ════════════════════════════════════════════════════════
+  # JOB 1 — Build, Verify, Export HTML, Upload artifacts
+  # ════════════════════════════════════════════════════════
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      # ── 1. Checkout ────────────────────────────────────
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # ── 2. Node.js ─────────────────────────────────────
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
+      # ── 3. Install ─────────────────────────────────────
       - name: Install dependencies
         run: npm ci
 
+      # ── 4. Build ───────────────────────────────────────
       - name: Build Vite app
         run: npm run build
 
+      # ── 5. VERIFY — يفشل الـ workflow إذا غاب index.html
+      - name: Verify HTML output
+        run: |
+          echo "📂 محتوى dist/:"
+          ls -la dist/
+          echo ""
+          echo "📄 التحقق من dist/index.html..."
+          test -f dist/index.html || { echo "❌ dist/index.html غائب — فشل البناء"; exit 1; }
+          echo "✅ dist/index.html موجود ($(wc -c < dist/index.html) bytes)"
+          echo ""
+          echo "📂 محتوى dist/assets/:"
+          ls -la dist/assets/
+
+      # ── 6. Embed fonts into dist ───────────────────────
       - name: Copy fonts into dist
         run: |
           mkdir -p dist/fonts
           cp public/fonts/*.ttf dist/fonts/
+          echo "✅ الخطوط منسوخة: $(ls dist/fonts | wc -l) ملف"
 
-      - name: Write fonts.css into dist
-        run: |
-          cat > dist/fonts.css << 'CSSEOF'
-          @font-face { font-family:'ThmanyahSans'; src:url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype'); font-weight:300; font-display:block; }
-          @font-face { font-family:'ThmanyahSans'; src:url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype'); font-weight:400; font-display:block; }
-          @font-face { font-family:'ThmanyahSans'; src:url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype'); font-weight:500; font-display:block; }
-          @font-face { font-family:'ThmanyahSans'; src:url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype'); font-weight:700; font-display:block; }
-          @font-face { font-family:'ThmanyahSans'; src:url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype'); font-weight:900; font-display:block; }
-          @font-face { font-family:'ThmanyahSerifDisplay'; src:url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype'); font-weight:700; font-display:block; }
-          @font-face { font-family:'ThmanyahSerifDisplay'; src:url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype'); font-weight:900; font-display:block; }
-          *,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}
-          html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;word-spacing:.04em;line-height:1.65}
-          h1{font-family:'ThmanyahSerifDisplay'!important;font-weight:900!important;line-height:1.1!important}
-          h2{font-family:'ThmanyahSerifDisplay'!important;font-weight:700!important;line-height:1.2!important}
-          h3{font-family:'ThmanyahSans'!important;font-weight:700!important;line-height:1.3!important}
-          label{font-family:'ThmanyahSans'!important;font-weight:500!important}
-          button{font-family:'ThmanyahSans'!important;font-weight:700!important}
-          input,select,textarea{font-family:'ThmanyahSans'!important;font-weight:400!important}
-          th{font-family:'ThmanyahSans'!important;font-weight:700!important}
-          td{font-family:'ThmanyahSans'!important;font-weight:400!important}
-          .font-display{font-family:'ThmanyahSerifDisplay'!important}
-          input[type="number"]{direction:ltr;text-align:center}
-          CSSEOF
-
-      - name: Inject fonts.css into dist/index.html
+      # ── 7. Inject font CSS into Pages index.html ───────
+      - name: Inject font CSS for GitHub Pages
         run: |
           python3 - << 'PYEOF'
+          font_css = """
+          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Light.ttf') format('truetype');font-weight:300;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Regular.ttf') format('truetype');font-weight:400;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Medium.ttf') format('truetype');font-weight:500;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
+          @font-face{font-family:'ThmanyahSans';src:url('/clc-calculator/fonts/thmanyahsans-Black.ttf') format('truetype');font-weight:900;font-display:block;}
+          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/clc-calculator/fonts/thmanyahserifdisplay-Bold.ttf') format('truetype');font-weight:700;font-display:block;}
+          @font-face{font-family:'ThmanyahSerifDisplay';src:url('/clc-calculator/fonts/thmanyahserifdisplay-Black.ttf') format('truetype');font-weight:900;font-display:block;}
+          *,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}
+          html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}
+          h1,h2{font-family:'ThmanyahSerifDisplay'!important;}
+          h1{font-weight:900!important;} h2{font-weight:700!important;}
+          h3,h4,h5,h6{font-family:'ThmanyahSans'!important;font-weight:700!important;}
+          label{font-weight:500!important;} button{font-weight:700!important;}
+          .font-display{font-family:'ThmanyahSerifDisplay'!important;}
+          input[type="number"]{direction:ltr;text-align:center;}
+          """
           with open('dist/index.html', 'r') as f:
               html = f.read()
-          link = '<link rel="stylesheet" href="/clc-calculator/fonts.css">'
-          html = html.replace('<head>', '<head>\n    ' + link, 1)
+          style_tag = f'<style>{font_css}</style>'
+          html = html.replace('<head>', '<head>\n' + style_tag, 1)
           with open('dist/index.html', 'w') as f:
               f.write(html)
+          print('✅ Font CSS injected into dist/index.html')
           PYEOF
 
-      # ── Generate standalone single-file HTML (fonts embedded as base64) ──
-      - name: Generate standalone HTML with embedded fonts
+      # ── 8. Generate standalone HTML (fonts as base64) ──
+      - name: Generate standalone offline HTML
         run: |
           python3 - << 'PYEOF'
           import base64, os, glob
 
-          with open('dist/assets/index-BMZu_54u.css') as f:
-              css = f.read()
+          # CSS
+          css_files = glob.glob('dist/assets/*.css')
+          css = open(css_files[0]).read() if css_files else ''
 
+          # JS
           js_files = glob.glob('dist/assets/*.js')
-          with open(js_files[0]) as f:
-              js = f.read()
+          js = open(js_files[0]).read() if js_files else ''
 
+          # Embed fonts
           fonts = [
             ('ThmanyahSans',         300, 'thmanyahsans-Light.ttf'),
             ('ThmanyahSans',         400, 'thmanyahsans-Regular.ttf'),
@@ -99,35 +116,29 @@ jobs:
             ('ThmanyahSerifDisplay', 700, 'thmanyahserifdisplay-Bold.ttf'),
             ('ThmanyahSerifDisplay', 900, 'thmanyahserifdisplay-Black.ttf'),
           ]
-
           font_faces = []
           for family, weight, filename in fonts:
-              with open(f'dist/fonts/{filename}', 'rb') as f:
-                  b64 = base64.b64encode(f.read()).decode()
+              path = f'dist/fonts/{filename}'
+              b64 = base64.b64encode(open(path,'rb').read()).decode()
               font_faces.append(
                   f"@font-face{{font-family:'{family}';"
                   f"src:url('data:font/truetype;base64,{b64}') format('truetype');"
                   f"font-weight:{weight};font-display:block;}}"
               )
-              print(f'  embedded: {filename}')
+              print(f'  ✅ embedded: {filename}')
 
-          font_css = '\n'.join(font_faces)
-          global_css = """
-          *,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}
-          html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;word-spacing:.04em;line-height:1.65}
-          h1{font-family:'ThmanyahSerifDisplay'!important;font-weight:900!important;line-height:1.1!important}
-          h2{font-family:'ThmanyahSerifDisplay'!important;font-weight:700!important;line-height:1.2!important}
-          h3{font-family:'ThmanyahSans'!important;font-weight:700!important;line-height:1.3!important}
-          label{font-family:'ThmanyahSans'!important;font-weight:500!important}
-          button{font-family:'ThmanyahSans'!important;font-weight:700!important}
-          input,select,textarea{font-family:'ThmanyahSans'!important;font-weight:400!important}
-          th{font-family:'ThmanyahSans'!important;font-weight:700!important}
-          td{font-family:'ThmanyahSans'!important;font-weight:400!important}
-          .font-display{font-family:'ThmanyahSerifDisplay'!important}
-          input[type="number"]{direction:ltr;text-align:center}
-          """
+          global_css = (
+              "*,*::before,*::after{font-family:'ThmanyahSans',sans-serif!important}"
+              "html,body{font-family:'ThmanyahSans'!important;font-weight:400;-webkit-font-smoothing:antialiased;}"
+              "h1,h2{font-family:'ThmanyahSerifDisplay'!important;}"
+              "h1{font-weight:900!important;}h2{font-weight:700!important;}"
+              "h3,h4,h5,h6{font-family:'ThmanyahSans'!important;font-weight:700!important;}"
+              "label{font-weight:500!important;}button{font-weight:700!important;}"
+              ".font-display{font-family:'ThmanyahSerifDisplay'!important;}"
+              "input[type='number']{direction:ltr;text-align:center;}"
+          )
 
-          sha = os.environ.get('GITHUB_SHA', 'local')[:7]
+          sha = os.environ.get('GITHUB_SHA','local')[:7]
 
           html = f"""<!doctype html>
 <html lang="ar" dir="rtl">
@@ -135,7 +146,7 @@ jobs:
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>حساب أحمال التبريد والتكييف</title>
-  <style>{font_css}{global_css}</style>
+  <style>{''.join(font_faces)}{global_css}</style>
   <style>{css}</style>
 </head>
 <body>
@@ -144,38 +155,24 @@ jobs:
 </body>
 </html>"""
 
-          with open('clc-calculator.html', 'w', encoding='utf-8') as f:
-              f.write(html)
-
-          size = os.path.getsize('clc-calculator.html') / (1024*1024)
-          print(f'clc-calculator.html — {size:.2f} MB  (sha: {sha})')
+          out = 'clc-calculator.html'
+          open(out, 'w', encoding='utf-8').write(html)
+          size_mb = os.path.getsize(out) / 1024 / 1024
+          print(f'✅ {out} — {size_mb:.2f} MB (sha: {sha})')
           PYEOF
         env:
           GITHUB_SHA: ${{ github.sha }}
 
-      # ── Upload HTML as GitHub Release asset (no ZIP) ──
-      - name: Create GitHub Release with HTML
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: build-${{ github.sha }}
-          name: "CLC Build ${{ github.sha }}"
-          body: |
-            ## ملف HTML مستقل — يعمل بدون إنترنت
+      # ── 9. Verify standalone HTML was created ──────────
+      - name: Verify standalone HTML
+        run: |
+          test -f clc-calculator.html || { echo "❌ clc-calculator.html غائب"; exit 1; }
+          SIZE=$(wc -c < clc-calculator.html)
+          echo "✅ clc-calculator.html — ${SIZE} bytes"
+          # Sanity: must contain Arabic title
+          grep -q "التبريد" clc-calculator.html && echo "✅ المحتوى العربي موجود" || { echo "❌ المحتوى العربي غائب"; exit 1; }
 
-            افتح `clc-calculator.html` مباشرة من أي متصفح.
-
-            - جميع CSS مدمج
-            - جميع JavaScript مدمج
-            - خطوط ثمانية (7 أوزان) مدمجة كـ base64
-            - الموقع المباشر: https://vltmed.github.io/clc-calculator/
-
-            Commit: `${{ github.sha }}`
-          files: clc-calculator.html
-          make_latest: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ── Deploy to GitHub Pages ──
+      # ── 10. Upload dist as Pages artifact ─────────────
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -184,9 +181,33 @@ jobs:
         with:
           path: './dist'
 
-  # ══════════════════════════════════════════════════════
-  # JOB 2: Deploy Pages
-  # ══════════════════════════════════════════════════════
+      # ── 11. Upload standalone HTML as Actions artifact ─
+      - name: Upload standalone HTML artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clc-calculator-standalone-${{ github.sha }}
+          path: clc-calculator.html
+          retention-days: 30
+
+      # ── 12. Create GitHub Release with HTML ────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.sha }}
+          name: "CLC ${{ github.sha }}"
+          body: |
+            ملف HTML مستقل — يعمل offline بدون إنترنت
+
+            الموقع: https://vltmed.github.io/clc-calculator/
+            Commit: `${{ github.sha }}`
+          files: clc-calculator.html
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ════════════════════════════════════════════════════════
+  # JOB 2 — Deploy to GitHub Pages
+  # ════════════════════════════════════════════════════════
   deploy:
     environment:
       name: github-pages
