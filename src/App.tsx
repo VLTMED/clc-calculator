@@ -144,7 +144,7 @@ export default function App() {
           </div>
 
           {/* ─── لوحة النتائج — Desktop (ثابتة على اليسار) ─── */}
-          <div className="hidden md:block w-72 lg:w-80 shrink-0 sticky top-[140px]">
+          <div className="hidden md:block w-72 lg:w-80 shrink-0 sticky top-[100px] self-start max-h-[calc(100vh-120px)] overflow-y-auto">
             <ResultsPanel result={result} inputs={inputs} />
           </div>
 

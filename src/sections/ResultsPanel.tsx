@@ -38,7 +38,7 @@ export function ResultsPanel({ result, inputs }: Props) {
   const isAC = inputs.mode === "ac";
 
   return (
-    <Card className="sticky top-4">
+    <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-bold text-primary flex items-center justify-between">
           <span>📊 نتائج الحساب</span>
