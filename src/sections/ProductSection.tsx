@@ -5,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Package } from "lucide-react";
 import type { CLCInputs, ProductLoad } from "@/types/inputs";
 import { PRODUCTS } from "@/data/products";
 import { PACKAGING_MATERIALS } from "@/data/tables";
@@ -206,7 +206,8 @@ export function ProductSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          📦 حمل المنتج والتغليف وإزالة الصقيع
+          <Package className="h-4 w-4" />
+          حمل المنتج والتغليف وإزالة الصقيع
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

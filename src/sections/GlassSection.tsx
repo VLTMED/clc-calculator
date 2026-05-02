@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, AppWindow } from "lucide-react";
 import type { CLCInputs, GlassConfig, WallDirection } from "@/types/inputs";
 import { GLASS_TYPES, SOLAR_RADIATION_16B } from "@/data/tables";
 
@@ -141,7 +141,8 @@ export function GlassSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          🪟 النوافذ والزجاج
+          <AppWindow className="h-4 w-4" />
+          النوافذ والزجاج
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

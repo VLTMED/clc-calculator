@@ -3,6 +3,7 @@ import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Ruler } from "lucide-react";
 import type { CLCInputs } from "@/types/inputs";
 import { SAUDI_CITIES } from "@/data/tables";
 
@@ -18,7 +19,8 @@ export function DimensionsSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          📐 الأبعاد والظروف التصميمية
+          <Ruler className="h-4 w-4" />
+          الأبعاد والظروف التصميمية
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

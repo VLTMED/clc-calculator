@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Layers } from "lucide-react";
 import type { CLCInputs, SurfaceConfig, WallConfig, WallDirection, BuildingLayer } from "@/types/inputs";
 import { MATERIALS, ABSORPTANCE_MATERIALS } from "@/data/tables";
 import { calcU } from "@/engine/fullCalculator";
@@ -216,7 +216,8 @@ export function ConstructionSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          🏗️ بناء الجدران والسقف والأرضية
+          <Layers className="h-4 w-4" />
+          بناء الجدران والسقف والأرضية
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

@@ -3,6 +3,7 @@ import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Lightbulb } from "lucide-react";
 import type { CLCInputs } from "@/types/inputs";
 import { PEOPLE_HEAT_AC } from "@/data/tables";
 
@@ -18,7 +19,8 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          💡 الأحمال الداخلية (إضاءة / أشخاص / معدات)
+          <Lightbulb className="h-4 w-4" />
+          الأحمال الداخلية (إضاءة / أشخاص / معدات)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

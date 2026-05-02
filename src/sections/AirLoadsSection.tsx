@@ -3,6 +3,7 @@ import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Wind } from "lucide-react";
 import type { CLCInputs } from "@/types/inputs";
 import { VENTILATION_RATES, getInfiltrationRate, getAirChangesPerDay } from "@/data/tables";
 
@@ -22,7 +23,8 @@ export function AirLoadsSection({ inputs, onChange }: Props) {
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
-          💨 أحمال الهواء (تسرب / تغيير / تهوية)
+          <Wind className="h-4 w-4" />
+          أحمال الهواء (تسرب / تغيير / تهوية)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

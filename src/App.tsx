@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PenLine, BarChart2 } from "lucide-react";
 
 import { StudentInfo }          from "@/sections/StudentInfo";
 import { DimensionsSection }    from "@/sections/DimensionsSection";
@@ -46,7 +46,7 @@ export default function App() {
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h1 className="text-sm font-bold text-primary leading-tight truncate">
-                حاسبة الأحمال الحرارية CLC v4A
+                حاسبة الأحمال الحرارية
               </h1>
               <p className="text-[10px] text-muted-foreground">نظام تبريد وتكييف هواء</p>
             </div>
@@ -106,23 +106,23 @@ export default function App() {
           <div className="flex md:hidden gap-1 mt-3 bg-muted rounded-lg p-1">
             <button
               onClick={() => setActiveTab("inputs")}
-              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-md font-medium transition-all ${
                 activeTab === "inputs"
                   ? "bg-background shadow-sm text-foreground"
                   : "text-muted-foreground"
               }`}
             >
-              ✏️ الإدخال
+              <PenLine className="h-3.5 w-3.5" /> الإدخال
             </button>
             <button
               onClick={() => setActiveTab("results")}
-              className={`flex-1 text-xs py-1.5 rounded-md font-medium transition-all ${
+              className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-1.5 rounded-md font-medium transition-all ${
                 activeTab === "results"
                   ? "bg-background shadow-sm text-foreground"
                   : "text-muted-foreground"
               }`}
             >
-              📊 النتائج
+              <BarChart2 className="h-3.5 w-3.5" /> النتائج
             </button>
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function App() {
       </main>
 
       <footer className="border-t mt-8 py-4 text-center text-xs text-muted-foreground">
-        CLC v4A · سلطان · نسخة ويب — {new Date().getFullYear()}
+        حاسبة الأحمال الحرارية · نسخة ويب — {new Date().getFullYear()}
       </footer>
     </div>
   );
