@@ -16,7 +16,7 @@ export function StudentInfo({ inputs, onChange }: Props) {
     { label: "الجامعة / المؤسسة", key: "university", placeholder: "اسم الجامعة" },
     { label: "اسم الأستاذ", key: "professorName", placeholder: "اسم الأستاذ المشرف" },
     { label: "اسم المشروع", key: "projectName", placeholder: "اسم أو وصف المشروع" },
-    { label: "التاريخ", key: "date",        placeholder: "yyyy/mm/dd" },
+    { label: "التاريخ", key: "date", placeholder: "yyyy/mm/dd" },
   ];
 
   return (
@@ -27,12 +27,13 @@ export function StudentInfo({ inputs, onChange }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {fields.map(({ label, key, placeholder }) => (
-            <div key={key} className="space-y-1">
-              <Label className="text-xs">{label}</Label>
+            <div key={key} className="space-y-1.5">
+              <Label className="text-xs font-medium">{label}</Label>
               <Input
                 placeholder={placeholder}
+                className="text-right"
                 value={((studentInfo as unknown) as Record<string, string>)[key] ?? ""}
                 onChange={e => onChange({ studentInfo: { ...studentInfo, [key]: e.target.value } })}
               />

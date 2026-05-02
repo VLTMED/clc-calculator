@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,10 +14,8 @@ interface Props {
   onChange: (partial: Partial<CLCInputs>) => void;
 }
 
-// ─── مكوّن الطبقات ────────────────────────────────────────────────
 function LayersEditor({
-  layers, hi, ho,
-  onLayersChange,
+  layers, hi, ho, onLayersChange,
 }: {
   layers: BuildingLayer[];
   hi: number; ho: number;
@@ -32,42 +30,44 @@ function LayersEditor({
 
   return (
     <div className="space-y-2">
-      {layers.map((layer, i) => {
-        return (
-          <div key={i} className="grid grid-cols-[1fr_100px_32px] gap-1 items-end">
-            <div className="space-y-0.5">
-              {i === 0 && <Label className="text-[10px] text-muted-foreground">المادة</Label>}
-              <Select value={layer.materialId} onValueChange={v => updateLayer(i, { materialId: v })}>
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {MATERIALS.map(m => (
-                    <SelectItem key={m.id} value={m.id}>
-                      {m.nameAr} (k={m.k})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-0.5">
-              {i === 0 && <Label className="text-[10px] text-muted-foreground">السُمك (m)</Label>}
-              <Input className="h-8 text-xs" type="number" min={0.001} step={0.01}
-                value={layer.thickness}
-                onChange={e => updateLayer(i, { thickness: parseFloat(e.target.value) || 0 })} />
-            </div>
+      {layers.map((layer, i) => (
+        <div key={i} className="grid grid-cols-[1fr_90px_36px] gap-2 items-end">
+          <div className="space-y-1">
+            {i === 0 && <Label className="text-[10px] text-muted-foreground">المادة</Label>}
+            <Select value={layer.materialId} onValueChange={v => updateLayer(i, { materialId: v })}>
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {MATERIALS.map(m => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.nameAr} (k={m.k})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            {i === 0 && <Label className="text-[10px] text-muted-foreground">السُمك (m)</Label>}
+            <NumericInput
+              className="h-8 text-xs"
+              min={0.001} step={0.01} fallback={0.1}
+              value={layer.thickness}
+              onChange={v => updateLayer(i, { thickness: v })} />
+          </div>
+          <div className={i === 0 ? "pt-4" : ""}>
             <Button variant="ghost" size="icon" className="h-8 w-8"
               onClick={() => removeLayer(i)}>
               <Trash2 className="h-3.5 w-3.5 text-destructive" />
             </Button>
           </div>
-        );
-      })}
-      <div className="flex items-center justify-between">
-        <Button variant="outline" size="sm" className="h-7 text-xs gap-1" onClick={addLayer}>
+        </div>
+      ))}
+      <div className="flex items-center justify-between pt-1">
+        <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5" onClick={addLayer}>
           <PlusCircle className="h-3.5 w-3.5" /> إضافة طبقة
         </Button>
-        <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-0.5 rounded">
+        <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-1 rounded-md">
           U = {U.toFixed(4)} W/m²·K
         </span>
       </div>
@@ -75,7 +75,6 @@ function LayersEditor({
   );
 }
 
-// ─── مكوّن السطح (سقف / أرضية) ───────────────────────────────────
 function SurfaceEditor({
   label, surface, onChange, showSolar = false
 }: {
@@ -85,39 +84,39 @@ function SurfaceEditor({
   showSolar?: boolean;
 }) {
   return (
-    <div className="border rounded p-3 space-y-3">
-      <div className="flex items-center gap-2">
+    <div className="border rounded-lg p-3 space-y-3">
+      <div className="flex items-center gap-3">
         <Switch checked={surface.enabled} onCheckedChange={v => onChange({ enabled: v })} />
         <span className="text-sm font-semibold">{label}</span>
       </div>
       {surface.enabled && (
         <>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <Label className="text-xs">hi (W/m²·K)</Label>
-              <Input type="number" step={0.1} className="h-8 text-xs"
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">hi (W/m²·K)</Label>
+              <NumericInput className="h-8 text-xs" step={0.1} fallback={8}
                 value={surface.hi}
-                onChange={e => onChange({ hi: parseFloat(e.target.value) || 8 })} />
+                onChange={v => onChange({ hi: v })} />
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">ho (W/m²·K)</Label>
-              <Input type="number" step={0.1} className="h-8 text-xs"
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">ho (W/m²·K)</Label>
+              <NumericInput className="h-8 text-xs" step={0.1} fallback={22.7}
                 value={surface.ho}
-                onChange={e => onChange({ ho: parseFloat(e.target.value) || 22.7 })} />
+                onChange={v => onChange({ ho: v })} />
             </div>
           </div>
           <LayersEditor
             layers={surface.layers} hi={surface.hi} ho={surface.ho}
             onLayersChange={layers => onChange({ layers })} />
           {showSolar && (
-            <div className="border-t pt-2 space-y-2">
-              <div className="flex items-center gap-2">
+            <div className="border-t pt-3 space-y-2">
+              <div className="flex items-center gap-3">
                 <Switch checked={surface.solarEnabled}
                   onCheckedChange={v => onChange({ solarEnabled: v })} />
-                <Label className="text-xs">تأثير الشمس — جدول 2-16A</Label>
+                <Label className="text-xs font-medium">تأثير الشمس — جدول 2-16A</Label>
               </div>
               {surface.solarEnabled && (
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <Label className="text-xs">مادة السطح الخارجي (معامل الامتصاص a)</Label>
                   <Select value={surface.absorptanceMaterialId}
                     onValueChange={v => onChange({ absorptanceMaterialId: v })}>
@@ -142,7 +141,6 @@ function SurfaceEditor({
   );
 }
 
-// ─── مكوّن الجدار ──────────────────────────────────────────────────
 function WallEditor({
   label, wall, onChange
 }: {
@@ -151,38 +149,38 @@ function WallEditor({
   onChange: (patch: Partial<WallConfig>) => void;
 }) {
   return (
-    <div className="border rounded p-3 space-y-3">
-      <div className="flex items-center gap-2">
+    <div className="border rounded-lg p-3 space-y-3">
+      <div className="flex items-center gap-3">
         <Switch checked={wall.enabled} onCheckedChange={v => onChange({ enabled: v })} />
         <span className="text-sm font-semibold">{label}</span>
       </div>
       {wall.enabled && (
         <>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <Label className="text-xs">hi (W/m²·K)</Label>
-              <Input type="number" step={0.1} className="h-8 text-xs"
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">hi (W/m²·K)</Label>
+              <NumericInput className="h-8 text-xs" step={0.1} fallback={8}
                 value={wall.hi}
-                onChange={e => onChange({ hi: parseFloat(e.target.value) || 8 })} />
+                onChange={v => onChange({ hi: v })} />
             </div>
-            <div className="space-y-1">
-              <Label className="text-xs">ho (W/m²·K)</Label>
-              <Input type="number" step={0.1} className="h-8 text-xs"
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">ho (W/m²·K)</Label>
+              <NumericInput className="h-8 text-xs" step={0.1} fallback={22.7}
                 value={wall.ho}
-                onChange={e => onChange({ ho: parseFloat(e.target.value) || 22.7 })} />
+                onChange={v => onChange({ ho: v })} />
             </div>
           </div>
           <LayersEditor
             layers={wall.layers} hi={wall.hi} ho={wall.ho}
             onLayersChange={layers => onChange({ layers })} />
-          <div className="border-t pt-2 space-y-2">
-            <div className="flex items-center gap-2">
+          <div className="border-t pt-3 space-y-2">
+            <div className="flex items-center gap-3">
               <Switch checked={wall.solarEnabled}
                 onCheckedChange={v => onChange({ solarEnabled: v })} />
-              <Label className="text-xs">تأثير الشمس — جدول 2-16A</Label>
+              <Label className="text-xs font-medium">تأثير الشمس — جدول 2-16A</Label>
             </div>
             {wall.solarEnabled && (
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <Label className="text-xs">مادة السطح الخارجي (a)</Label>
                 <Select value={wall.absorptanceMaterialId}
                   onValueChange={v => onChange({ absorptanceMaterialId: v })}>
@@ -206,7 +204,6 @@ function WallEditor({
   );
 }
 
-// ─── المكوّن الرئيسي ───────────────────────────────────────────────
 export function ConstructionSection({ inputs, onChange }: Props) {
   const DIRECTIONS: { key: WallDirection; label: string }[] = [
     { key: "north", label: "الجدار الشمالي" },
@@ -223,24 +220,21 @@ export function ConstructionSection({ inputs, onChange }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2 rounded">
+        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2.5 rounded-lg">
           جدول 2-1 — معامل التوصيل الحراري k (W/m·K) | جدول 2-2 — hi/ho | المعادلة: U = 1/(1/hi + Σ(L/k) + 1/ho)
         </p>
 
-        {/* السقف */}
         <SurfaceEditor
           label="السقف"
           surface={inputs.roof}
           onChange={patch => onChange({ roof: { ...inputs.roof, ...patch } })}
           showSolar />
 
-        {/* الأرضية */}
         <SurfaceEditor
           label="الأرضية"
           surface={inputs.floor}
           onChange={patch => onChange({ floor: { ...inputs.floor, ...patch } })} />
 
-        {/* الجدران */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {DIRECTIONS.map(({ key, label }) => (
             <WallEditor

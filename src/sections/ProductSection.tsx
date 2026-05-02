@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -33,7 +33,6 @@ function ProductRow({
 }) {
   const product = PRODUCTS.find(p => p.id === prod.productId);
 
-  // حساب لحظي للعرض
   const tf = product?.tf ?? -1;
   const cpAbove = product?.cpAbove ?? 3.7;
   const cpBelow = product?.cpBelow ?? 1.9;
@@ -57,23 +56,23 @@ function ProductRow({
   const total = qAbove + qLatent + qBelow;
 
   return (
-    <div className="border rounded p-3 space-y-3 bg-muted/20">
+    <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Switch checked={prod.enabled} onCheckedChange={v => onUpdate({ enabled: v })} />
           <span className="text-sm font-medium">منتج {index + 1}</span>
-          {total > 0 && <Badge variant="outline" className="text-xs">{total.toFixed(1)} W</Badge>}
+          {total > 0 && <Badge variant="outline" className="text-xs font-mono">{total.toFixed(1)} W</Badge>}
         </div>
-        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onRemove}>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onRemove}>
           <Trash2 className="h-3.5 w-3.5 text-destructive" />
         </Button>
       </div>
 
       {prod.enabled && (
         <>
-          <div className="grid grid-cols-2 gap-2">
-            <div className="space-y-1">
-              <Label className="text-[10px]">الفئة</Label>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">الفئة</Label>
               <Select
                 value={PRODUCTS.find(p => p.id === prod.productId)?.category ?? "fruit"}
                 onValueChange={v => {
@@ -86,8 +85,8 @@ function ProductRow({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1">
-              <Label className="text-[10px]">المنتج (جداول 2-5 إلى 2-8)</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">المنتج (جداول 2-5 إلى 2-8)</Label>
               <Select value={prod.productId}
                 onValueChange={v => {
                   const p = PRODUCTS.find(x => x.id === v);
@@ -108,7 +107,7 @@ function ProductRow({
           </div>
 
           {product && (
-            <div className="text-xs bg-muted/50 rounded p-2 grid grid-cols-3 gap-1">
+            <div className="text-xs bg-muted/50 rounded-lg p-2.5 grid grid-cols-3 gap-1.5">
               <span>Tf = {product.tf}°C</span>
               <span>Cp↑ = {product.cpAbove} kJ/kg·K</span>
               <span>Cp↓ = {product.cpBelow} kJ/kg·K</span>
@@ -118,61 +117,44 @@ function ProductRow({
             </div>
           )}
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <div className="space-y-1">
-              <Label className="text-[10px]">الكتلة (kg)</Label>
-              <Input className="h-8 text-xs" type="number" min={0}
-                value={prod.massKg}
-                onChange={e => onUpdate({ massKg: parseFloat(e.target.value) || 0 })} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[10px]">درجة الدخول (°C)</Label>
-              <Input className="h-8 text-xs" type="number" step={0.5}
-                value={prod.enterTemp}
-                onChange={e => onUpdate({ enterTemp: parseFloat(e.target.value) || 0 })} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[10px]">درجة التخزين (°C)</Label>
-              <Input className="h-8 text-xs" type="number" step={0.5}
-                value={prod.storageTemp}
-                onChange={e => onUpdate({ storageTemp: parseFloat(e.target.value) || 0 })} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[10px]">وقت التبريد (ساعة)</Label>
-              <Input className="h-8 text-xs" type="number" min={0.5} step={0.5}
-                value={prod.pulldownHours}
-                onChange={e => onUpdate({ pulldownHours: parseFloat(e.target.value) || 1 })} />
-            </div>
-            <div className="space-y-1">
-              <Label className="text-[10px]">معامل التبريد CRF</Label>
-              <Input className="h-8 text-xs" type="number" min={0.01} max={1} step={0.01}
-                value={prod.crf}
-                onChange={e => onUpdate({ crf: parseFloat(e.target.value) || 0.67 })} />
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              { label: "الكتلة (kg)", key: "massKg", step: 10, min: 0, fallback: 0 },
+              { label: "درجة الدخول (°C)", key: "enterTemp", step: 0.5, min: undefined, fallback: 0 },
+              { label: "درجة التخزين (°C)", key: "storageTemp", step: 0.5, min: undefined, fallback: 0 },
+              { label: "وقت التبريد (ساعة)", key: "pulldownHours", step: 0.5, min: 0.5, fallback: 1 },
+              { label: "معامل التبريد CRF", key: "crf", step: 0.01, min: 0.01, fallback: 0.67 },
+            ].map(({ label, key, step, min, fallback }) => (
+              <div key={key} className="space-y-1.5">
+                <Label className="text-xs font-medium">{label}</Label>
+                <NumericInput className="h-8 text-xs" step={step} min={min} fallback={fallback}
+                  value={((prod as unknown) as Record<string, number>)[key]}
+                  onChange={v => onUpdate({ [key]: v })} />
+              </div>
+            ))}
           </div>
 
-          {/* ثلاثة تبديلات مستقلة من Excel E105/F105/G105 */}
-          <div className="border-t pt-2 space-y-2">
+          <div className="border-t pt-3 space-y-2">
             <Label className="text-xs font-semibold">تبديلات الحمل الحراري (مستقلة)</Label>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between rounded-lg border p-2.5">
+                <div className="flex items-center gap-3">
                   <Switch checked={prod.aboveFreezeEnabled}
                     onCheckedChange={v => onUpdate({ aboveFreezeEnabled: v })} />
                   <Label className="text-xs">حمل فوق التجميد (Cp↑ × ΔT)</Label>
                 </div>
                 <span className="text-xs font-mono text-primary">{qAbove.toFixed(1)} W</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between rounded-lg border p-2.5">
+                <div className="flex items-center gap-3">
                   <Switch checked={prod.latentEnabled}
                     onCheckedChange={v => onUpdate({ latentEnabled: v })} />
                   <Label className="text-xs">حرارة التجميد الكامنة (LH)</Label>
                 </div>
                 <span className="text-xs font-mono text-primary">{qLatent.toFixed(1)} W</span>
               </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between rounded-lg border p-2.5">
+                <div className="flex items-center gap-3">
                   <Switch checked={prod.belowFreezeEnabled}
                     onCheckedChange={v => onUpdate({ belowFreezeEnabled: v })} />
                   <Label className="text-xs">حمل تحت التجميد (Cp↓ × ΔT)</Label>
@@ -228,7 +210,7 @@ export function ProductSection({ inputs, onChange }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2 rounded">
+        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2.5 rounded-lg">
           جداول 2-5 إلى 2-8 — خصائص المنتج | الحساب: Q = M × Cp × ΔT × 1000 / (3600 × n × CRF)
         </p>
 
@@ -242,17 +224,17 @@ export function ProductSection({ inputs, onChange }: Props) {
           <PlusCircle className="h-4 w-4" /> إضافة منتج
         </Button>
 
-        {/* ─── التغليف ─── */}
-        <div className="border rounded p-3 space-y-3">
-          <div className="flex items-center gap-2">
+        {/* التغليف */}
+        <div className="border rounded-lg p-3 space-y-3">
+          <div className="flex items-center gap-3">
             <Switch checked={packaging.enabled}
               onCheckedChange={v => onChange({ packaging: { ...packaging, enabled: v } })} />
             <span className="text-sm font-semibold">التغليف — جدول 2-19</span>
           </div>
           {packaging.enabled && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              <div className="space-y-1 col-span-2 sm:col-span-1">
-                <Label className="text-[10px]">مادة التغليف</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="space-y-1.5 col-span-2 sm:col-span-1">
+                <Label className="text-xs font-medium">مادة التغليف</Label>
                 <Select value={packaging.packagingMaterialId}
                   onValueChange={v => onChange({ packaging: { ...packaging, packagingMaterialId: v } })}>
                   <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
@@ -266,51 +248,51 @@ export function ProductSection({ inputs, onChange }: Props) {
                 </Select>
               </div>
               {[
-                { label: "عدد الصناديق", key: "boxCount", step: 1 },
-                { label: "وزن الصندوق (kg)", key: "massPerBoxKg", step: 0.1 },
-                { label: "درجة الدخول (°C)", key: "enterTemp", step: 0.5 },
-                { label: "درجة التخزين (°C)", key: "storageTemp", step: 0.5 },
-                { label: "وقت التبريد (h)", key: "pulldownHours", step: 0.5 },
-              ].map(({ label, key, step }) => (
-                <div key={key} className="space-y-1">
-                  <Label className="text-[10px]">{label}</Label>
-                  <Input className="h-8 text-xs" type="number" step={step}
+                { label: "عدد الصناديق", key: "boxCount", step: 1, fallback: 0 },
+                { label: "وزن الصندوق (kg)", key: "massPerBoxKg", step: 0.1, fallback: 0 },
+                { label: "درجة الدخول (°C)", key: "enterTemp", step: 0.5, fallback: 0 },
+                { label: "درجة التخزين (°C)", key: "storageTemp", step: 0.5, fallback: 0 },
+                { label: "وقت التبريد (h)", key: "pulldownHours", step: 0.5, fallback: 1 },
+              ].map(({ label, key, step, fallback }) => (
+                <div key={key} className="space-y-1.5">
+                  <Label className="text-xs font-medium">{label}</Label>
+                  <NumericInput className="h-8 text-xs" step={step} fallback={fallback}
                     value={((packaging as unknown) as Record<string, number>)[key]}
-                    onChange={e => onChange({ packaging: { ...packaging, [key]: parseFloat(e.target.value) || 0 } })} />
+                    onChange={v => onChange({ packaging: { ...packaging, [key]: v } })} />
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        {/* ─── إزالة الصقيع ─── */}
-        <div className="border rounded p-3 space-y-3">
-          <div className="flex items-center gap-2">
+        {/* إزالة الصقيع */}
+        <div className="border rounded-lg p-3 space-y-3">
+          <div className="flex items-center gap-3">
             <Switch checked={inputs.defrost.enabled}
               onCheckedChange={v => onChange({ defrost: { ...inputs.defrost, enabled: v } })} />
             <span className="text-sm font-semibold">إزالة الصقيع (Defrost)</span>
           </div>
           {inputs.defrost.enabled && (
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { label: "عدد السخانات", key: "heaterCount", step: 1 },
-                { label: "قدرة كل سخان (W)", key: "powerEachW", step: 100 },
-                { label: "معامل الاستخدام", key: "usageFactor", step: 0.05 },
-              ].map(({ label, key, step }) => (
-                <div key={key} className="space-y-1">
-                  <Label className="text-[10px]">{label}</Label>
-                  <Input className="h-8 text-xs" type="number" step={step} min={0}
-                    value={((inputs.defrost as unknown) as Record<string, number>)[key]}
-                    onChange={e => onChange({ defrost: { ...inputs.defrost, [key]: parseFloat(e.target.value) || 0 } })} />
-                </div>
-              ))}
-            </div>
-          )}
-          {inputs.defrost.enabled && (
-            <p className="text-xs text-muted-foreground">
-              Q = {inputs.defrost.heaterCount} × {inputs.defrost.usageFactor} × {inputs.defrost.powerEachW}
-              = <span className="font-bold text-primary">{(inputs.defrost.heaterCount * inputs.defrost.usageFactor * inputs.defrost.powerEachW).toFixed(1)} W</span>
-            </p>
+            <>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "عدد السخانات", key: "heaterCount", step: 1, fallback: 0 },
+                  { label: "قدرة كل سخان (W)", key: "powerEachW", step: 100, fallback: 0 },
+                  { label: "معامل الاستخدام", key: "usageFactor", step: 0.05, fallback: 0 },
+                ].map(({ label, key, step, fallback }) => (
+                  <div key={key} className="space-y-1.5">
+                    <Label className="text-xs font-medium">{label}</Label>
+                    <NumericInput className="h-8 text-xs" step={step} min={0} fallback={fallback}
+                      value={((inputs.defrost as unknown) as Record<string, number>)[key]}
+                      onChange={v => onChange({ defrost: { ...inputs.defrost, [key]: v } })} />
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground bg-muted/40 rounded-lg p-2">
+                Q = {inputs.defrost.heaterCount} × {inputs.defrost.usageFactor} × {inputs.defrost.powerEachW}
+                = <span className="font-bold text-primary">{(inputs.defrost.heaterCount * inputs.defrost.usageFactor * inputs.defrost.powerEachW).toFixed(1)} W</span>
+              </p>
+            </>
           )}
         </div>
       </CardContent>

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -37,21 +37,21 @@ function GlassRow({
   onRemove: () => void;
 }) {
   return (
-    <div className="border rounded p-3 space-y-3 bg-muted/20">
+    <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Switch checked={glass.enabled} onCheckedChange={v => onUpdate({ enabled: v })} />
           <span className="text-sm font-medium">نافذة / زجاج {index + 1}</span>
         </div>
-        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onRemove}>
+        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onRemove}>
           <Trash2 className="h-3.5 w-3.5 text-destructive" />
         </Button>
       </div>
 
       {glass.enabled && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          <div className="space-y-1">
-            <Label className="text-[10px]">الاتجاه</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">الاتجاه</Label>
             <Select value={glass.direction} onValueChange={v => onUpdate({ direction: v as WallDirection })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -59,14 +59,14 @@ function GlassRow({
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1">
-            <Label className="text-[10px]">المساحة (m²)</Label>
-            <Input className="h-8 text-xs" type="number" min={0} step={0.1}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">المساحة (m²)</Label>
+            <NumericInput className="h-8 text-xs" min={0} step={0.1} fallback={0}
               value={glass.area}
-              onChange={e => onUpdate({ area: parseFloat(e.target.value) || 0 })} />
+              onChange={v => onUpdate({ area: v })} />
           </div>
-          <div className="space-y-1">
-            <Label className="text-[10px]">نوع الزجاج — جدول 2-17</Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">نوع الزجاج — جدول 2-17</Label>
             <Select value={glass.glassTypeId} onValueChange={v => onUpdate({ glassTypeId: v })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -78,8 +78,8 @@ function GlassRow({
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1">
-            <Label className="text-[10px]">طريقة الحمل الشمسي</Label>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">طريقة الحمل الشمسي</Label>
             <Select value={glass.solarMethod} onValueChange={v => onUpdate({ solarMethod: v as GlassConfig["solarMethod"] })}>
               <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>
@@ -87,15 +87,15 @@ function GlassRow({
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1">
-            <Label className="text-[10px]">معامل التضليل SC — جدول 2-18B</Label>
-            <Input className="h-8 text-xs" type="number" min={0} max={1} step={0.01}
+          <div className="space-y-1.5">
+            <Label className="text-xs font-medium">معامل التضليل SC — جدول 2-18B</Label>
+            <NumericInput className="h-8 text-xs" min={0} max={1} step={0.01} fallback={1}
               value={glass.shadingCoefficient}
-              onChange={e => onUpdate({ shadingCoefficient: parseFloat(e.target.value) || 1 })} />
+              onChange={v => onUpdate({ shadingCoefficient: v })} />
           </div>
           {glass.solarMethod === "table16B" && (
-            <div className="space-y-1">
-              <Label className="text-[10px]">الشهر</Label>
+            <div className="space-y-1.5">
+              <Label className="text-xs font-medium">الشهر</Label>
               <Select value={glass.month ?? "يوليو"} onValueChange={v => onUpdate({ month: v })}>
                 <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -145,7 +145,7 @@ export function GlassSection({ inputs, onChange }: Props) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2 rounded">
+        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2.5 rounded-lg">
           جدول 2-17: U الزجاج | جدول 2-16A/B: شدة الشمس | جدول 2-18B: معامل التضليل SC
         </p>
         {inputs.glasses.map((g, i) => (
