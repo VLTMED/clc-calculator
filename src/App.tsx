@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,18 +20,32 @@ import type { CLCInputs }       from "@/types/inputs";
 type Tab = "inputs" | "results";
 
 export default function App() {
-  const [inputs, setInputs] = useState<CLCInputs>(getDefaultInputs("refrigeration"));
+  const [inputs, setInputs] = useState<CLCInputs>(() => {
+    try {
+      const saved = localStorage.getItem("clc-v1");
+      if (saved) return JSON.parse(saved) as CLCInputs;
+    } catch {}
+    return getDefaultInputs("refrigeration");
+  });
   const [activeTab, setActiveTab] = useState<Tab>("inputs");
 
   const onChange = useCallback((partial: Partial<CLCInputs>) => {
     setInputs(prev => ({ ...prev, ...partial }));
   }, []);
 
-  const result = calculateAll(inputs);
+  useEffect(() => {
+    const id = setTimeout(() => {
+      try { localStorage.setItem("clc-v1", JSON.stringify(inputs)); } catch {}
+    }, 600);
+    return () => clearTimeout(id);
+  }, [inputs]);
+
+  const result = useMemo(() => calculateAll(inputs), [inputs]);
   const isAC = inputs.mode === "ac";
 
   const handleReset = () => {
     if (window.confirm("هل تريد إعادة تعيين جميع البيانات إلى القيم الافتراضية؟")) {
+      localStorage.removeItem("clc-v1");
       setInputs(getDefaultInputs(inputs.mode));
     }
   };

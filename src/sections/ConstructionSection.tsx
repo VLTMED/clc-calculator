@@ -75,6 +75,27 @@ function LayersEditor({
   );
 }
 
+const HI_OPTIONS = [
+  { value: "9.37", label: "9.37 — أفقي / حرارة أعلى (سقف)" },
+  { value: "8",    label: "8.00 — رأسي / حرارة أفقياً (جدار)" },
+  { value: "6",    label: "6.00 — أفقي / حرارة أسفل (أرضية)" },
+];
+const HO_OPTIONS = [
+  { value: "22.7", label: "22.70 — هواء عادي 3.4 م/ث" },
+  { value: "34.1", label: "34.10 — هواء سريع 6.7 م/ث" },
+];
+
+function hiToStr(v: number) {
+  if (Math.abs(v - 9.37) < 0.01) return "9.37";
+  if (Math.abs(v - 8)    < 0.01) return "8";
+  if (Math.abs(v - 6)    < 0.01) return "6";
+  return "8";
+}
+function hoToStr(v: number) {
+  if (Math.abs(v - 34.1) < 0.05) return "34.1";
+  return "22.7";
+}
+
 function SurfaceEditor({
   label, surface, onChange, showSolar = false
 }: {
@@ -93,16 +114,22 @@ function SurfaceEditor({
         <>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium">hi (W/m²·K)</Label>
-              <NumericInput className="h-8 text-xs" step={0.1} fallback={8}
-                value={surface.hi}
-                onChange={v => onChange({ hi: v })} />
+              <Label className="text-xs font-medium">hi — جدول 2-2</Label>
+              <Select value={hiToStr(surface.hi)} onValueChange={v => onChange({ hi: Number(v) })}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {HI_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium">ho (W/m²·K)</Label>
-              <NumericInput className="h-8 text-xs" step={0.1} fallback={22.7}
-                value={surface.ho}
-                onChange={v => onChange({ ho: v })} />
+              <Label className="text-xs font-medium">ho — جدول 2-2</Label>
+              <Select value={hoToStr(surface.ho)} onValueChange={v => onChange({ ho: Number(v) })}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {HO_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <LayersEditor
@@ -158,16 +185,22 @@ function WallEditor({
         <>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium">hi (W/m²·K)</Label>
-              <NumericInput className="h-8 text-xs" step={0.1} fallback={8}
-                value={wall.hi}
-                onChange={v => onChange({ hi: v })} />
+              <Label className="text-xs font-medium">hi — جدول 2-2</Label>
+              <Select value={hiToStr(wall.hi)} onValueChange={v => onChange({ hi: Number(v) })}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {HI_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs font-medium">ho (W/m²·K)</Label>
-              <NumericInput className="h-8 text-xs" step={0.1} fallback={22.7}
-                value={wall.ho}
-                onChange={v => onChange({ ho: v })} />
+              <Label className="text-xs font-medium">ho — جدول 2-2</Label>
+              <Select value={hoToStr(wall.ho)} onValueChange={v => onChange({ ho: Number(v) })}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {HO_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <LayersEditor

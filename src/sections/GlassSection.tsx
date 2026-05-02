@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NumericInput } from "@/components/ui/numeric-input";
 import { Label } from "@/components/ui/label";
@@ -6,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash2, AppWindow } from "lucide-react";
 import type { CLCInputs, GlassConfig, WallDirection } from "@/types/inputs";
-import { GLASS_TYPES, SOLAR_RADIATION_16B } from "@/data/tables";
+import { GLASS_TYPES, SOLAR_RADIATION_16B, SHADING_COEFFICIENTS } from "@/data/tables";
 
 interface Props {
   inputs: CLCInputs;
@@ -28,6 +29,27 @@ const SOLAR_METHODS = [
 
 const MONTHS = SOLAR_RADIATION_16B.map(r => r.month);
 
+type ShadingTypeKey = "noShading" | "rollerLight" | "rollerDark" | "venetianLight" | "venetianMedium";
+
+const SHADING_TYPE_LABELS: Array<{ key: ShadingTypeKey; label: string }> = [
+  { key: "noShading",      label: "بدون تضليل" },
+  { key: "rollerLight",    label: "ستائر ملفوفة فاتحة" },
+  { key: "rollerDark",     label: "ستائر ملفوفة غامقة" },
+  { key: "venetianLight",  label: "ستائر فينيسية فاتحة" },
+  { key: "venetianMedium", label: "ستائر فينيسية متوسطة" },
+];
+
+function findScInit(sc: number): { rowIdx: number; type: ShadingTypeKey } {
+  for (let i = 0; i < SHADING_COEFFICIENTS.length; i++) {
+    for (const { key } of SHADING_TYPE_LABELS) {
+      if (Math.abs(SHADING_COEFFICIENTS[i][key] - sc) < 0.001) {
+        return { rowIdx: i, type: key };
+      }
+    }
+  }
+  return { rowIdx: 0, type: "noShading" };
+}
+
 function GlassRow({
   glass, index, onUpdate, onRemove
 }: {
@@ -36,6 +58,29 @@ function GlassRow({
   onUpdate: (patch: Partial<GlassConfig>) => void;
   onRemove: () => void;
 }) {
+  const [scRowIdx, setScRowIdx] = useState(() => findScInit(glass.shadingCoefficient).rowIdx);
+  const [scType, setScType] = useState<ShadingTypeKey>(() => findScInit(glass.shadingCoefficient).type);
+
+  const currentScRow = SHADING_COEFFICIENTS[scRowIdx];
+
+  const handleScRow = (val: string) => {
+    const idx = Number(val);
+    setScRowIdx(idx);
+    const row = SHADING_COEFFICIENTS[idx];
+    const newVal = row[scType];
+    if (newVal > 0) {
+      onUpdate({ shadingCoefficient: newVal });
+    } else {
+      setScType("noShading");
+      onUpdate({ shadingCoefficient: row.noShading });
+    }
+  };
+
+  const handleScType = (val: ShadingTypeKey) => {
+    setScType(val);
+    onUpdate({ shadingCoefficient: currentScRow[val] });
+  };
+
   return (
     <div className="border rounded-lg p-3 space-y-3 bg-muted/20">
       <div className="flex items-center justify-between">
@@ -87,12 +132,47 @@ function GlassRow({
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-1.5">
-            <Label className="text-xs font-medium">معامل التضليل SC — جدول 2-18B</Label>
-            <NumericInput className="h-8 text-xs" min={0} max={1} step={0.01} fallback={1}
-              value={glass.shadingCoefficient}
-              onChange={v => onUpdate({ shadingCoefficient: v })} />
+
+          {/* ── معامل التضليل SC — جدول 2-18B (full width) ── */}
+          <div className="col-span-2 sm:col-span-3 rounded-lg border border-primary/25 bg-primary/5 p-2.5 space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs font-semibold">معامل التضليل SC — جدول 2-18B</Label>
+              <span className="text-xs font-bold font-mono text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                SC = {glass.shadingCoefficient.toFixed(2)}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground">نوع الزجاج</Label>
+                <Select value={String(scRowIdx)} onValueChange={handleScRow}>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {SHADING_COEFFICIENTS.map((row, i) => (
+                      <SelectItem key={i} value={String(i)}>
+                        {row.glassType} ({row.thickness_mm}mm)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-[10px] text-muted-foreground">نوع التضليل</Label>
+                <Select value={scType} onValueChange={v => handleScType(v as ShadingTypeKey)}>
+                  <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {SHADING_TYPE_LABELS
+                      .filter(({ key }) => currentScRow[key] > 0)
+                      .map(({ key, label }) => (
+                        <SelectItem key={key} value={key}>
+                          {label} — SC = {currentScRow[key].toFixed(2)}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
+
           {glass.solarMethod === "table16B" && (
             <div className="space-y-1.5">
               <Label className="text-xs font-medium">الشهر</Label>
