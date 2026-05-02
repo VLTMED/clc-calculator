@@ -40,7 +40,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 <div key={key} className="space-y-1">
                   <Label className="text-[10px]">{label}</Label>
                   <Input className="h-8 text-xs" type="number" step={step} min={min}
-                    value={(lighting as Record<string, number>)[key]}
+                    value={((lighting as unknown) as Record<string, number>)[key]}
                     onChange={e => onChange({ lighting: { ...lighting, [key]: parseFloat(e.target.value) || 0 } })} />
                 </div>
               ))}
@@ -95,7 +95,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                   <div key={key} className="space-y-1">
                     <Label className="text-[10px]">{label}</Label>
                     <Input className="h-8 text-xs" type="number" step={step} min={0}
-                      value={(people as Record<string, number>)[key]}
+                      value={((people as unknown) as Record<string, number>)[key]}
                       onChange={e => onChange({ people: { ...people, [key]: parseFloat(e.target.value) || 0 } })} />
                   </div>
                 ))}
@@ -122,7 +122,7 @@ export function InternalLoadsSection({ inputs, onChange }: Props) {
                 <div key={key} className="space-y-1">
                   <Label className="text-[10px]">{label}</Label>
                   <Input className="h-8 text-xs" type="number" step={step} min={0}
-                    value={(equipment as Record<string, number>)[key]}
+                    value={((equipment as unknown) as Record<string, number>)[key]}
                     onChange={e => onChange({ equipment: { ...equipment, [key]: parseFloat(e.target.value) || 0 } })} />
                 </div>
               ))}

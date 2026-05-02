@@ -31,7 +31,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
             <div key={key} className="space-y-1">
               <Label className="text-xs">{label}</Label>
               <Input type="number" min={0.1} step={0.1}
-                value={(inputs as Record<string, number>)[key]}
+                value={((inputs as unknown) as Record<string, number>)[key]}
                 onChange={e => onChange({ [key]: parseFloat(e.target.value) || 0 })} />
             </div>
           ))}
@@ -51,7 +51,7 @@ export function DimensionsSection({ inputs, onChange }: Props) {
             <div key={key} className="space-y-1">
               <Label className="text-xs">{label}</Label>
               <Input type="number" step={0.5}
-                value={(inputs as Record<string, number>)[key]}
+                value={((inputs as unknown) as Record<string, number>)[key]}
                 onChange={e => onChange({ [key]: parseFloat(e.target.value) || 0 })} />
             </div>
           ))}

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { CLCInputs, StudentInfo as StudentInfoType } from "@/types/inputs";
+import type { CLCInputs } from "@/types/inputs";
 
 interface Props {
   inputs: CLCInputs;
@@ -33,7 +33,7 @@ export function StudentInfo({ inputs, onChange }: Props) {
               <Label className="text-xs">{label}</Label>
               <Input
                 placeholder={placeholder}
-                value={(studentInfo as Record<string, string>)[key] ?? ""}
+                value={((studentInfo as unknown) as Record<string, string>)[key] ?? ""}
                 onChange={e => onChange({ studentInfo: { ...studentInfo, [key]: e.target.value } })}
               />
             </div>

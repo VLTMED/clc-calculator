@@ -395,7 +395,6 @@ export const ENTHALPY_TABLE_12B: EnthalpyRow12B[] = [
 // Helper: get enthalpy from 12A or 12B by interpolation
 export function getEnthalpyDiff(tempRoom: number, tempOut: number, rh: number): number {
   const table = tempRoom < 0 ? ENTHALPY_TABLE_12B : ENTHALPY_TABLE_12A;
-  const rows = table.map(r => r.tempRoom);
   let r1 = table[0], r2 = table[0];
   for (let i = 0; i < table.length - 1; i++) {
     if (tempRoom >= table[i + 1].tempRoom && tempRoom <= table[i].tempRoom) {

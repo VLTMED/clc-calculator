@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Trash2 } from "lucide-react";
-import type { CLCInputs, ProductLoad, PackagingLoad } from "@/types/inputs";
+import type { CLCInputs, ProductLoad } from "@/types/inputs";
 import { PRODUCTS } from "@/data/products";
 import { PACKAGING_MATERIALS } from "@/data/tables";
 
@@ -275,7 +275,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                 <div key={key} className="space-y-1">
                   <Label className="text-[10px]">{label}</Label>
                   <Input className="h-8 text-xs" type="number" step={step}
-                    value={(packaging as Record<string, number>)[key]}
+                    value={((packaging as unknown) as Record<string, number>)[key]}
                     onChange={e => onChange({ packaging: { ...packaging, [key]: parseFloat(e.target.value) || 0 } })} />
                 </div>
               ))}
@@ -300,7 +300,7 @@ export function ProductSection({ inputs, onChange }: Props) {
                 <div key={key} className="space-y-1">
                   <Label className="text-[10px]">{label}</Label>
                   <Input className="h-8 text-xs" type="number" step={step} min={0}
-                    value={(inputs.defrost as Record<string, number>)[key]}
+                    value={((inputs.defrost as unknown) as Record<string, number>)[key]}
                     onChange={e => onChange({ defrost: { ...inputs.defrost, [key]: parseFloat(e.target.value) || 0 } })} />
                 </div>
               ))}

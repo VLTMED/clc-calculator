@@ -33,7 +33,6 @@ function LayersEditor({
   return (
     <div className="space-y-2">
       {layers.map((layer, i) => {
-        const mat = MATERIALS.find(m => m.id === layer.materialId);
         return (
           <div key={i} className="grid grid-cols-[1fr_100px_32px] gap-1 items-end">
             <div className="space-y-0.5">
