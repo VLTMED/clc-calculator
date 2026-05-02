@@ -44,7 +44,7 @@ export default function App() {
               حاسبة الأحمال الحرارية CLC v4A
             </h1>
             <p className="text-[10px] text-muted-foreground">
-              د. رحيم ك. جاسم — نظام تبريد وتكييف هواء
+              نظام تبريد وتكييف هواء
             </p>
           </div>
 
