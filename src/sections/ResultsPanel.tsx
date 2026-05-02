@@ -1,288 +1,145 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Thermometer,
-  Sun,
-  GlassWater,
-  Users,
-  Package,
-  Wind,
-  Zap,
-  TrendingUp,
-  Snowflake,
-} from "lucide-react";
-import type { DetailedResults } from "@/engine/calculator";
-import type { CalculationInputs } from "@/types/inputs";
+import { Badge } from "@/components/ui/badge";
+import type { CalculationBreakdown } from "@/engine/fullCalculator";
+import type { CLCInputs } from "@/types/inputs";
 
 interface Props {
-  results: DetailedResults;
-  inputs: CalculationInputs;
+  result: CalculationBreakdown;
+  inputs: CLCInputs;
 }
 
-interface ResultRowProps {
-  label: string;
-  value: number;
-  unit?: string;
-  highlight?: boolean;
-}
-
-function ResultRow({ label, value, unit = "W", highlight }: ResultRowProps) {
+function Row({ label, value, unit = "W", highlight = false, muted = false }: {
+  label: string; value: number; unit?: string; highlight?: boolean; muted?: boolean;
+}) {
+  if (Math.abs(value) < 0.001 && !highlight) return null;
   return (
-    <TableRow className={highlight ? "bg-blue-50/50 font-medium" : ""}>
-      <TableCell className="py-2 text-start">{label}</TableCell>
-      <TableCell className="py-2 text-center font-mono" dir="ltr">
-        {value.toFixed(2)}
-      </TableCell>
-      <TableCell className="py-2 text-center text-slate-500 text-xs">{unit}</TableCell>
-    </TableRow>
+    <div className={`flex items-center justify-between py-1 text-xs border-b border-border/30 last:border-0 ${highlight ? "font-bold" : ""} ${muted ? "text-muted-foreground" : ""}`}>
+      <span>{label}</span>
+      <span className={`font-mono ${highlight ? "text-primary text-sm" : ""}`}>
+        {value.toFixed(1)} {unit}
+      </span>
+    </div>
   );
 }
 
-export function ResultsPanel({ results, inputs }: Props) {
+function SectionTitle({ label }: { label: string }) {
   return (
-    <Card className="border-2 border-blue-200 shadow-xl bg-white">
-      <CardHeader className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-t-lg pb-4">
-        <CardTitle className="text-xl flex items-center gap-2 font-display">
-          <TrendingUp className="w-6 h-6" />
-          لوحة النتائج المفصلة
+    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide pt-2 pb-1 border-t">
+      {label}
+    </div>
+  );
+}
+
+export function ResultsPanel({ result, inputs }: Props) {
+  const wallCondTotal = Object.values(result.wallCond).reduce((a, b) => a + b, 0);
+  const wallSolarTotal = Object.values(result.wallSolar).reduce((a, b) => a + b, 0);
+
+  const isAC = inputs.mode === "ac";
+
+  return (
+    <Card className="sticky top-4">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-bold text-primary flex items-center justify-between">
+          <span>📊 نتائج الحساب</span>
+          <Badge variant={result.total > 0 ? "default" : "secondary"}>
+            {result.capacityTon.toFixed(2)} طن
+          </Badge>
         </CardTitle>
-        <p className="text-blue-100 text-sm font-sans font-light">
-          جميع الأحمال المحسوبة بدقة 100%
-        </p>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="overflow-auto max-h-[80vh]">
-          {/* System Capacity Summary */}
-          <div className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200">
-            <h3 className="text-lg font-black text-amber-800 mb-3 text-center font-display">
-              السعة النهائية للمنظومة
-            </h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-black text-amber-700 font-sans">
-                  {results.tons.toFixed(2)}
-                </div>
-                <div className="text-xs text-amber-600">طن تبريد (Ton)</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-black text-amber-700 font-sans">
-                  {results.kw.toFixed(2)}
-                </div>
-                <div className="text-xs text-amber-600">كيلوواط (kW)</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-black text-amber-700 font-sans">
-                  {results.grandTotal.toFixed(2)}
-                </div>
-                <div className="text-xs text-amber-600">
-                  الحمل الإجمالي (W)
-                </div>
-              </div>
-              <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-amber-200">
-                <div className="text-2xl font-black text-amber-700 font-sans">
-                  {results.requiredCapacity.toFixed(2)}
-                </div>
-                <div className="text-xs text-amber-600">
-                  السعة المطلوبة (W)
-                </div>
-              </div>
-            </div>
-            <div className="mt-3 text-center text-xs text-amber-700 bg-white rounded p-2 border border-amber-200">
-              معامل الأمان: {inputs.safetyFactor}% | ساعات التشغيل: {" "}
-              {inputs.operationHours}h/يوم
-            </div>
+      <CardContent className="text-xs space-y-0">
+
+        {/* السقف والأرضية */}
+        {!inputs.shortMethodEnabled && (
+          <>
+            <SectionTitle label="المغلف الحراري" />
+            <Row label="السقف — توصيل" value={result.roofCond} />
+            <Row label="السقف — شمسي" value={result.roofSolar} />
+            <Row label="الأرضية — توصيل" value={result.floorCond} />
+            <Row label="الجدران — توصيل" value={wallCondTotal} />
+            <Row label="الجدران — شمسي" value={wallSolarTotal} />
+            <Row label="الزجاج — توصيل" value={result.glassCond} />
+            <Row label="الزجاج — شمسي" value={result.glassSolar} />
+
+            {/* الأحمال الداخلية */}
+            <SectionTitle label="الأحمال الداخلية" />
+            <Row label="الإضاءة" value={result.lighting} />
+            <Row label="الأشخاص" value={result.people} />
+            <Row label="المعدات" value={result.equipment} />
+
+            {/* أحمال المنتج */}
+            {inputs.mode === "refrigeration" && (
+              <>
+                <SectionTitle label="أحمال المنتج والتبريد" />
+                <Row label="حمل فوق التجميد" value={result.productAboveFreeze} />
+                <Row label="حرارة التجميد الكامنة" value={result.productLatent} />
+                <Row label="حمل تحت التجميد" value={result.productBelowFreeze} />
+                <Row label="التغليف" value={result.packaging} />
+                <Row label="إزالة الصقيع" value={result.defrost} />
+              </>
+            )}
+
+            {/* الهواء */}
+            <SectionTitle label="أحمال الهواء" />
+            <Row label="تسرب الهواء" value={result.infiltration} />
+            {!isAC && <Row label="تغيير الهواء" value={result.airChanges} />}
+            {isAC  && <Row label="التهوية" value={result.ventilation} />}
+          </>
+        )}
+
+        {/* الطريقة المختصرة */}
+        {inputs.shortMethodEnabled && (
+          <>
+            <SectionTitle label="الطريقة المختصرة — جدول 2-22" />
+            <Row label="حمل المغلف (مختصر)" value={result.shortMethod} />
+            <Row label="أحمال المنتج والتبريد"
+              value={result.productAboveFreeze + result.productLatent + result.productBelowFreeze + result.packaging + result.defrost} />
+            <Row label="أحمال الهواء"
+              value={result.infiltration + result.airChanges + result.ventilation} />
+          </>
+        )}
+
+        <Separator className="my-2" />
+
+        {/* المجاميع */}
+        <Row label="مجموع الأحمال" value={result.subtotal} highlight />
+        <Row label={`معامل الأمان (${inputs.safetyFactor}%)`} value={result.safetyLoad} muted />
+
+        <Separator className="my-2" />
+
+        <div className="space-y-2 pt-1">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-bold">الكسب الكلي</span>
+            <span className="font-mono font-bold text-primary">{result.total.toFixed(1)} W</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-muted-foreground">بالكيلوواط</span>
+            <span className="font-mono">{result.totalKW.toFixed(3)} kW</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-muted-foreground">سعة المنظومة ({inputs.operatingHours}h/day)</span>
+            <span className="font-mono">{result.capacityKW.toFixed(3)} kW</span>
           </div>
 
-          {/* Detailed Results Table */}
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-100">
-                <TableHead className="font-bold text-start">بند الحمل</TableHead>
-                <TableHead className="font-bold text-center w-28" dir="ltr">القيمة</TableHead>
-                <TableHead className="font-bold text-center w-16">الوحدة</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {/* Section 1: Transmission */}
-              <TableRow className="bg-blue-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-blue-800"
-                >
-                  <div className="flex items-center gap-2"><Thermometer className="w-4 h-4 shrink-0" />أحمال التوصيل (Transmission)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="السقف" value={results.roofLoad} />
-              <ResultRow label="الأرضية" value={results.floorLoad} />
-              <ResultRow label="الجدار الشمالي" value={results.northWallLoad} />
-              <ResultRow label="الجدار الجنوبي" value={results.southWallLoad} />
-              <ResultRow label="الجدار الشرقي" value={results.eastWallLoad} />
-              <ResultRow label="الجدار الغربي" value={results.westWallLoad} />
-              <ResultRow
-                label="المجموع"
-                value={results.totalTransmission}
-                highlight
-              />
+          <div className="bg-primary/10 rounded p-3 text-center">
+            <div className="text-xs text-muted-foreground">سعة التبريد المطلوبة</div>
+            <div className="text-2xl font-bold text-primary">{result.capacityTon.toFixed(2)}</div>
+            <div className="text-xs font-semibold">طن تبريد (TR)</div>
+            <div className="text-xs text-muted-foreground mt-1">= {result.capacityKW.toFixed(2)} kW</div>
+          </div>
 
-              {/* Section 2: Solar */}
-              <TableRow className="bg-amber-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-amber-800"
-                >
-                  <div className="flex items-center gap-2"><Sun className="w-4 h-4 shrink-0" />أحمال الإشعاع الشمسي (Solar Radiation)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="إشعاع السقف" value={results.solarRoof} />
-              <ResultRow label="إشعاع الشمالي" value={results.solarNorth} />
-              <ResultRow label="إشعاع الجنوبي" value={results.solarSouth} />
-              <ResultRow label="إشعاع الشرقي" value={results.solarEast} />
-              <ResultRow label="إشعاع الغربي" value={results.solarWest} />
-              <ResultRow label="المجموع" value={results.totalSolar} highlight />
-
-              {/* Section 3: Glass */}
-              <TableRow className="bg-sky-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-sky-800"
-                >
-                  <div className="flex items-center gap-2"><GlassWater className="w-4 h-4 shrink-0" />أحمال الزجاج (Glass)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="توصيل الزجاج" value={results.glassTransmission} />
-              <ResultRow label="إشعاع الزجاج" value={results.glassSolar} />
-              <ResultRow label="المجموع" value={results.totalGlass} highlight />
-
-              {/* Section 4: Internal */}
-              <TableRow className="bg-emerald-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-emerald-800"
-                >
-                  <div className="flex items-center gap-2"><Users className="w-4 h-4 shrink-0" />الأحمال الداخلية (Internal)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="الإضاءة" value={results.lightingLoad} />
-              <ResultRow label="الأشخاص" value={results.peopleLoad} />
-              <ResultRow label="المعدات" value={results.equipmentLoad} />
-              <ResultRow label="المجموع" value={results.totalInternal} highlight />
-
-              {/* Section 5: Product */}
-              <TableRow className="bg-violet-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-violet-800"
-                >
-                  <div className="flex items-center gap-2"><Package className="w-4 h-4 shrink-0" />أحمال المنتج (Product)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow
-                label="فوق التجميد (Sensible)"
-                value={results.productAboveFreezing}
-              />
-              <ResultRow
-                label="تحت التجميد"
-                value={results.productBelowFreezing}
-              />
-              <ResultRow
-                label="الحرارة الكامنة (Latent)"
-                value={results.latentHeatLoad}
-              />
-              <ResultRow
-                label="حرارة التنفس"
-                value={results.respirationLoad}
-              />
-              <ResultRow label="التغليف" value={results.packagingLoad} />
-              <ResultRow label="المجموع" value={results.totalProduct} highlight />
-
-              {/* Section 6: Air */}
-              <TableRow className="bg-cyan-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-cyan-800"
-                >
-                  <div className="flex items-center gap-2"><Wind className="w-4 h-4 shrink-0 rtl-flip" />أحمال الهواء (Air & Ventilation)</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="التسرب" value={results.infiltrationLoad} />
-              <ResultRow label="التهوية" value={results.ventilationLoad} />
-              <ResultRow label="تغيير الهواء" value={results.airChangeLoad} />
-              <ResultRow label="المجموع" value={results.totalAir} highlight />
-
-              {/* Section 7: Other */}
-              <TableRow className="bg-rose-100">
-                <TableCell
-                  colSpan={3}
-                  className="py-2 font-bold text-rose-800"
-                >
-                  <div className="flex items-center gap-2"><Zap className="w-4 h-4 shrink-0" />أحمال أخرى</div>
-                </TableCell>
-              </TableRow>
-              <ResultRow label="أذابة الصقيع" value={results.defrostLoad} />
-              <ResultRow
-                label="الطريقة المختصرة"
-                value={results.usageLoad}
-              />
-
-              {/* Grand Total */}
-              <Separator />
-              <TableRow className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                <TableCell className="py-3 font-bold text-lg">
-                  الحمل الإجمالي
-                </TableCell>
-                <TableCell className="py-3 text-center font-bold text-lg font-mono" dir="ltr">
-                  {results.grandTotal.toFixed(2)}
-                </TableCell>
-                <TableCell className="py-3 font-bold">W</TableCell>
-              </TableRow>
-              <TableRow className="bg-amber-50">
-                <TableCell className="py-2 font-medium">
-                  مع معامل الأمان ({inputs.safetyFactor}%)
-                </TableCell>
-                <TableCell className="py-2 text-center font-bold font-mono" dir="ltr">
-                  {results.totalWithSafety.toFixed(2)}
-                </TableCell>
-                <TableCell className="py-2">W</TableCell>
-              </TableRow>
-              <TableRow className="bg-amber-50">
-                <TableCell className="py-2 font-medium">
-                  السعة المطلوبة ({inputs.operationHours}h تشغيل)
-                </TableCell>
-                <TableCell className="py-2 text-center font-bold font-mono" dir="ltr">
-                  {results.requiredCapacity.toFixed(2)}
-                </TableCell>
-                <TableCell className="py-2">W</TableCell>
-              </TableRow>
-              <TableRow className="bg-amber-100">
-                <TableCell className="py-2 font-bold">
-                  <Snowflake className="w-4 h-4 inline me-1" />
-                  السعة بالكيلوواط
-                </TableCell>
-                <TableCell className="py-2 text-center font-bold text-lg font-mono" dir="ltr">
-                  {results.kw.toFixed(2)}
-                </TableCell>
-                <TableCell className="py-2 font-bold">kW</TableCell>
-              </TableRow>
-              <TableRow className="bg-amber-200">
-                <TableCell className="py-3 font-bold text-lg">
-                  <Snowflake className="w-5 h-5 inline me-1" />
-                  السعة بالطن
-                </TableCell>
-                <TableCell className="py-3 text-center font-bold text-xl font-mono text-amber-800" dir="ltr">
-                  {results.tons.toFixed(2)}
-                </TableCell>
-                <TableCell className="py-3 font-bold text-lg">Ton</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          {/* U values */}
+          <div className="border-t pt-2 space-y-1">
+            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wide">معاملات U (W/m²·K)</div>
+            {result.roofU > 0 && <div className="flex justify-between text-[10px]"><span>السقف</span><span className="font-mono">{result.roofU.toFixed(4)}</span></div>}
+            {result.floorU > 0 && <div className="flex justify-between text-[10px]"><span>الأرضية</span><span className="font-mono">{result.floorU.toFixed(4)}</span></div>}
+            {(["north", "south", "east", "west"] as const).map(dir => result.wallU[dir] > 0 && (
+              <div key={dir} className="flex justify-between text-[10px]">
+                <span>{{ north:"شمال", south:"جنوب", east:"شرق", west:"غرب" }[dir]}</span>
+                <span className="font-mono">{result.wallU[dir].toFixed(4)}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

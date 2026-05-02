@@ -1,8 +1,10 @@
-# Cooling & Heating Load Calculator (حساب أحمال التبريد والتكييف)
+# Cooling & Heating Load Calculator — CLC v4A (حاسبة الأحمال الحرارية)
 
 ## Project Overview
 
-A professional Arabic-first web application for calculating cooling/heating loads based on ASHRAE tables. The UI is fully RTL (Arabic) with mobile-first design. Supports: wall/roof/floor conduction layers, solar/glass radiation, internal gains (people/lighting/equipment), product/storage cold-room gains, and air infiltration/ventilation loads.
+Arabic-first HVAC load calculator built in React 19 + TypeScript + Vite + Tailwind + shadcn/ui.
+Fully RTL, mobile-first. 100% faithful rebuild of Dr. Raheem K. Jassim's Excel CLC Version 4A.
+Supports: refrigeration mode and air-conditioning mode, all 22 ASHRAE-based tables.
 
 ## Tech Stack
 
@@ -10,83 +12,72 @@ A professional Arabic-first web application for calculating cooling/heating load
 - **Build Tool:** Vite 7
 - **Styling:** Tailwind CSS + shadcn/ui (Radix UI)
 - **Fonts:** Thmanyah Sans (5 weights) + Thmanyah Serif Display (2 weights)
-- **Charts:** Recharts
 - **Package Manager:** npm
-
-## Typography System (Thmanyah)
-
-Two font families following the official Thmanyah Font Guide:
-
-| Family | Weights | Use |
-|---|---|---|
-| ThmanyahSans | 300, 400, 500, 700, 900 | Body, labels, buttons, numbers |
-| ThmanyahSerifDisplay | 700, 900 | H1/H2 headings, hero titles |
-
-### OpenType Features Enabled
-- `"salt" 1` — Stylistic Alternates (حروف مرسلة تُفعَّل تلقائياً)
-- `"calt" 1` — Contextual Alternates (روابط سياقية)
-- `"liga" 1` — Standard Ligatures (ربط الحروف)
-- `"tnum" 1` — Tabular Numerals (للأرقام فقط)
-- `"ss01" 1` — Stylistic Set 1 / كشيدة مائلة (utility class: `.font-kashida-italic`)
 
 ## Project Structure
 
-- `src/main.tsx` — React entry point (RTL/Arabic setup)
-- `src/App.tsx` — Main UI, mobile-first header, tab navigation, state management
-- `src/engine/` — Calculation logic (`calculator.ts`, `fullCalculator.ts`)
-- `src/types/` — TypeScript types (`inputs.ts`, `WallLayer`)
-- `src/data/` — ASHRAE/material/product lookup tables
-- `src/sections/` — Input sections (ConstructionSection redesigned as layer cards)
-- `src/components/ui/` — Shared UI components
-- `public/fonts/` — Arabic fonts
-- `public/fonts.css` — Font-face declarations + global OpenType settings
-- `src/index.css` — Full typography system + mobile-first utilities
+```
+src/
+  App.tsx                   — Main layout: header, input columns, sticky results sidebar
+  types/inputs.ts           — Complete CLCInputs type + all sub-interfaces (StudentInfo added)
+  engine/
+    fullCalculator.ts       — Full calculation engine: calculateAll() + calcU()
+    defaults.ts             — getDefaultInputs(mode) with all defaults
+  data/
+    tables.ts               — All 22 tables: MATERIALS, SAUDI_CITIES, GLASS_TYPES, etc.
+    products.ts             — 60+ products from Excel tables 2-5 to 2-8
+  sections/
+    StudentInfo.tsx         — Student/project info fields
+    DimensionsSection.tsx   — Room dims, temp conditions, city selector (table 2-4)
+    ConstructionSection.tsx — Walls(4 dirs), roof, floor: layers + U display + solar toggle
+    GlassSection.tsx        — Glass/windows: direction, type, SC, solar method (16A/16B)
+    InternalLoadsSection.tsx — Lighting, people (table 2-20/21), equipment
+    ProductSection.tsx      — Product loads (3 independent toggles), packaging, defrost
+    AirLoadsSection.tsx     — Infiltration (table 2-11), air changes (2-13), ventilation (2-14)
+    ResultsPanel.tsx        — Live results: U-values, all loads, total W/kW/TR
+  components/ui/            — shadcn/ui components
+public/
+  fonts/                    — Arabic fonts (Thmanyah)
+  fonts.css                 — Font-face declarations
+```
 
-## Layers System (ConstructionSection)
+## Calculation Engine
 
-Each construction layer (طبقة) is an independent card unit containing:
-1. **اسم الطبقة** — Material selector (full width dropdown)
-2. **السُّمك (m)** — Editable thickness input
-3. **معامل التوصيل k** — Auto-filled from material, displayed as read-only badge
+Key formulas (faithful to Excel):
+- **U = 1 / (1/hi + Σ(L_i/k_i) + 1/ho)** — per surface
+- **Q = U × A × CLTD** — conduction load
+- **Q_solar = U × A × DTs** where **DTs = 1.15 × a × I / ho** — solar load (table 2-16A)
+- **Product Q = M × Cp × ΔT × 1000 / (3600 × n × CRF)** — 3 independent toggles per Excel E105/F105/G105
+- **Short method** — table 2-22 (23 rows, 0.6 to 2800 m³)
 
-Layers are independently addable, deletable, and editable. The thermal calculation uses: U = 1 / (1/hi + Σ(L/k) + 1/ho).
+## Key Data
 
-## Mobile-First RTL Design
+- Table 2-1: 11 materials with exact k values
+- Table 2-4: Saudi cities with Tdb/Twb
+- Tables 2-5 to 2-8: 60+ products (Tf, Cp↑, Cp↓, LH, CRF, humidity)
+- Table 2-11: Infiltration rates by volume + temp zone
+- Table 2-13: Air changes per day by volume
+- Table 2-14: Ventilation rates
+- Table 2-16A/B: Solar radiation (16A: cooling CLTD; 16B: monthly by direction)
+- Table 2-17: Glass U-values
+- Table 2-19: Packaging materials Cp
+- Table 2-20/21: People heat gains (AC / refrigeration)
+- Table 2-22: Short-method load factors (heavy/medium construction)
 
-- Header: compact layout on mobile, badges hidden on xs, clamp() font scaling, color changes with appMode (blue=refrig, orange=ac)
-- Tabs: horizontally scrollable on mobile (icon + label stacked), full on desktop
-- Layer cards: full-width material select, 2-column thickness/k grid
-- Touch targets: minimum 44px on mobile
-- Checkbox toggles: card-style rows with clear visual affordance
+## Mode
 
-## UX Overhaul (v4A — May 2026)
-
-Key changes applied from 30-point observation report:
-1. **appMode switch** — prominent 2-button card at top of App.tsx (تبريد/تكييف). Header color adapts dynamically.
-2. **lightsEnabled + peopleEnabled** — independent card toggles in InternalLoadsSection, same pattern as equipment.
-3. **Neutral defaults** — all inputs start at 0. "تحميل مثال" button loads demo data.
-4. **handleReset** — now resets all inputs (not just results). Clears localStorage too.
-5. **Ground temp label** — "درجة حرارة التربة/الهواء المحاذي للأرضية" with explanatory sub-label.
-6. **Product field locking** — constants auto-filled on product selection, locked by default. "مؤمّن — انقر للتعديل" button to unlock.
-7. **Frozen product note** — blue info banner shown when product has latentHeat=0 or frozen.
-8. **Temp validation** — amber warning banner when productEnterTemp < storageTemp.
-9. **Auto-infiltration** — AirLoadsSection auto-calculates suggested infiltration rate from room volume via INFILTRATION_RATES interpolation, with one-tap "تطبيق" button.
-10. **localStorage** — inputs auto-saved on every change; restored on page load; cleared on reset.
-11. **fullCalculator.ts** — lightsEnabled and peopleEnabled flags now multiply their respective loads.
-12. **DisabledBadge** — consistent "غير محسوب" indicator across all disabled load cards.
+- **تبريد (Refrigeration):** product loads, air changes, packaging, defrost enabled
+- **تكييف (AC):** ventilation, people activity table 2-20 enabled; product section hidden
 
 ## Development
 
 ```bash
 npm install
-npm run dev
+npm run dev  # port 5000
 ```
-
-App runs on port 5000 at `0.0.0.0`.
 
 ## Deployment
 
-Configured as a static site:
-- **Build:** `npm run build`
-- **Public Dir:** `dist`
-- **GitHub:** https://github.com/VLTMED/clc-calculator (branch: main)
+- Build: `npm run build` → `dist/`
+- GitHub: https://github.com/VLTMED/clc-calculator (branch: main)
+- Push: use Python REST API with personal access token stored in env (write via REST API only)

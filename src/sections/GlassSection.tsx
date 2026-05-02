@@ -1,200 +1,162 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Sun, GlassWater, Info } from "lucide-react";
-import { GLASS_U_VALUES, SHADING_COEFFICIENTS } from "@/data/ventilation";
-import type { CalculationInputs } from "@/types/inputs";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { PlusCircle, Trash2 } from "lucide-react";
+import type { CLCInputs, GlassConfig, WallDirection } from "@/types/inputs";
+import { GLASS_TYPES, SOLAR_RADIATION_16B } from "@/data/tables";
 
 interface Props {
-  inputs: CalculationInputs;
-  onChange: (field: string, value: number | string) => void;
+  inputs: CLCInputs;
+  onChange: (partial: Partial<CLCInputs>) => void;
 }
 
-function FieldRow({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
+const DIRECTIONS: { key: WallDirection; label: string }[] = [
+  { key: "north", label: "شمالي" },
+  { key: "south", label: "جنوبي" },
+  { key: "east",  label: "شرقي" },
+  { key: "west",  label: "غربي" },
+];
+
+const SOLAR_METHODS = [
+  { value: "table16A", label: "جدول 2-16A (تبريد)" },
+  { value: "table16B", label: "جدول 2-16B (تكييف — بالشهر)" },
+  { value: "none",     label: "بدون تأثير شمسي" },
+];
+
+const MONTHS = SOLAR_RADIATION_16B.map(r => r.month);
+
+function GlassRow({
+  glass, index, onUpdate, onRemove
+}: {
+  glass: GlassConfig;
+  index: number;
+  onUpdate: (patch: Partial<GlassConfig>) => void;
+  onRemove: () => void;
+}) {
   return (
-    <div className="flex items-center justify-between gap-3">
-      <div className="text-sm font-medium text-slate-700 leading-snug">{label}</div>
-      <div className="w-28 shrink-0">{children}</div>
+    <div className="border rounded p-3 space-y-3 bg-muted/20">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Switch checked={glass.enabled} onCheckedChange={v => onUpdate({ enabled: v })} />
+          <span className="text-sm font-medium">نافذة / زجاج {index + 1}</span>
+        </div>
+        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onRemove}>
+          <Trash2 className="h-3.5 w-3.5 text-destructive" />
+        </Button>
+      </div>
+
+      {glass.enabled && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="space-y-1">
+            <Label className="text-[10px]">الاتجاه</Label>
+            <Select value={glass.direction} onValueChange={v => onUpdate({ direction: v as WallDirection })}>
+              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {DIRECTIONS.map(d => <SelectItem key={d.key} value={d.key}>{d.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px]">المساحة (m²)</Label>
+            <Input className="h-8 text-xs" type="number" min={0} step={0.1}
+              value={glass.area}
+              onChange={e => onUpdate({ area: parseFloat(e.target.value) || 0 })} />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px]">نوع الزجاج — جدول 2-17</Label>
+            <Select value={glass.glassTypeId} onValueChange={v => onUpdate({ glassTypeId: v })}>
+              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {GLASS_TYPES.map(g => (
+                  <SelectItem key={g.id} value={g.id}>
+                    {g.nameAr} (U={g.uSummer})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px]">طريقة الحمل الشمسي</Label>
+            <Select value={glass.solarMethod} onValueChange={v => onUpdate({ solarMethod: v as GlassConfig["solarMethod"] })}>
+              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {SOLAR_METHODS.map(m => <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label className="text-[10px]">معامل التضليل SC — جدول 2-18B</Label>
+            <Input className="h-8 text-xs" type="number" min={0} max={1} step={0.01}
+              value={glass.shadingCoefficient}
+              onChange={e => onUpdate({ shadingCoefficient: parseFloat(e.target.value) || 1 })} />
+          </div>
+          {glass.solarMethod === "table16B" && (
+            <div className="space-y-1">
+              <Label className="text-[10px]">الشهر</Label>
+              <Select value={glass.month ?? "يوليو"} onValueChange={v => onUpdate({ month: v })}>
+                <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {MONTHS.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
 export function GlassSection({ inputs, onChange }: Props) {
+  const addGlass = () => {
+    onChange({
+      glasses: [
+        ...inputs.glasses,
+        {
+          enabled: true,
+          direction: "north",
+          area: 1.5,
+          glassTypeId: "single",
+          solarMethod: "table16A",
+          shadingCoefficient: 1.0,
+        } satisfies GlassConfig,
+      ],
+    });
+  };
+
+  const updateGlass = (i: number, patch: Partial<GlassConfig>) => {
+    onChange({
+      glasses: inputs.glasses.map((g, idx) => idx === i ? { ...g, ...patch } : g),
+    });
+  };
+
+  const removeGlass = (i: number) => {
+    onChange({ glasses: inputs.glasses.filter((_, idx) => idx !== i) });
+  };
+
   return (
-    <div className="space-y-4">
-
-      {/* ── Solar ── */}
-      <Card className="border-amber-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-amber-800 font-display">
-            <Sun className="w-5 h-5 text-amber-600 shrink-0" />
-            تأثير الإشعاع الشمسي على الجدران والسقف
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <label htmlFor="considerSolar"
-            className="flex items-center gap-3 cursor-pointer select-none py-1">
-            <span className="flex-1 text-sm font-medium">أخذ تأثير الأشعة الشمسية بالحسبان؟</span>
-            <input type="checkbox" id="considerSolar"
-              checked={inputs.considerSolar === 1}
-              onChange={(e) => onChange("considerSolar", e.target.checked ? 1 : 0)}
-              className="w-5 h-5 shrink-0 rounded accent-amber-600" />
-          </label>
-
-          {inputs.considerSolar === 1 && (
-            <>
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium text-slate-700 flex items-center gap-1">
-                  <Info className="w-3.5 h-3.5" /> معامل الامتصاص (a)
-                </Label>
-                <Select value={inputs.absorptance.toString()}
-                  onValueChange={(v) => onChange("absorptance", parseFloat(v))}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0.89">الأسفلت (0.89)</SelectItem>
-                    <SelectItem value="0.65">الخرسانة (0.65)</SelectItem>
-                    <SelectItem value="0.77">الطوب الأحمر (0.77)</SelectItem>
-                    <SelectItem value="0.26">الطوب الأبيض (0.26)</SelectItem>
-                    <SelectItem value="0.57">المونة الأسمنتية (0.57)</SelectItem>
-                    <SelectItem value="0.40">المونة الجبسية (0.40)</SelectItem>
-                    <SelectItem value="0.91">العازل الحراري (0.91)</SelectItem>
-                    <SelectItem value="0.90">البيتومين (0.90)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <FieldRow label="شدة الإشعاع الشمسي (W/m²)">
-                <Input type="number" value={inputs.radiation}
-                  onChange={(e) => onChange("radiation", parseFloat(e.target.value) || 0)}
-                  dir="ltr" className="text-center font-mono" />
-              </FieldRow>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ── Glass ── */}
-      <Card className="border-sky-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-sky-800 font-display">
-            <GlassWater className="w-5 h-5 text-sky-600 shrink-0" />
-            أحمال النوافذ الزجاجية
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <label htmlFor="glassEnabled"
-            className="flex items-center gap-3 cursor-pointer select-none py-1">
-            <span className="flex-1 text-sm font-medium">أخذ حمل الزجاج بالحسبان؟</span>
-            <input type="checkbox" id="glassEnabled"
-              checked={inputs.glassEnabled === 1}
-              onChange={(e) => onChange("glassEnabled", e.target.checked ? 1 : 0)}
-              className="w-5 h-5 shrink-0 rounded accent-sky-600" />
-          </label>
-
-          {inputs.glassEnabled === 1 && (
-            <>
-              <FieldRow label="مساحة الزجاج (m²)">
-                <Input type="number" value={inputs.glassArea}
-                  onChange={(e) => onChange("glassArea", parseFloat(e.target.value) || 0)}
-                  dir="ltr" className="text-center font-mono" />
-              </FieldRow>
-
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium text-slate-700">U-Value الزجاج</Label>
-                <Select value={inputs.glassU.toString()}
-                  onValueChange={(v) => onChange("glassU", parseFloat(v))}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {GLASS_U_VALUES.map((g) => (
-                      <SelectItem key={g.id} value={g.uSummer.toString()}>
-                        {g.description} ({g.uSummer})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium text-slate-700">الاتجاه</Label>
-                <Select value={inputs.glassDirection}
-                  onValueChange={(v) => onChange("glassDirection", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="شمالي">شمالي</SelectItem>
-                    <SelectItem value="جنوبي">جنوبي</SelectItem>
-                    <SelectItem value="شرقي">شرقي</SelectItem>
-                    <SelectItem value="غربي">غربي</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Separator />
-
-              <div className="bg-sky-50 border border-sky-200 rounded-lg p-3 space-y-3">
-                <div className="text-sm font-medium text-sky-800">طريقة حساب حمل الزجاج</div>
-
-                <label htmlFor="useSCMethod"
-                  className="flex items-center gap-3 cursor-pointer select-none py-1">
-                  <span className="flex-1 text-sm">استخدام طريقة SC × SHGF × CLF</span>
-                  <input type="checkbox" id="useSCMethod"
-                    checked={inputs.useSCMethod === 1}
-                    onChange={(e) => onChange("useSCMethod", e.target.checked ? 1 : 0)}
-                    className="w-5 h-5 shrink-0 rounded accent-sky-600" />
-                </label>
-
-                {inputs.useSCMethod === 1 ? (
-                  <div className="space-y-2">
-                    {[
-                      { label: "معامل التظليل SC", field: "scValue", val: inputs.scValue, step: "0.01" },
-                      { label: "SHGF", field: "shgfValue", val: inputs.shgfValue, step: "1" },
-                      { label: "معامل الحمل الشمسي CLF", field: "clfValue", val: inputs.clfValue, step: "0.01" },
-                    ].map(({ label, field, val, step }) => (
-                      <div key={field} className="flex items-center gap-2">
-                        <span className="text-xs text-slate-600 flex-1">{label}</span>
-                        <Input type="number" step={step} value={val}
-                          onChange={(e) => onChange(field, parseFloat(e.target.value) || 0)}
-                          className="h-8 text-xs text-center font-mono w-24 shrink-0"
-                          dir="ltr" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-600 flex-1">حرارة مكتسبة للزجاج (W/m²)</span>
-                      <Input type="number" value={inputs.glassSHGF}
-                        onChange={(e) => onChange("glassSHGF", parseFloat(e.target.value) || 0)}
-                        className="h-8 text-xs text-center font-mono w-24 shrink-0" dir="ltr" />
-                    </div>
-                    <div className="space-y-1">
-                      <Label className="text-xs text-slate-600">معامل التضليل (SC)</Label>
-                      <Select value={inputs.shadingCoefficient.toString()}
-                        onValueChange={(v) => onChange("shadingCoefficient", parseFloat(v))}>
-                        <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          {SHADING_COEFFICIENTS.map((sc, i) => (
-                            <SelectItem key={i} value={sc.noShading.toString()}>
-                              {sc.glassType} - بدون تضليل ({sc.noShading})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-    </div>
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
+          🪟 النوافذ والزجاج
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950/30 p-2 rounded">
+          جدول 2-17: U الزجاج | جدول 2-16A/B: شدة الشمس | جدول 2-18B: معامل التضليل SC
+        </p>
+        {inputs.glasses.map((g, i) => (
+          <GlassRow key={i} glass={g} index={i}
+            onUpdate={patch => updateGlass(i, patch)}
+            onRemove={() => removeGlass(i)} />
+        ))}
+        <Button variant="outline" className="w-full gap-2 text-sm" onClick={addGlass}>
+          <PlusCircle className="h-4 w-4" /> إضافة نافذة / زجاجية
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

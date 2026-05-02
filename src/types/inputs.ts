@@ -1,134 +1,162 @@
-export interface WallLayer {
+// ═══════════════════════════════════════════════════════════════════
+// نوع البيانات الشاملة — CLC v4A (إعادة بناء كاملة)
+// مطابق 100% لهيكل ملف Excel الأصلي
+// ═══════════════════════════════════════════════════════════════════
+
+export interface BuildingLayer {
   materialId: string;
-  thickness: number;
-  k: number;
+  thickness: number; // m
 }
 
-export interface CalculationInputs {
-  // App mode
-  appMode: "ac" | "refrig"; // وضع التكييف أو التبريد
+export interface SurfaceConfig {
+  enabled: boolean;
+  hi: number;
+  ho: number;
+  layers: BuildingLayer[];
+  solarEnabled: boolean;
+  absorptanceMaterialId: string;
+}
 
-  // Dimensions
-  length: number;
-  width: number;
-  height: number;
+export type WallDirection = "north" | "south" | "east" | "west";
+
+export interface WallConfig {
+  enabled: boolean;
+  hi: number;
+  ho: number;
+  layers: BuildingLayer[];
+  solarEnabled: boolean;
+  absorptanceMaterialId: string;
+}
+
+export interface GlassConfig {
+  enabled: boolean;
+  direction: WallDirection;
+  area: number;
+  glassTypeId: string;
+  solarMethod: "table16A" | "table16B" | "none";
+  month?: string;
+  shadingCoefficient: number;
+}
+
+export interface LightingLoad {
+  enabled: boolean;
+  count: number;
+  wattEach: number;
+  hoursPerDay: number;
+  clf: number;
+}
+
+export interface PeopleLoad {
+  enabled: boolean;
+  count: number;
+  hoursPerDay: number;
+  clf: number;
+  activityId: string;
+}
+
+export interface EquipmentLoad {
+  enabled: boolean;
+  count: number;
+  heatRate: number;
+  hoursPerDay: number;
+  clf: number;
+}
+
+export interface ProductLoad {
+  enabled: boolean;
+  productId: string;
+  massKg: number;
+  enterTemp: number;
+  storageTemp: number;
+  aboveFreezeEnabled: boolean;
+  latentEnabled: boolean;
+  belowFreezeEnabled: boolean;
+  pulldownHours: number;
+  crf: number;
+}
+
+export interface PackagingLoad {
+  enabled: boolean;
+  packagingMaterialId: string;
+  boxCount: number;
+  massPerBoxKg: number;
+  enterTemp: number;
+  storageTemp: number;
+  pulldownHours: number;
+}
+
+export interface DefrostLoad {
+  enabled: boolean;
+  heaterCount: number;
+  powerEachW: number;
+  usageFactor: number;
+}
+
+export interface InfiltrationLoad {
+  enabled: boolean;
+  method: "table11" | "manual";
+  manualRate?: number;
+  tempOut: number;
+  rhOut: number;
+  severeConditions: boolean;
+}
+
+export interface AirChangesLoad {
+  enabled: boolean;
+  method: "table13" | "manual";
+  manualChanges?: number;
+  vo: number;
+  hi: number;
+  ho: number;
+}
+
+export interface VentilationLoad {
+  enabled: boolean;
+  personCount: number;
+  ventilationRateId: string;
+  usePreferred: boolean;
+  vo: number;
+  hi: number;
+  ho: number;
+}
+
+export interface StudentInfo {
+  studentName: string;
+  studentId: string;
+  university: string;
+  professorName: string;
+  projectName: string;
+  date: string;
+}
+
+export type AppMode = "refrigeration" | "ac";
+export type RoomLocation = "ground" | "elevated";
+
+export interface CLCInputs {
+  mode: AppMode;
   tempIn: number;
   tempOut: number;
   groundTemp: number;
-  location: string;
-  isGroundFloor: number;
-  considerRoofFloor: number;
-  considerWalls: number;
-  considerSolar: number;
-
-  // Roof layers
-  roofLayers: WallLayer[];
-  roofHi: number;
-  roofHo: number;
-
-  // Floor layers
-  floorLayers: WallLayer[];
-  floorHi: number;
-  floorHo: number;
-
-  // Wall layers
-  wallLayers: WallLayer[];
-  wallHi: number;
-  wallHo: number;
-
-  // Directional settings
-  northEnabled: number;
-  southEnabled: number;
-  eastEnabled: number;
-  westEnabled: number;
-  northWallHo: number;
-  southWallHo: number;
-  eastWallHo: number;
-  westWallHo: number;
-
-  // Solar
-  absorptance: number;
-  radiation: number;
-
-  // Glass
-  glassEnabled: number;
-  glassArea: number;
-  glassU: number;
-  glassDirection: string;
-  glassSHGF: number;
-  shadingCoefficient: number;
-  useSCMethod: number;
-  scValue: number;
-  shgfValue: number;
-  clfValue: number;
-
-  // Internal loads
-  lightsEnabled: number;
-  lightsCount: number;
-  lightsWatt: number;
-  lightsHours: number;
-  peopleEnabled: number;
-  peopleCount: number;
-  peopleQt: number;
-  peopleHours: number;
-  equipmentEnabled: number;
-  equipmentHeatRate: number;
-  equipmentCount: number;
-  equipmentHours: number;
-
-  // Product
-  productEnabled: number;
-  productId: string;
-  productMass: number;
-  productEnterTemp: number;
-  freezeTemp: number;
-  storageTemp: number;
-  coolTime: number;
-  crf: number;
-  cpAbove: number;
-  cpBelow: number;
-  latentHeat: number;
-  respirationRate: number;
-
-  // Packaging
-  packagingEnabled: number;
-  boxesCount: number;
-  boxWeight: number;
-  packagingCp: number;
-  packagingSafetyHours: number;
-
-  // Defrost
-  defrostEnabled: number;
-  heatersCount: number;
-  heaterPower: number;
-  heaterUsageFactor: number;
-
-  // Usage method
-  usageEnabled: number;
-  usageFactor: number;
-
-  // Air infiltration
-  infiltrationEnabled: number;
-  infiltrationRate: number;
-  enthalpyDiff: number;
-
-  // Ventilation
-  ventilationEnabled: number;
-  ventRatePerPerson: number;
-  peopleCountVent: number;
-  ventHi: number;
-  ventHo: number;
-  specificVolume: number;
-
-  // Air change
-  airChangeEnabled: number;
-  airChangesPer24h: number;
-  airChangeVolume: number;
-  airChangeHi: number;
-  airChangeHo: number;
-  airChangeSpecificVolume: number;
-
-  // System
+  roomLocation: RoomLocation;
+  length: number;
+  width: number;
+  height: number;
+  roof: SurfaceConfig;
+  floor: SurfaceConfig;
+  walls: Record<WallDirection, WallConfig>;
+  glasses: GlassConfig[];
+  lighting: LightingLoad;
+  people: PeopleLoad;
+  equipment: EquipmentLoad;
+  products: ProductLoad[];
+  packaging: PackagingLoad;
+  defrost: DefrostLoad;
+  infiltration: InfiltrationLoad;
+  airChanges: AirChangesLoad;
+  ventilation: VentilationLoad;
   safetyFactor: number;
-  operationHours: number;
+  operatingHours: number;
+  shortMethodEnabled: boolean;
+  shortMethodType: "heavy" | "medium";
+  studentInfo: StudentInfo;
 }

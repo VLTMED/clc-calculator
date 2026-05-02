@@ -2,157 +2,105 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { ThermometerSun, MapPin, Building2 } from "lucide-react";
-import { SAUDI_CITIES } from "@/data/cities";
-import type { CalculationInputs } from "@/types/inputs";
+import { Switch } from "@/components/ui/switch";
+import type { CLCInputs } from "@/types/inputs";
+import { SAUDI_CITIES } from "@/data/tables";
 
 interface Props {
-  inputs: CalculationInputs;
-  onChange: (field: string, value: number | string) => void;
-}
-
-/* ══════════════════════════════════════════════════════
-   FieldRow — نمط RTL الأصيل
-   [ النص ·····················  ] [ قيمة ]
-   اللابل يمين (flex-1) — الـ input يسار (w-28 ثابت)
-   ══════════════════════════════════════════════════════ */
-function FieldRow({ label, children }: { label: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="flex-1 text-sm font-medium text-slate-700 leading-snug">{label}</div>
-      <div className="w-28 shrink-0">{children}</div>
-    </div>
-  );
+  inputs: CLCInputs;
+  onChange: (partial: Partial<CLCInputs>) => void;
 }
 
 export function DimensionsSection({ inputs, onChange }: Props) {
+  const volume = inputs.length * inputs.width * inputs.height;
+
   return (
-    <div className="space-y-4">
-
-      {/* ── أبعاد الحيز ─────────────────────────────────── */}
-      <Card className="border-blue-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-blue-800 font-display">
-            <Building2 className="w-5 h-5 text-blue-600 shrink-0" />
-            أبعاد الحيز المبرد/المكيف
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-
-          <FieldRow label="الطول (m)">
-            <Input id="length" type="number" value={inputs.length}
-              onChange={(e) => onChange("length", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
-
-          <FieldRow label="العرض (m)">
-            <Input id="width" type="number" value={inputs.width}
-              onChange={(e) => onChange("width", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
-
-          <FieldRow label="الارتفاع (m)">
-            <Input id="height" type="number" value={inputs.height}
-              onChange={(e) => onChange("height", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
-
-          <Separator />
-
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">
-              المساحة: <span className="font-mono ms-1">{(inputs.length * inputs.width).toFixed(1)}</span> m²
-            </Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">
-              الحجم: <span className="font-mono ms-1">{(inputs.length * inputs.width * inputs.height).toFixed(1)}</span> m³
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* ── الظروف الحرارية ──────────────────────────────── */}
-      <Card className="border-amber-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2 text-amber-800 font-display">
-            <ThermometerSun className="w-5 h-5 text-amber-600 shrink-0" />
-            الظروف الحرارية والموقع
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-
-          <FieldRow label="درجة حرارة الداخل (°C)">
-            <Input type="number" value={inputs.tempIn}
-              onChange={(e) => onChange("tempIn", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
-
-          <FieldRow label="درجة حرارة الخارج (°C)">
-            <Input type="number" value={inputs.tempOut}
-              onChange={(e) => onChange("tempOut", parseFloat(e.target.value) || 0)}
-              dir="ltr" className="text-center font-mono" />
-          </FieldRow>
-
-          <div className="flex items-start gap-3">
-            <div className="flex-1 text-sm font-medium text-slate-700 leading-snug pt-2.5">
-              <div>درجة حرارة التربة/الهواء المحاذي للأرضية (°C)</div>
-              <div className="text-xs text-slate-400 font-normal mt-0.5">
-                تختلف عن الخارج عند وجود طابق سفلي أو تربة باردة — في الغالب = الخارج
-              </div>
+    <Card>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-sm font-bold text-primary flex items-center gap-2">
+          📐 الأبعاد والظروف التصميمية
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "الطول/عرض الشمال (m)", key: "length" },
+            { label: "العرض/طول الشرق (m)", key: "width" },
+            { label: "الارتفاع (m)", key: "height" },
+          ].map(({ label, key }) => (
+            <div key={key} className="space-y-1">
+              <Label className="text-xs">{label}</Label>
+              <Input type="number" min={0.1} step={0.1}
+                value={(inputs as Record<string, number>)[key]}
+                onChange={e => onChange({ [key]: parseFloat(e.target.value) || 0 })} />
             </div>
-            <div className="w-28 shrink-0">
-              <Input type="number" value={inputs.groundTemp}
-                onChange={(e) => onChange("groundTemp", parseFloat(e.target.value) || 0)}
-                dir="ltr" className="text-center font-mono" />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 bg-muted/40 rounded p-3 text-sm">
+          <div><span className="text-muted-foreground">المساحة: </span><span className="font-bold">{(inputs.length * inputs.width).toFixed(2)} m²</span></div>
+          <div><span className="text-muted-foreground">الحجم: </span><span className="font-bold">{volume.toFixed(2)} m³</span></div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "درجة الحرارة الداخلية (°C)", key: "tempIn" },
+            { label: "درجة الحرارة الخارجية (°C)", key: "tempOut" },
+            { label: "درجة حرارة الأرض (°C)", key: "groundTemp" },
+          ].map(({ label, key }) => (
+            <div key={key} className="space-y-1">
+              <Label className="text-xs">{label}</Label>
+              <Input type="number" step={0.5}
+                value={(inputs as Record<string, number>)[key]}
+                onChange={e => onChange({ [key]: parseFloat(e.target.value) || 0 })} />
             </div>
+          ))}
+        </div>
+
+        <div className="space-y-1">
+          <Label className="text-xs">شروط تصميم المدينة — جدول 2-4</Label>
+          <Select onValueChange={v => {
+            const city = SAUDI_CITIES.find(c => c.id === v);
+            if (city) onChange({ tempOut: city.tempDryBulb });
+          }}>
+            <SelectTrigger className="text-sm">
+              <SelectValue placeholder="اختر مدينة للتعبئة التلقائية..." />
+            </SelectTrigger>
+            <SelectContent>
+              {SAUDI_CITIES.map(c => (
+                <SelectItem key={c.id} value={c.id}>
+                  {c.nameAr} — جاف: {c.tempDryBulb}°C | رطب: {c.tempWetBulb}°C
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex items-center gap-4 py-1">
+          <Label className="text-xs min-w-fit">موقع الغرفة:</Label>
+          <div className="flex items-center gap-2">
+            <span className={`text-xs ${inputs.roomLocation === "ground" ? "font-bold" : "text-muted-foreground"}`}>أرضي (تستخدم درجة الأرض)</span>
+            <Switch checked={inputs.roomLocation === "elevated"}
+              onCheckedChange={v => onChange({ roomLocation: v ? "elevated" : "ground" })} />
+            <span className={`text-xs ${inputs.roomLocation === "elevated" ? "font-bold" : "text-muted-foreground"}`}>مرتفع (يستخدم درجة الخارج)</span>
           </div>
+        </div>
 
-          <Separator />
-
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium flex items-center gap-1.5 text-slate-700">
-              <MapPin className="w-3.5 h-3.5 text-slate-500" />
-              المدينة
-            </Label>
-            <Select value={inputs.location} onValueChange={(v) => onChange("location", v)}>
-              <SelectTrigger><SelectValue placeholder="اختر المدينة" /></SelectTrigger>
-              <SelectContent>
-                {SAUDI_CITIES.map((city) => (
-                  <SelectItem key={city.id} value={city.id}>
-                    {city.name} (جافة: {city.dryTemp}°C | رطبة: {city.wetTemp}°C)
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <div className="grid grid-cols-2 gap-3 border-t pt-3">
+          <div className="space-y-1">
+            <Label className="text-xs">معامل الأمان (%)</Label>
+            <Input type="number" min={0} max={50}
+              value={inputs.safetyFactor}
+              onChange={e => onChange({ safetyFactor: parseFloat(e.target.value) || 0 })} />
           </div>
-
-          <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-slate-700">موقع الحيز</Label>
-            <Select value={inputs.isGroundFloor.toString()}
-              onValueChange={(v) => onChange("isGroundFloor", parseInt(v))}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">الأرض (Ground Floor)</SelectItem>
-                <SelectItem value="0">مختلف (Not Ground)</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-1">
+            <Label className="text-xs">ساعات تشغيل المنظومة / يوم</Label>
+            <Input type="number" min={1} max={24}
+              value={inputs.operatingHours}
+              onChange={e => onChange({ operatingHours: parseFloat(e.target.value) || 18 })} />
           </div>
-
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-amber-600">
-                حرارة الأرض - الداخل: <span className="font-mono">{inputs.groundTemp - inputs.tempIn}°C</span>
-              </span>
-              <span className="font-medium text-amber-800 text-sm">
-                فرق الحرارة (CLTD):{" "}
-                <span className="text-lg font-bold font-mono">{inputs.tempOut - inputs.tempIn}°C</span>
-              </span>
-            </div>
-          </div>
-
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
