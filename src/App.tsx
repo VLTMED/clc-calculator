@@ -117,7 +117,7 @@ export default function App() {
       </main>
 
       <footer className="border-t mt-8 py-4 text-center text-xs text-muted-foreground">
-        CLC v4A · د. رحيم ك. جاسم · نسخة ويب — {new Date().getFullYear()}
+        CLC v4A · سلطان · نسخة ويب — {new Date().getFullYear()}
       </footer>
     </div>
   );
