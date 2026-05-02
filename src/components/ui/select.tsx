@@ -43,10 +43,7 @@ function SelectTrigger({
         "transition-[color,box-shadow] outline-none",
         "focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
         "data-[size=default]:h-9 data-[size=sm]:h-8",
-        // قيمة النص تملأ المساحة وتُدفع لليمين
         "*:data-[slot=select-value]:flex-1 *:data-[slot=select-value]:text-start *:data-[slot=select-value]:truncate",
-        // السهم يُزاح لليسار (نهاية السطر في LTR = بداية في RTL ← نحن نريده يمين لذا نستخدم order)
-        "[&>[data-radix-select-icon]]:order-first",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "[&_svg:not([class*='text-'])]:text-muted-foreground",
         className
@@ -55,7 +52,7 @@ function SelectTrigger({
     >
       {children}
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 opacity-50 order-first" />
+        <ChevronDownIcon className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
